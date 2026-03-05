@@ -1,0 +1,353 @@
+---
+title: JTextArea
+description: A styled multi-line text area component for JavaFX forms
+icon: align-left
+---
+
+## Overview
+
+`JTextArea` is a customized JavaFX TextArea with built-in styling and validation support. It extends `TextArea` and provides additional methods for styling, validation states, and label creation. Perfect for multi-line text input like comments, descriptions, or messages.
+
+## Constructor
+
+<ParamField path="JTextArea()" type="constructor">
+  Creates a new JTextArea with no prompt text.
+  
+  ```java
+  JTextArea textArea = new JTextArea();
+  ```
+</ParamField>
+
+<ParamField path="JTextArea(String promptText)" type="constructor">
+  Creates a new JTextArea with the specified prompt text.
+  
+  <Expandable title="parameters">
+    <ResponseField name="promptText" type="String">
+      The placeholder text to display when the textarea is empty
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  JTextArea textArea = new JTextArea("Enter your comments here...");
+  ```
+</ParamField>
+
+## Methods
+
+<ParamField path="addClass(String... styleClasses)" type="JTextArea">
+  Adds custom CSS style classes to the textarea.
+  
+  <Expandable title="parameters">
+    <ResponseField name="styleClasses" type="String...">
+      One or more CSS class names to add
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="JTextArea">
+      Returns this instance for method chaining
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  textArea.addClass("custom-class", "large-text");
+  ```
+</ParamField>
+
+<ParamField path="createWithLabel(String labelText, boolean required)" type="VBox">
+  Creates a VBox container with a label and this textarea. If required is true, adds a red asterisk (*) next to the label.
+  
+  <Expandable title="parameters">
+    <ResponseField name="labelText" type="String">
+      The text to display in the label
+    </ResponseField>
+    <ResponseField name="required" type="boolean">
+      Whether to show a required indicator (*)
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="VBox">
+      A VBox containing the label and textarea with 4px spacing
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  VBox formField = textArea.createWithLabel("Description", true);
+  container.getChildren().add(formField);
+  ```
+</ParamField>
+
+<ParamField path="setStatus(String styleClass)" type="JTextArea">
+  Sets the validation status of the textarea by applying a status style class.
+  
+  <Expandable title="parameters">
+    <ResponseField name="styleClass" type="String">
+      The validation style class to apply. Valid values:
+      - `"form-input-success"` - Green border for valid input
+      - `"form-input-danger"` - Red border for errors
+      - `"form-input-warning"` - Orange border for warnings
+      - `"form-input-dark"` - Dark border variant
+      - `null` or empty string - Removes all validation styles
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="JTextArea">
+      Returns this instance for method chaining
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  // Show success state
+  textArea.setStatus("form-input-success");
+  
+  // Show error state
+  textArea.setStatus("form-input-danger");
+  
+  // Clear status
+  textArea.setStatus(null);
+  ```
+</ParamField>
+
+## Default Configuration
+
+<ResponseField name="wrapText" type="boolean" default="true">
+  Text wrapping is enabled by default
+</ResponseField>
+
+<ResponseField name="prefRowCount" type="int" default="3">
+  Default height is set to 3 rows
+</ResponseField>
+
+## Style Classes
+
+<ResponseField name="j-text-area" type="CSS class">
+  Custom style class applied to JTextArea instances
+</ResponseField>
+
+<ResponseField name="form-input" type="CSS class">
+  Base style class automatically applied to all JTextArea instances (reuses common input styles)
+</ResponseField>
+
+<ResponseField name="form-label" type="CSS class">
+  Style class applied to labels created with `createWithLabel()`
+</ResponseField>
+
+<ResponseField name="required-mark" type="CSS class">
+  Style class applied to the asterisk (*) required indicator
+</ResponseField>
+
+## Usage Examples
+
+### Basic Comment Form
+
+```java
+import com.jjarroyo.components.JTextArea;
+import javafx.scene.layout.VBox;
+
+public class CommentForm {
+    public VBox createForm() {
+        VBox form = new VBox(10);
+        
+        // Basic textarea with label
+        JTextArea commentArea = new JTextArea("Write your comment...");
+        VBox commentField = commentArea.createWithLabel("Comment", true);
+        
+        form.getChildren().add(commentField);
+        return form;
+    }
+}
+```
+
+### Description Field with Validation
+
+```java
+import com.jjarroyo.components.JTextArea;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+
+public class ProductForm {
+    public VBox createDescriptionField() {
+        VBox container = new VBox(5);
+        
+        JTextArea descriptionArea = new JTextArea("Enter product description...");
+        VBox descriptionField = descriptionArea.createWithLabel("Description", true);
+        
+        Label charCount = new Label("0 / 500 characters");
+        charCount.setStyle("-fx-text-fill: gray; -fx-font-size: 12px;");
+        
+        // Character count and validation
+        descriptionArea.textProperty().addListener((obs, old, newVal) -> {
+            int length = newVal.length();
+            charCount.setText(length + " / 500 characters");
+            
+            if (length > 500) {
+                descriptionArea.setStatus("form-input-danger");
+                charCount.setStyle("-fx-text-fill: red; -fx-font-size: 12px;");
+            } else if (length > 400) {
+                descriptionArea.setStatus("form-input-warning");
+                charCount.setStyle("-fx-text-fill: orange; -fx-font-size: 12px;");
+            } else if (length >= 50) {
+                descriptionArea.setStatus("form-input-success");
+                charCount.setStyle("-fx-text-fill: green; -fx-font-size: 12px;");
+            } else {
+                descriptionArea.setStatus(null);
+                charCount.setStyle("-fx-text-fill: gray; -fx-font-size: 12px;");
+            }
+        });
+        
+        container.getChildren().addAll(descriptionField, charCount);
+        return container;
+    }
+}
+```
+
+### Multi-line Address Input
+
+```java
+import com.jjarroyo.components.JTextArea;
+import javafx.scene.layout.VBox;
+
+public class AddressForm {
+    public VBox createAddressField() {
+        VBox form = new VBox(10);
+        
+        JTextArea addressArea = new JTextArea("Street address, city, state, ZIP");
+        addressArea.setPrefRowCount(4); // Taller for address
+        
+        VBox addressField = addressArea.createWithLabel("Shipping Address", true);
+        
+        form.getChildren().add(addressField);
+        return form;
+    }
+}
+```
+
+### Message Input with Custom Styling
+
+```java
+import com.jjarroyo.components.JTextArea;
+import javafx.scene.layout.VBox;
+
+public class MessageForm {
+    public VBox createMessageField() {
+        VBox form = new VBox(10);
+        
+        JTextArea messageArea = new JTextArea("Type your message...")
+            .addClass("large-text", "message-input");
+        
+        messageArea.setPrefRowCount(5);
+        messageArea.setWrapText(true);
+        
+        VBox messageField = messageArea.createWithLabel("Message", true);
+        
+        form.getChildren().add(messageField);
+        return form;
+    }
+}
+```
+
+### Feedback Form with Validation
+
+```java
+import com.jjarroyo.components.JTextArea;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
+
+public class FeedbackForm {
+    public VBox createFeedbackForm() {
+        VBox form = new VBox(15);
+        
+        JTextArea feedbackArea = new JTextArea("Tell us what you think...");
+        feedbackArea.setPrefRowCount(6);
+        
+        VBox feedbackField = feedbackArea.createWithLabel("Feedback", true);
+        
+        Button submitBtn = new Button("Submit Feedback");
+        submitBtn.setOnAction(e -> {
+            String feedback = feedbackArea.getText().trim();
+            
+            if (feedback.isEmpty()) {
+                feedbackArea.setStatus("form-input-danger");
+            } else if (feedback.length() < 10) {
+                feedbackArea.setStatus("form-input-warning");
+            } else {
+                feedbackArea.setStatus("form-input-success");
+                submitFeedback(feedback);
+            }
+        });
+        
+        form.getChildren().addAll(feedbackField, submitBtn);
+        return form;
+    }
+    
+    private void submitFeedback(String feedback) {
+        System.out.println("Feedback submitted: " + feedback);
+    }
+}
+```
+
+## Inherited Methods
+
+Since `JTextArea` extends `TextArea`, all standard JavaFX TextArea methods are available:
+
+- `setText(String text)` - Set the text content
+- `getText()` - Get the current text
+- `setPromptText(String value)` - Set placeholder text
+- `setPrefRowCount(int rows)` - Set preferred number of rows
+- `setWrapText(boolean wrap)` - Enable/disable text wrapping
+- `setEditable(boolean value)` - Enable/disable editing
+- `setDisable(boolean value)` - Enable/disable the textarea
+- `textProperty()` - Access the text property for binding
+- `setPrefWidth(double width)` - Set preferred width
+- `setPrefHeight(double height)` - Set preferred height
+- And all other TextArea methods
+
+## Common Patterns
+
+### Required Field Validation
+
+```java
+JTextArea textArea = new JTextArea("Required field");
+textArea.focusedProperty().addListener((obs, wasFocused, isFocused) -> {
+    if (!isFocused && textArea.getText().trim().isEmpty()) {
+        textArea.setStatus("form-input-danger");
+    } else if (!textArea.getText().trim().isEmpty()) {
+        textArea.setStatus("form-input-success");
+    }
+});
+```
+
+### Character Limit Enforcement
+
+```java
+JTextArea textArea = new JTextArea();
+final int MAX_LENGTH = 500;
+
+textArea.textProperty().addListener((obs, old, newVal) -> {
+    if (newVal.length() > MAX_LENGTH) {
+        textArea.setText(old);
+    }
+});
+```
+
+### Auto-resize
+
+```java
+JTextArea textArea = new JTextArea();
+textArea.setWrapText(true);
+textArea.setPrefRowCount(3);
+
+// Auto-grow based on content
+textArea.textProperty().addListener((obs, old, newVal) -> {
+    int lines = newVal.split("\n").length;
+    textArea.setPrefRowCount(Math.max(3, Math.min(10, lines)));
+});
+```
+
+## See Also
+
+- [JInput](/api/components/jinput) - Single-line text input
+- [JPasswordInput](/api/components/jpasswordinput) - Password input with visibility toggle
+- [JSearchInput](/api/components/jsearchinput) - Search input with autocomplete

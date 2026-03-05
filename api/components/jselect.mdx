@@ -1,0 +1,509 @@
+---
+title: JSelect
+description: A customizable dropdown select component with single/multiple selection and search
+icon: list-dropdown
+---
+
+## Overview
+
+`JSelect<T>` is a versatile dropdown select component with support for single and multiple selection, searchable options, custom item rendering, and automatic filtering. It extends `StackPane` and provides a modern, styled alternative to JavaFX's standard ComboBox.
+
+## Generic Type
+
+<ResponseField name="T" type="type parameter">
+  The type of items in the select list. Can be any object type.
+</ResponseField>
+
+## Constructor
+
+<ParamField path="JSelect()" type="constructor">
+  Creates a new JSelect with default configuration (single selection, not searchable).
+  
+  ```java
+  JSelect<String> select = new JSelect<>();
+  ```
+</ParamField>
+
+## Methods
+
+### Item Management
+
+<ParamField path="getItems()" type="ObservableList&lt;T&gt;">
+  Gets the observable list of items in the select.
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="ObservableList&lt;T&gt;">
+      The observable list of all items
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  select.getItems().addAll("Option 1", "Option 2", "Option 3");
+  ```
+</ParamField>
+
+### Selection (Single Mode)
+
+<ParamField path="selectedItemProperty()" type="ObjectProperty<T>">
+  Gets the selected item property for binding.
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="ObjectProperty<T>">
+      The selected item property
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  select.selectedItemProperty().addListener((obs, old, newVal) -> {
+      System.out.println("Selected: " + newVal);
+  });
+  ```
+</ParamField>
+
+<ParamField path="getSelectedItem()" type="T">
+  Gets the currently selected item (single selection mode).
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="T">
+      The currently selected item, or null if none selected
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  String selected = select.getSelectedItem();
+  ```
+</ParamField>
+
+<ParamField path="setSelectedItem(T item)" type="void">
+  Sets the selected item (single selection mode).
+  
+  <Expandable title="parameters">
+    <ResponseField name="item" type="T">
+      The item to select
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  select.setSelectedItem("Option 2");
+  ```
+</ParamField>
+
+### Selection (Multiple Mode)
+
+<ParamField path="getSelectedItems()" type="ObservableList&lt;T&gt;">
+  Gets the observable list of selected items (multiple selection mode).
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="ObservableList&lt;T&gt;">
+      The list of selected items
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  ObservableList&lt;String&gt; selected = select.getSelectedItems();
+  System.out.println("Selected count: " + selected.size());
+  ```
+</ParamField>
+
+### Configuration
+
+<ParamField path="multipleProperty()" type="BooleanProperty">
+  Gets the multiple selection property for binding.
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="BooleanProperty">
+      The multiple selection property
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="isMultiple()" type="boolean">
+  Checks if multiple selection mode is enabled.
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="boolean">
+      True if multiple selection is enabled
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setMultiple(boolean multiple)" type="void">
+  Enables or disables multiple selection mode.
+  
+  <Expandable title="parameters">
+    <ResponseField name="multiple" type="boolean">
+      True to enable multiple selection, false for single selection
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  select.setMultiple(true);
+  ```
+</ParamField>
+
+<ParamField path="searchableProperty()" type="BooleanProperty">
+  Gets the searchable property for binding.
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="BooleanProperty">
+      The searchable property
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="isSearchable()" type="boolean">
+  Checks if search functionality is enabled.
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="boolean">
+      True if searchable
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setSearchable(boolean searchable)" type="void">
+  Enables or disables the search field in the dropdown.
+  
+  <Expandable title="parameters">
+    <ResponseField name="searchable" type="boolean">
+      True to show search field, false to hide it
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  select.setSearchable(true);
+  ```
+</ParamField>
+
+<ParamField path="setPlaceholder(String placeholder)" type="void">
+  Sets the placeholder text shown when no item is selected.
+  
+  <Expandable title="parameters">
+    <ResponseField name="placeholder" type="String">
+      The placeholder text (default: "Select an option")
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  select.setPlaceholder("Choose a country...");
+  ```
+</ParamField>
+
+<ParamField path="setConverter(Function&lt;T, String&gt; converter)" type="void">
+  Sets a function to convert items to display strings.
+  
+  <Expandable title="parameters">
+    <ResponseField name="converter" type="Function&lt;T, String&gt;">
+      A function that converts items to strings for display (default: Object::toString)
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  select.setConverter(user -> user.getFirstName() + " " + user.getLastName());
+  ```
+</ParamField>
+
+<ParamField path="setCellFactory(Callback<ListView<T>, ListCell<T>> factory)" type="void">
+  Sets a custom cell factory for advanced item rendering (icons, custom layouts, etc.).
+  
+  <Expandable title="parameters">
+    <ResponseField name="factory" type="Callback<ListView<T>, ListCell<T>>">
+      The cell factory callback
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  select.setCellFactory(param -> new CustomListCell());
+  ```
+</ParamField>
+
+## Style Classes
+
+<ResponseField name="j-select" type="CSS class">
+  Applied to the root StackPane container
+</ResponseField>
+
+<ResponseField name="select-trigger" type="CSS class">
+  Applied to the clickable trigger area
+</ResponseField>
+
+<ResponseField name="select-prompt" type="CSS class">
+  Applied to the placeholder label
+</ResponseField>
+
+<ResponseField name="select-value" type="CSS class">
+  Applied to the selected value label
+</ResponseField>
+
+<ResponseField name="select-tag" type="CSS class">
+  Applied to individual tags in multiple selection mode
+</ResponseField>
+
+<ResponseField name="select-arrow" type="CSS class">
+  Applied to the dropdown arrow icon
+</ResponseField>
+
+<ResponseField name="select-popup" type="CSS class">
+  Applied to the popup dropdown container
+</ResponseField>
+
+<ResponseField name="select-search-container" type="CSS class">
+  Applied to the search field container
+</ResponseField>
+
+<ResponseField name="select-list" type="CSS class">
+  Applied to the ListView of items
+</ResponseField>
+
+## Pseudo-classes
+
+<ResponseField name=":showing" type="pseudo-class">
+  Applied to the select when the dropdown popup is visible
+</ResponseField>
+
+## Usage Examples
+
+### Basic String Select
+
+```java
+import com.jjarroyo.components.JSelect;
+import javafx.scene.layout.VBox;
+
+public class BasicSelectExample {
+    public VBox createCountrySelect() {
+        VBox container = new VBox(10);
+        
+        JSelect<String> countrySelect = new JSelect<>();
+        countrySelect.setPlaceholder("Select a country");
+        countrySelect.getItems().addAll(
+            "United States",
+            "Canada",
+            "Mexico",
+            "Brazil"
+        );
+        
+        // Listen to selection changes
+        countrySelect.selectedItemProperty().addListener((obs, old, newVal) -> {
+            System.out.println("Selected country: " + newVal);
+        });
+        
+        container.getChildren().add(countrySelect);
+        return container;
+    }
+}
+```
+
+### Searchable Select
+
+```java
+import com.jjarroyo.components.JSelect;
+
+public class SearchableSelectExample {
+    public JSelect<String> createCitySelect() {
+        JSelect<String> citySelect = new JSelect<>();
+        citySelect.setPlaceholder("Search cities...");
+        citySelect.setSearchable(true);
+        
+        // Add many items
+        citySelect.getItems().addAll(
+            "New York", "Los Angeles", "Chicago", "Houston",
+            "Phoenix", "Philadelphia", "San Antonio", "San Diego",
+            "Dallas", "San Jose", "Austin", "Jacksonville"
+        );
+        
+        return citySelect;
+    }
+}
+```
+
+### Multiple Selection
+
+```java
+import com.jjarroyo.components.JSelect;
+import javafx.collections.ListChangeListener;
+
+public class MultipleSelectExample {
+    public JSelect<String> createSkillsSelect() {
+        JSelect<String> skillsSelect = new JSelect<>();
+        skillsSelect.setPlaceholder("Select skills");
+        skillsSelect.setMultiple(true);
+        skillsSelect.setSearchable(true);
+        
+        skillsSelect.getItems().addAll(
+            "Java", "JavaScript", "Python", "C++",
+            "React", "Angular", "Vue.js", "Node.js"
+        );
+        
+        // Listen to selection changes
+        skillsSelect.getSelectedItems().addListener(
+            (ListChangeListener.Change<? extends String> c) -> {
+                System.out.println("Selected skills: " + skillsSelect.getSelectedItems());
+            }
+        );
+        
+        return skillsSelect;
+    }
+}
+```
+
+### Custom Object Select
+
+```java
+import com.jjarroyo.components.JSelect;
+
+public class User {
+    private int id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    
+    // Constructor, getters, setters...
+    public User(int id, String firstName, String lastName, String email) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+    
+    public String getFirstName() { return firstName; }
+    public String getLastName() { return lastName; }
+    public String getEmail() { return email; }
+}
+
+public class UserSelectExample {
+    public JSelect<User> createUserSelect() {
+        JSelect<User> userSelect = new JSelect<>();
+        userSelect.setPlaceholder("Select a user");
+        userSelect.setSearchable(true);
+        
+        // Custom converter to display full name
+        userSelect.setConverter(user -> 
+            user.getFirstName() + " " + user.getLastName()
+        );
+        
+        // Add users
+        userSelect.getItems().addAll(
+            new User(1, "John", "Doe", "john@example.com"),
+            new User(2, "Jane", "Smith", "jane@example.com"),
+            new User(3, "Bob", "Johnson", "bob@example.com")
+        );
+        
+        // Handle selection
+        userSelect.selectedItemProperty().addListener((obs, old, newVal) -> {
+            if (newVal != null) {
+                System.out.println("Selected: " + newVal.getEmail());
+            }
+        });
+        
+        return userSelect;
+    }
+}
+```
+
+### Select with Custom Cell Factory
+
+```java
+import com.jjarroyo.components.JSelect;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+
+public class CustomCellSelectExample {
+    public JSelect<User> createUserSelectWithIcons() {
+        JSelect<User> userSelect = new JSelect<>();
+        userSelect.setPlaceholder("Select a user");
+        userSelect.setSearchable(true);
+        
+        // Custom converter
+        userSelect.setConverter(user -> 
+            user.getFirstName() + " " + user.getLastName()
+        );
+        
+        // Custom cell factory with email subtitle
+        userSelect.setCellFactory(param -> new ListCell<User>() {
+            @Override
+            protected void updateItem(User user, boolean empty) {
+                super.updateItem(user, empty);
+                if (empty || user == null) {
+                    setGraphic(null);
+                    setText(null);
+                } else {
+                    VBox content = new VBox(2);
+                    Label nameLabel = new Label(
+                        user.getFirstName() + " " + user.getLastName()
+                    );
+                    nameLabel.setStyle("-fx-font-weight: bold;");
+                    
+                    Label emailLabel = new Label(user.getEmail());
+                    emailLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: gray;");
+                    
+                    content.getChildren().addAll(nameLabel, emailLabel);
+                    setGraphic(content);
+                }
+            }
+        });
+        
+        userSelect.getItems().addAll(
+            new User(1, "John", "Doe", "john@example.com"),
+            new User(2, "Jane", "Smith", "jane@example.com")
+        );
+        
+        return userSelect;
+    }
+}
+```
+
+### Programmatic Selection
+
+```java
+JSelect<String> select = new JSelect<>();
+select.getItems().addAll("Option 1", "Option 2", "Option 3");
+
+// Set initial selection
+select.setSelectedItem("Option 2");
+
+// For multiple selection
+JSelect<String> multiSelect = new JSelect<>();
+multiSelect.setMultiple(true);
+multiSelect.getItems().addAll("A", "B", "C", "D");
+multiSelect.getSelectedItems().addAll("A", "C");
+```
+
+## Behavior Details
+
+### Single Selection Mode
+
+- Click on an item to select it
+- Previously selected item is replaced
+- Popup closes after selection
+- Selected value displays in the trigger area
+
+### Multiple Selection Mode
+
+- Click items to toggle selection (checkboxes shown)
+- Multiple items can be selected
+- Popup remains open after selection
+- Selected items display as tags in trigger area
+- Click outside or press Escape to close
+
+### Search Functionality
+
+- Search field appears at top of dropdown when enabled
+- Filters items based on converter output
+- Case-insensitive matching
+- Updates in real-time as you type
+
+### Popup Behavior
+
+- Matches width of the trigger
+- Maximum height of 200px with scrolling
+- Auto-hides when clicking outside
+- Syncs stylesheets and dark mode from parent scene
+- Positioned 1px below trigger for seamless appearance
+
+## See Also
+
+- [JInput](/api/components/jinput) - Basic text input
+- [JSearchInput](/api/components/jsearchinput) - Search input with autocomplete
+- [JNumberInput](/api/components/jnumberinput) - Numeric input component

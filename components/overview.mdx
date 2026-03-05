@@ -1,0 +1,95 @@
+---
+title: Components Overview
+description: Comprehensive guide to JJArroyo's JavaFX component library
+icon: 'box'
+---
+
+## Introduction
+
+JJArroyo provides a rich set of pre-styled JavaFX components designed with modern UI principles. All components follow a consistent API pattern and integrate seamlessly with the theming system.
+
+## Component Categories
+
+<CardGroup cols={2}>
+  <Card title="Buttons & Badges" icon="hand-pointer" href="/components/buttons">
+    Interactive elements including buttons, badges, and chips
+  </Card>
+  <Card title="Form Inputs" icon="keyboard" href="/components/inputs">
+    Text inputs, password fields, and search components
+  </Card>
+  <Card title="Cards" icon="window" href="/components/cards">
+    Flexible container components with headers, bodies, and footers
+  </Card>
+  <Card title="Alerts" icon="bell" href="/components/alerts">
+    Notification and alert components for user feedback
+  </Card>
+  <Card title="Modals" icon="square" href="/components/modals">
+    Dialog and modal overlay components
+  </Card>
+</CardGroup>
+
+## Design Philosophy
+
+### Fluent API
+
+All components support method chaining for concise, readable code:
+
+```java
+JButton button = new JButton("Click Me")
+    .addClass("btn-success", "btn-lg")
+    .setIcon(JIcon.CHECK);
+```
+
+### Style Classes
+
+Components use CSS style classes that follow Tailwind-inspired naming conventions:
+
+- `btn-primary`, `btn-success`, `btn-danger` - Color variants
+- `btn-sm`, `btn-lg` - Size modifiers
+- `badge-circle` - Shape modifiers
+
+### Intelligent Defaults
+
+Components automatically manage default styles. When you add a variant class (like `btn-success`), the default `btn-primary` is automatically removed.
+
+## Common Patterns
+
+### Adding Style Classes
+
+All visual components provide an `addClass()` method:
+
+```java
+component.addClass("custom-class", "another-class");
+```
+
+### Using Icons
+
+Many components support the `JIcon` enum for consistent iconography:
+
+```java
+JButton button = new JButton("Save", JIcon.SAVE);
+JAlert alert = new JAlert("Success").setIcon(JIcon.CHECK_CIRCLE);
+```
+
+### Form Labels
+
+Input components can generate labeled containers:
+
+```java
+JInput input = new JInput("Enter username");
+VBox labeledInput = input.createWithLabel("Username", true); // true = required
+```
+
+## Browser Compatibility
+
+All components are tested with JavaFX 17+ and support:
+
+- Windows 10/11
+- macOS 10.14+
+- Linux (GTK 3+)
+
+## Next Steps
+
+<Card title="Explore Components" icon="rocket">
+  Browse the individual component pages to see detailed examples and API references.
+</Card>

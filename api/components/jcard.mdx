@@ -1,0 +1,272 @@
+---
+title: JCard
+description: A flexible card component with header, body, footer, and collapsible support
+---
+
+## Overview
+
+`JCard` is a flexible container component that extends JavaFX's `VBox`. It provides a structured layout with optional header (title, subtitle, toolbar), body content, footer, and built-in support for scrolling and collapse functionality.
+
+## Constructor
+
+<ParamField path="JCard()" type="constructor">
+  Creates an empty card.
+</ParamField>
+
+<ParamField path="JCard(String titleText, Node content)" type="constructor">
+  Convenience constructor with title and content.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="titleText" type="String">
+      The title text to display in the card header
+    </ResponseField>
+    <ResponseField name="content" type="Node">
+      The content node to display in the card body
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="JCard(String titleText, String subtitleText)" type="constructor">
+  Convenience constructor with title and subtitle.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="titleText" type="String">
+      The title text to display in the card header
+    </ResponseField>
+    <ResponseField name="subtitleText" type="String">
+      The subtitle text to display below the title
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Methods
+
+### Header Configuration
+
+<ParamField path="setTitle(String titleText)" type="JCard">
+  Sets the card title. Creates the header section if it doesn't exist.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="titleText" type="String">
+      The title text to display
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="JCard">
+      The card instance for method chaining
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setSubtitle(String subtitleText)" type="JCard">
+  Sets the card subtitle. Appears below the title in the header.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="subtitleText" type="String">
+      The subtitle text to display
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="JCard">
+      The card instance for method chaining
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="addToolbarItem(Node node)" type="JCard">
+  Adds a node to the header toolbar (positioned on the right side).
+  
+  <Expandable title="Parameters">
+    <ResponseField name="node" type="Node">
+      The node to add to the toolbar (typically buttons or icons)
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="JCard">
+      The card instance for method chaining
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setLine(boolean show)" type="void">
+  Adds or removes a border line below the header.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="show" type="boolean">
+      `true` to show the line, `false` to hide it
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+### Content Configuration
+
+<ParamField path="setBody(Node content)" type="JCard">
+  Sets the main content of the card body.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="content" type="Node">
+      The content node to display in the card body
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="JCard">
+      The card instance for method chaining
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setFooter(Node content)" type="JCard">
+  Sets the footer content at the bottom of the card.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="content" type="Node">
+      The content node to display in the footer
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="JCard">
+      The card instance for method chaining
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="makeScrollable()" type="JCard">
+  Makes the card body scrollable by wrapping it in a `ScrollPane`.
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="JCard">
+      The card instance for method chaining
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+### Collapse Functionality
+
+<ParamField path="setCollapsible(boolean collapsible)" type="JCard">
+  Enables or disables the collapsible functionality. Adds a chevron icon to the header toolbar.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="collapsible" type="boolean">
+      `true` to make the card collapsible, `false` to disable
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="JCard">
+      The card instance for method chaining
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setExpanded(boolean expanded)" type="JCard">
+  Sets the expanded/collapsed state of the card.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="expanded" type="boolean">
+      `true` to expand the card, `false` to collapse it
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="JCard">
+      The card instance for method chaining
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+### Styling
+
+<ParamField path="addClass(String... styleClasses)" type="JCard">
+  Adds custom CSS style classes to the card.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="styleClasses" type="String...">
+      Variable number of CSS class names to add
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="JCard">
+      The card instance for method chaining
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Style Classes
+
+<ResponseField name="card" type="String">
+  Base style class applied to the card container
+</ResponseField>
+
+<ResponseField name="card-header" type="String">
+  Applied to the header container
+</ResponseField>
+
+<ResponseField name="card-header-line" type="String">
+  Applied to the header when `setLine(true)` is called
+</ResponseField>
+
+<ResponseField name="card-title-box" type="String">
+  Applied to the container holding title and subtitle
+</ResponseField>
+
+<ResponseField name="card-title" type="String">
+  Applied to the title label
+</ResponseField>
+
+<ResponseField name="card-subtitle" type="String">
+  Applied to the subtitle label
+</ResponseField>
+
+<ResponseField name="card-toolbar" type="String">
+  Applied to the toolbar container in the header
+</ResponseField>
+
+<ResponseField name="card-body" type="String">
+  Applied to the body container
+</ResponseField>
+
+<ResponseField name="card-footer" type="String">
+  Applied to the footer container
+</ResponseField>
+
+<ResponseField name="card-scroll" type="String">
+  Applied to the scroll pane when `makeScrollable()` is called
+</ResponseField>
+
+<ResponseField name="card-chevron" type="String">
+  Applied to the collapse/expand chevron icon
+</ResponseField>
+
+## Example Usage
+
+```java
+// Basic card with title and content
+JCard card = new JCard("Card Title", new Label("Card content"));
+
+// Card with title, subtitle, and toolbar
+JCard card = new JCard()
+    .setTitle("User Profile")
+    .setSubtitle("Manage your account settings")
+    .addToolbarItem(new JButton("Edit"))
+    .setLine(true)
+    .setBody(new Label("Profile content here"))
+    .setFooter(new HBox(new JButton("Save"), new JButton("Cancel")));
+
+// Scrollable collapsible card
+JCard card = new JCard()
+    .setTitle("Details")
+    .setBody(new VBox(/* long content */))
+    .makeScrollable()
+    .setCollapsible(true)
+    .setExpanded(false);
+```
+
+## Source
+
+`com.jjarroyo.components.JCard` in JCard.java:6

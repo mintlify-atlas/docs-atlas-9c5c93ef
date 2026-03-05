@@ -1,0 +1,314 @@
+---
+title: JTable
+description: Enterprise-grade table component with checkboxes, search/filter, row actions, custom cell renderers, bulk actions, CSV export, and pagination.
+---
+
+## Overview
+
+JTable is a feature-rich table component built on JavaFX TableView with advanced capabilities including:
+
+- Checkbox selection with header "select all" control
+- Built-in search and filtering across columns
+- Custom cell renderers for rich content
+- Row actions column with custom buttons/controls
+- Bulk actions toolbar for multi-row operations
+- CSV export functionality
+- Pagination with customizable items per page
+- Infinite scroll support
+- Empty state customization
+- Striped and dense visual modes
+
+## Constructor
+
+<ParamField path="JTable<T>()" type="constructor">
+  Creates a new generic table for type T.
+</ParamField>
+
+## Basic Usage
+
+```java
+JTable<User> table = new JTable<>();
+table.setCheckable(true);
+table.setSearchable(true);
+table.setStriped(true);
+table.addColumn("Name", "name");
+table.addColumn("Email", "email");
+table.addColumn("Role", "role", user -> new JChip(user.getRole()));
+table.setRowActions((user, box) -> {
+    JButton editBtn = new JButton("Edit");
+    editBtn.setOnAction(e -> editUser(user));
+    box.getChildren().add(editBtn);
+});
+table.setItems(userData);
+```
+
+## Column Configuration
+
+<ParamField path="addColumn(title, property)" type="TableColumn<T, V>">
+  Adds a sortable column with the specified title and property name.
+  
+  <Expandable title="Parameters">
+    - `title` (String): Column header text
+    - `property` (String): JavaBean property name for cell value binding
+  </Expandable>
+</ParamField>
+
+<ParamField path="addColumn(title, property, sortable)" type="TableColumn<T, V>">
+  Adds a column with control over sortability.
+  
+  <Expandable title="Parameters">
+    - `title` (String): Column header text
+    - `property` (String): JavaBean property name
+    - `sortable` (boolean): Whether the column can be sorted
+  </Expandable>
+</ParamField>
+
+<ParamField path="addColumn(title, property, renderer)" type="TableColumn&lt;T, V&gt;">
+  Adds a column with a custom cell renderer.
+  
+  <Expandable title="Parameters">
+    - `title` (String): Column header text
+    - `property` (String): JavaBean property name
+    - `renderer` (Function&lt;T, Node&gt;): Function that returns a JavaFX Node for each row item
+  </Expandable>
+</ParamField>
+
+<ParamField path="addColumn(title, property, sortable, renderer)" type="TableColumn&lt;T, V&gt;">
+  Adds a column with custom renderer and sortability control.
+  
+  <Expandable title="Parameters">
+    - `title` (String): Column header text
+    - `property` (String): JavaBean property name
+    - `sortable` (boolean): Whether the column can be sorted
+    - `renderer` (Function&lt;T, Node&gt;): Custom cell renderer function
+  </Expandable>
+</ParamField>
+
+## Checkable Mode
+
+<ParamField path="setCheckable(boolean)" type="void">
+  Enables or disables checkbox selection mode. When enabled, adds a checkbox column with header "select all" control.
+</ParamField>
+
+<ParamField path="isCheckable()" type="boolean">
+  Returns whether checkbox mode is enabled.
+</ParamField>
+
+<ParamField path="getCheckedItems()" type="ObservableList&lt;T&gt;">
+  Returns the list of currently checked items.
+</ParamField>
+
+<ParamField path="getCheckedIndices()" type="List&lt;Integer&gt;">
+  Returns the indices of checked items in the original data list.
+</ParamField>
+
+<ParamField path="clearChecks()" type="void">
+  Clears all checkbox selections and resets header checkbox state.
+</ParamField>
+
+<ParamField path="setOnCheckChange(callback)" type="void">
+  Sets a callback that fires when the checked items selection changes.
+  
+  <Expandable title="Parameters">
+    - `callback` (Consumer&lt;List&lt;T&gt;&gt;): Callback receiving the list of checked items
+  </Expandable>
+</ParamField>
+
+## Search and Filter
+
+<ParamField path="setSearchable(boolean)" type="void">
+  Enables or disables the search bar. Automatically filters across all column properties.
+</ParamField>
+
+<ParamField path="isSearchable()" type="boolean">
+  Returns whether search mode is enabled.
+</ParamField>
+
+<ParamField path="setSearchPlaceholder(placeholder)" type="void">
+  Sets the placeholder text for the search field (default: "Buscar...").
+  
+  <Expandable title="Parameters">
+    - `placeholder` (String): Search field placeholder text
+  </Expandable>
+</ParamField>
+
+## Row Actions
+
+<ParamField path="setRowActions(actionsFactory)" type="void">
+  Sets a factory function to create action buttons/controls for each row.
+  
+  <Expandable title="Parameters">
+    - `actionsFactory` (BiConsumer&lt;T, HBox&gt;): Function receiving the row item and an HBox to populate with action controls
+  </Expandable>
+  
+  ```java
+  table.setRowActions((user, box) -> {
+      JButton editBtn = new JButton("Edit");
+      JButton deleteBtn = new JButton("Delete");
+      editBtn.setOnAction(e -> editUser(user));
+      deleteBtn.setOnAction(e -> deleteUser(user));
+      box.getChildren().addAll(editBtn, deleteBtn);
+  });
+  ```
+</ParamField>
+
+## Row Click
+
+<ParamField path="setOnRowClick(handler)" type="void">
+  Sets a callback that fires when a table row is clicked.
+  
+  <Expandable title="Parameters">
+    - `handler` (Consumer&lt;T&gt;): Callback receiving the clicked row item
+  </Expandable>
+</ParamField>
+
+## Bulk Actions
+
+<ParamField path="setBulkActionsEnabled(boolean)" type="void">
+  Enables or disables the bulk actions toolbar (requires checkable mode).
+</ParamField>
+
+<ParamField path="setOnBulkDelete(handler)" type="void">
+  Sets a callback for bulk delete action and automatically enables bulk actions.
+  
+  <Expandable title="Parameters">
+    - `handler` (Consumer&lt;List&lt;T&gt;&gt;): Callback receiving the list of checked items to delete
+  </Expandable>
+</ParamField>
+
+## Data Management
+
+<ParamField path="setItems(items)" type="void">
+  Sets the table's data source.
+  
+  <Expandable title="Parameters">
+    - `items` (ObservableList&lt;T&gt;): The observable list of items to display
+  </Expandable>
+</ParamField>
+
+<ParamField path="getItems()" type="ObservableList&lt;T&gt;">
+  Returns the current items list.
+</ParamField>
+
+<ParamField path="setItemsPerPage(items)" type="void">
+  Sets the number of items per page for pagination (default: 10).
+  
+  <Expandable title="Parameters">
+    - `items` (int): Number of items per page
+  </Expandable>
+</ParamField>
+
+<ParamField path="addItem(item)" type="void">
+  Adds a single item to the table.
+  
+  <Expandable title="Parameters">
+    - `item` (T): The item to add
+  </Expandable>
+</ParamField>
+
+<ParamField path="removeItem(item)" type="void">
+  Removes a single item from the table and checked items list.
+  
+  <Expandable title="Parameters">
+    - `item` (T): The item to remove
+  </Expandable>
+</ParamField>
+
+<ParamField path="removeItems(items)" type="void">
+  Removes multiple items from the table and checked items list.
+  
+  <Expandable title="Parameters">
+    - `items` (List&lt;T&gt;): The items to remove
+  </Expandable>
+</ParamField>
+
+<ParamField path="refresh()" type="void">
+  Refreshes the table display, reapplying filters and updating the view.
+</ParamField>
+
+## Empty State
+
+<ParamField path="setEmptyText(text)" type="void">
+  Sets the text displayed when the table has no data.
+  
+  <Expandable title="Parameters">
+    - `text` (String): Empty state message
+  </Expandable>
+</ParamField>
+
+<ParamField path="setEmptyGraphic(graphic)" type="void">
+  Sets a custom graphic/icon for the empty state.
+  
+  <Expandable title="Parameters">
+    - `graphic` (Node): Custom graphic node
+  </Expandable>
+</ParamField>
+
+## Visual Modes
+
+<ParamField path="setStriped(boolean)" type="void">
+  Enables or disables striped row styling (alternating row colors).
+</ParamField>
+
+<ParamField path="isStriped()" type="boolean">
+  Returns whether striped mode is enabled.
+</ParamField>
+
+<ParamField path="setDense(boolean)" type="void">
+  Enables or disables dense mode (compact row spacing).
+</ParamField>
+
+<ParamField path="isDense()" type="boolean">
+  Returns whether dense mode is enabled.
+</ParamField>
+
+## Status Bar
+
+<ParamField path="setStatusBarEnabled(boolean)" type="void">
+  Enables or disables the status bar showing "Showing X to Y of Z results".
+</ParamField>
+
+## Pagination
+
+<ParamField path="setPaginationVisible(boolean)" type="void">
+  Shows or hides the pagination controls.
+  
+  <Expandable title="Parameters">
+    - `visible` (boolean): Whether pagination should be visible
+  </Expandable>
+</ParamField>
+
+<ParamField path="getPagination()" type="JPagination">
+  Returns the underlying JPagination component for advanced control.
+</ParamField>
+
+## Infinite Scroll
+
+<ParamField path="setOnScrollBottom(action)" type="void">
+  Sets a callback that fires when the user scrolls to the bottom of the table.
+  
+  <Expandable title="Parameters">
+    - `action` (Runnable): Callback to execute when scroll reaches bottom
+  </Expandable>
+</ParamField>
+
+## CSV Export
+
+<ParamField path="exportToCSV(file)" type="void" throws="IOException">
+  Exports all table data to a CSV file.
+  
+  <Expandable title="Parameters">
+    - `file` (File): Destination file for the CSV export
+  </Expandable>
+  
+  ```java
+  File csvFile = new File("users.csv");
+  table.exportToCSV(csvFile);
+  ```
+</ParamField>
+
+## Access to Underlying Components
+
+<ParamField path="getTableView()" type="TableView<T>">
+  Returns the underlying JavaFX TableView for advanced customization.
+</ParamField>

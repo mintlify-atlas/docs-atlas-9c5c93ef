@@ -1,0 +1,213 @@
+---
+title: Installation
+description: Add JJArroyo JavaFX Theme to your project using Maven or Gradle
+---
+
+JJArroyo is a modern, customizable JavaFX theme library that provides a comprehensive set of styled components for building beautiful desktop applications.
+
+## Requirements
+
+Before installing JJArroyo, ensure your project meets the following requirements:
+
+- **Java 17 or higher** (Java 21 recommended)
+- **JavaFX 21.0.2 or compatible version**
+- **Maven or Gradle** for dependency management
+
+## Maven Installation
+
+<Steps>
+  <Step title="Add the dependency">
+    Add JJArroyo to your `pom.xml` file:
+
+    ```xml
+    <dependency>
+        <groupId>com.jjarroyo</groupId>
+        <artifactId>jjarroyo-library</artifactId>
+        <version>1.2.0</version>
+    </dependency>
+    ```
+  </Step>
+
+  <Step title="Configure JavaFX">
+    Ensure you have JavaFX controls and FXML dependencies:
+
+    ```xml
+    <dependencies>
+        <!-- JavaFX Core -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>21.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>21.0.2</version>
+        </dependency>
+
+        <!-- JJArroyo Theme Library -->
+        <dependency>
+            <groupId>com.jjarroyo</groupId>
+            <artifactId>jjarroyo-library</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+    </dependencies>
+    ```
+  </Step>
+
+  <Step title="Set Java version">
+    Configure the Maven compiler plugin to use Java 17 or higher:
+
+    ```xml
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <javafx.version>21.0.2</javafx.version>
+    </properties>
+    ```
+  </Step>
+</Steps>
+
+## Gradle Installation
+
+<Steps>
+  <Step title="Add the dependency">
+    Add JJArroyo to your `build.gradle` file:
+
+    ```groovy
+    dependencies {
+        implementation 'com.jjarroyo:jjarroyo-library:1.2.0'
+        implementation 'org.openjfx:javafx-controls:21.0.2'
+        implementation 'org.openjfx:javafx-fxml:21.0.2'
+    }
+    ```
+  </Step>
+
+  <Step title="Configure JavaFX plugin">
+    Apply and configure the JavaFX Gradle plugin:
+
+    ```groovy
+    plugins {
+        id 'application'
+        id 'org.openjfx.javafxplugin' version '0.1.0'
+    }
+
+    javafx {
+        version = '21.0.2'
+        modules = ['javafx.controls', 'javafx.fxml']
+    }
+    ```
+  </Step>
+
+  <Step title="Set Java version">
+    Configure Java toolchain:
+
+    ```groovy
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+    ```
+  </Step>
+</Steps>
+
+## Gradle (Kotlin DSL)
+
+If you're using Gradle with Kotlin DSL (`build.gradle.kts`):
+
+```kotlin
+plugins {
+    application
+    id("org.openjfx.javafxplugin") version "0.1.0"
+}
+
+javafx {
+    version = "21.0.2"
+    modules("javafx.controls", "javafx.fxml")
+}
+
+dependencies {
+    implementation("com.jjarroyo:jjarroyo-library:1.2.0")
+    implementation("org.openjfx:javafx-controls:21.0.2")
+    implementation("org.openjfx:javafx-fxml:21.0.2")
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+```
+
+## Verify Installation
+
+After adding the dependency, rebuild your project to ensure JJArroyo is properly installed:
+
+<CodeGroup>
+```bash Maven
+mvn clean install
+```
+
+```bash Gradle
+./gradlew build
+```
+</CodeGroup>
+
+<Note>
+  If you encounter any issues during installation, make sure your IDE is configured to use the correct Java SDK version (17 or higher) and that JavaFX modules are properly recognized.
+</Note>
+
+## Optional Dependencies
+
+JJArroyo includes several optional features that require additional dependencies:
+
+### Icon Support
+
+For enhanced icon support using Ikonli:
+
+```xml
+<dependency>
+    <groupId>org.kordamp.ikonli</groupId>
+    <artifactId>ikonli-javafx</artifactId>
+    <version>12.3.1</version>
+</dependency>
+<dependency>
+    <groupId>org.kordamp.ikonli</groupId>
+    <artifactId>ikonli-feather-pack</artifactId>
+    <version>12.3.1</version>
+</dependency>
+```
+
+### Advanced Components
+
+For advanced components like JSqlEditor:
+
+```xml
+<!-- Code editor support -->
+<dependency>
+    <groupId>org.fxmisc.richtext</groupId>
+    <artifactId>richtextfx</artifactId>
+    <version>0.11.7</version>
+</dependency>
+
+<!-- SQL parsing -->
+<dependency>
+    <groupId>com.github.jsqlparser</groupId>
+    <artifactId>jsqlparser</artifactId>
+    <version>4.9</version>
+</dependency>
+```
+
+## Next Steps
+
+Now that you have JJArroyo installed, you're ready to start building your application:
+
+<CardGroup cols={2}>
+  <Card title="Quickstart Guide" icon="rocket" href="/quickstart">
+    Learn how to initialize JJArroyo and create your first styled application
+  </Card>
+  <Card title="Components" icon="grid" href="/components/overview">
+    Explore all available components and their features
+  </Card>
+</CardGroup>

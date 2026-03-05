@@ -1,0 +1,199 @@
+---
+title: JProgressBar
+description: Progress bar component for showing task completion percentage
+---
+
+A horizontal progress bar component that visually represents the completion percentage of a task, with customizable colors and sizes.
+
+## Constructor
+
+<ParamField path="JProgressBar()" type="constructor">
+  Creates a new progress bar with 0% progress.
+</ParamField>
+
+<ParamField path="JProgressBar(double progress)" type="constructor">
+  Creates a new progress bar with initial progress.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="progress" type="double" required>
+      Initial progress value (0.0 to 1.0)
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Enums
+
+### ProgressStyle
+
+Defines the progress bar color:
+- `PRIMARY` - Primary color (default)
+- `SUCCESS` - Green (success)
+- `DANGER` - Red (error/critical)
+- `WARNING` - Orange/yellow (warning)
+- `INFO` - Blue (information)
+- `DARK` - Dark gray
+- `SECONDARY` - Light gray
+
+### ProgressSize
+
+Defines the progress bar height:
+- `SM` - Small (`.progress-sm`)
+- `MD` - Medium (`.progress-md`) - Default
+- `LG` - Large (`.progress-lg`)
+
+## Methods
+
+<ParamField path="setProgressStyle(ProgressStyle style)" type="void">
+  Sets the progress bar color style.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="style" type="ProgressStyle" required>
+      The color style to apply
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setSize(ProgressSize size)" type="void">
+  Sets the progress bar size.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="size" type="ProgressSize" required>
+      The size to apply (SM, MD, or LG)
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Inherited Methods from JavaFX ProgressBar
+
+<ParamField path="setProgress(double value)" type="void">
+  Sets the current progress value.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="value" type="double" required>
+      Progress value: 0.0 (0%) to 1.0 (100%), or -1.0 for indeterminate
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="getProgress()" type="double">
+  Gets the current progress value.
+  
+  <ResponseField name="returns" type="double">
+    Current progress (0.0 to 1.0, or -1.0 if indeterminate)
+  </ResponseField>
+</ParamField>
+
+<ParamField path="progressProperty()" type="DoubleProperty">
+  Returns the progress property for binding.
+  
+  <ResponseField name="returns" type="DoubleProperty">
+    Observable progress property
+  </ResponseField>
+</ParamField>
+
+## Usage Examples
+
+### Basic Progress Bar
+
+```java
+JProgressBar progress = new JProgressBar();
+progress.setProgress(0.5); // 50%
+```
+
+### Styled Progress Bars
+
+```java
+// Success progress (green)
+JProgressBar successBar = new JProgressBar(0.8);
+successBar.setProgressStyle(JProgressBar.ProgressStyle.SUCCESS);
+
+// Danger progress (red)
+JProgressBar dangerBar = new JProgressBar(0.3);
+dangerBar.setProgressStyle(JProgressBar.ProgressStyle.DANGER);
+
+// Warning progress (orange)
+JProgressBar warningBar = new JProgressBar(0.6);
+warningBar.setProgressStyle(JProgressBar.ProgressStyle.WARNING);
+```
+
+### Different Sizes
+
+```java
+// Small
+JProgressBar smallBar = new JProgressBar();
+smallBar.setSize(JProgressBar.ProgressSize.SM);
+smallBar.setProgress(0.4);
+
+// Large
+JProgressBar largeBar = new JProgressBar();
+largeBar.setSize(JProgressBar.ProgressSize.LG);
+largeBar.setProgress(0.7);
+```
+
+### Indeterminate Progress
+
+```java
+// For tasks with unknown duration
+JProgressBar indeterminate = new JProgressBar();
+indeterminate.setProgress(-1.0); // Indeterminate/loading state
+```
+
+### Animated Progress
+
+```java
+JProgressBar progress = new JProgressBar(0.0);
+progress.setProgressStyle(JProgressBar.ProgressStyle.PRIMARY);
+
+// Simulate progress over time
+Timeline timeline = new Timeline(
+    new KeyFrame(Duration.ZERO, new KeyValue(progress.progressProperty(), 0)),
+    new KeyFrame(Duration.seconds(5), new KeyValue(progress.progressProperty(), 1.0))
+);
+timeline.play();
+```
+
+### With Label
+
+```java
+VBox container = new VBox(8);
+JLabel label = new JLabel("Loading...");
+JProgressBar progress = new JProgressBar();
+
+progress.progressProperty().addListener((obs, old, newVal) -> {
+    int percent = (int) (newVal.doubleValue() * 100);
+    label.setText("Loading... " + percent + "%");
+});
+
+container.getChildren().addAll(label, progress);
+```
+
+### File Upload Progress
+
+```java
+VBox uploadUI = new VBox(12);
+JLabel fileName = new JLabel("document.pdf");
+JProgressBar uploadProgress = new JProgressBar();
+uploadProgress.setProgressStyle(JProgressBar.ProgressStyle.INFO);
+
+uploadUI.getChildren().addAll(fileName, uploadProgress);
+
+// Update as upload progresses
+uploadFile(file, (bytesUploaded, totalBytes) -> {
+    double progress = (double) bytesUploaded / totalBytes;
+    uploadProgress.setProgress(progress);
+});
+```
+
+## Style Classes
+
+- `.j-progress-bar` - Main progress bar
+- `.progress-primary` - Primary color
+- `.progress-success` - Success color
+- `.progress-danger` - Danger color
+- `.progress-warning` - Warning color
+- `.progress-info` - Info color
+- `.progress-dark` - Dark color
+- `.progress-secondary` - Secondary color
+- `.progress-sm` - Small size
+- `.progress-md` - Medium size
+- `.progress-lg` - Large size

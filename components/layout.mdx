@@ -1,0 +1,314 @@
+---
+title: Layout Components
+description: Structure your UI with JHeader, JAccordion, and container components
+icon: layout
+---
+
+## JHeader
+
+Application header with branding, navigation menu, and user profile.
+
+### Basic Usage
+
+```java
+JHeader header = new JHeader();
+header.setBrand(logoImage, "MyApp");
+```
+
+### With Menu Items
+
+```java
+JHeader header = new JHeader();
+header.setBrand(null, "Dashboard");
+
+header.addMenuItem("Home", () -> navigate("/home"));
+header.addMenuItem("Products", () -> navigate("/products"));
+header.addMenuItem("About", () -> navigate("/about"));
+```
+
+### With Dropdown Menu
+
+```java
+JHeader header = new JHeader();
+header.setBrand(logoIcon, "MyApp");
+
+// Create dropdown menu
+Map<String, Runnable> productsMenu = new LinkedHashMap<>();
+productsMenu.put("All Products", () -> navigate("/products"));
+productsMenu.put("Categories", () -> navigate("/categories"));
+productsMenu.put("New Arrivals", () -> navigate("/new"));
+
+header.addMenuDropdown("Products", productsMenu);
+header.addMenuItem("Services", () -> navigate("/services"));
+```
+
+### With User Profile
+
+```java
+JHeader header = new JHeader();
+header.setBrand(null, "Dashboard");
+
+header.addMenuItem("Home", () -> navigate("/"));
+header.addMenuItem("Settings", () -> navigate("/settings"));
+
+// Add user profile with logout
+header.setUserProfile(
+    "John Doe",
+    "john@example.com",
+    "JD",
+    () -> handleLogout()
+);
+```
+
+### Custom Toolbar Items
+
+```java
+JHeader header = new JHeader();
+header.setBrand(logoIcon, "MyApp");
+
+// Add notification icon
+Button notificationBtn = new Button();
+notificationBtn.setGraphic(JIcon.BELL.view());
+notificationBtn.setOnAction(e -> showNotifications());
+
+header.addToolbarItem(notificationBtn);
+
+// Add search
+JSearchInput searchInput = new JSearchInput();
+searchInput.setPlaceholder("Search...");
+header.addToolbarItem(searchInput);
+
+// Then add user profile
+header.setUserProfile("Jane Doe", "jane@example.com", "JD", this::logout);
+```
+
+### Complete Example
+
+```java
+JHeader header = new JHeader();
+
+// Branding
+ImageView logo = new ImageView(new Image("/logo.png"));
+logo.setFitHeight(30);
+logo.setPreserveRatio(true);
+header.setBrand(logo, "Enterprise App");
+
+// Navigation menu
+header.addMenuItem("Dashboard", () -> navigate("/dashboard"));
+
+Map<String, Runnable> reportsMenu = new LinkedHashMap<>();
+reportsMenu.put("Sales Report", () -> navigate("/reports/sales"));
+reportsMenu.put("Analytics", () -> navigate("/reports/analytics"));
+reportsMenu.put("Export Data", () -> exportData());
+header.addMenuDropdown("Reports", reportsMenu);
+
+header.addMenuItem("Help", () -> navigate("/help"));
+
+// Toolbar
+JButton newBtn = new JButton("New")
+    .setVariant(JButton.ButtonVariant.PRIMARY)
+    .setSize(JButton.ButtonSize.SM);
+newBtn.setOnAction(e -> createNew());
+header.addToolbarItem(newBtn);
+
+// User profile
+header.setUserProfile(
+    "Admin User",
+    "admin@company.com",
+    "AU",
+    this::handleLogout
+);
+```
+
+### API Reference
+
+<ParamField path="setBrand(Node, String)" type="JHeader">
+  Set logo image and app title
+</ParamField>
+
+<ParamField path="addMenuItem(String, Runnable)" type="JHeader">
+  Add a clickable menu item
+</ParamField>
+
+<ParamField path="addMenuDropdown(String, Map<String, Runnable>)" type="JHeader">
+  Add a dropdown menu with multiple items
+</ParamField>
+
+<ParamField path="addToolbarItem(Node)" type="JHeader">
+  Add custom node to the toolbar area (before user profile)
+</ParamField>
+
+<ParamField path="setUserProfile(String, String, String, Runnable)" type="JHeader">
+  Set user profile with name, email, initials, and logout action
+</ParamField>
+
+---
+
+## JAccordion
+
+Collapsible content panels with expandable sections.
+
+### Basic Usage
+
+```java
+JAccordion accordion = new JAccordion();
+
+JAccordionPane pane1 = new JAccordionPane(
+    "Section 1",
+    new Label("Content for section 1")
+);
+
+JAccordionPane pane2 = new JAccordionPane(
+    "Section 2",
+    new Label("Content for section 2")
+);
+
+JAccordionPane pane3 = new JAccordionPane(
+    "Section 3",
+    new Label("Content for section 3")
+);
+
+accordion.getPanes().addAll(pane1, pane2, pane3);
+```
+
+### Rich Content Panels
+
+```java
+JAccordion accordion = new JAccordion();
+
+// FAQ Panel
+VBox faqContent = new VBox(10);
+faqContent.setPadding(new Insets(15));
+faqContent.getChildren().addAll(
+    new Label("Answer to frequently asked question..."),
+    new JButton("Learn More").setVariant(JButton.ButtonVariant.LIGHT_PRIMARY)
+);
+
+JAccordionPane faqPane = new JAccordionPane("How do I get started?", faqContent);
+
+// Settings Panel
+VBox settingsContent = new VBox(10);
+settingsContent.setPadding(new Insets(15));
+
+JCheckBox notificationsCheck = new JCheckBox("Enable notifications");
+JCheckBox updatesCheck = new JCheckBox("Automatic updates");
+settingsContent.getChildren().addAll(notificationsCheck, updatesCheck);
+
+JAccordionPane settingsPane = new JAccordionPane("Settings", settingsContent);
+
+accordion.getPanes().addAll(faqPane, settingsPane);
+```
+
+### Programmatic Control
+
+```java
+JAccordion accordion = new JAccordion();
+
+JAccordionPane pane1 = new JAccordionPane("Introduction", content1);
+JAccordionPane pane2 = new JAccordionPane("Advanced", content2);
+
+accordion.getPanes().addAll(pane1, pane2);
+
+// Expand specific pane
+accordion.setExpandedPane(pane1);
+
+// Get currently expanded pane
+TitledPane expanded = accordion.getExpandedPane();
+```
+
+### Nested Accordions
+
+```java
+JAccordion mainAccordion = new JAccordion();
+
+// Nested accordion in a panel
+JAccordion nestedAccordion = new JAccordion();
+nestedAccordion.getPanes().addAll(
+    new JAccordionPane("Subsection 1.1", new Label("Content 1.1")),
+    new JAccordionPane("Subsection 1.2", new Label("Content 1.2"))
+);
+
+JAccordionPane mainPane1 = new JAccordionPane("Section 1", nestedAccordion);
+JAccordionPane mainPane2 = new JAccordionPane("Section 2", new Label("Content 2"));
+
+mainAccordion.getPanes().addAll(mainPane1, mainPane2);
+```
+
+### Form Sections
+
+```java
+JAccordion accordion = new JAccordion();
+
+// Personal Info Section
+VBox personalInfo = new VBox(10);
+personalInfo.setPadding(new Insets(15));
+
+JInput nameInput = new JInput();
+nameInput.setPlaceholder("Full Name");
+
+JInput emailInput = new JInput();
+emailInput.setPlaceholder("Email Address");
+
+personalInfo.getChildren().addAll(
+    new Label("Name:"), nameInput,
+    new Label("Email:"), emailInput
+);
+
+JAccordionPane personalPane = new JAccordionPane("Personal Information", personalInfo);
+
+// Address Section
+VBox addressInfo = new VBox(10);
+addressInfo.setPadding(new Insets(15));
+
+JInput streetInput = new JInput();
+streetInput.setPlaceholder("Street Address");
+
+JInput cityInput = new JInput();
+cityInput.setPlaceholder("City");
+
+addressInfo.getChildren().addAll(
+    new Label("Street:"), streetInput,
+    new Label("City:"), cityInput
+);
+
+JAccordionPane addressPane = new JAccordionPane("Address", addressInfo);
+
+accordion.getPanes().addAll(personalPane, addressPane);
+accordion.setExpandedPane(personalPane); // Expand first by default
+```
+
+### API Reference - JAccordion
+
+<ParamField path="getPanes()" type="ObservableList<TitledPane>">
+  List of accordion panels
+</ParamField>
+
+<ParamField path="setExpandedPane(TitledPane)" type="void">
+  Expand a specific panel
+</ParamField>
+
+<ParamField path="getExpandedPane()" type="TitledPane">
+  Get currently expanded panel
+</ParamField>
+
+### API Reference - JAccordionPane
+
+<ParamField path="new JAccordionPane(String, Node)" type="constructor">
+  Create panel with title and content
+</ParamField>
+
+<ParamField path="setAnimated(boolean)" type="void">
+  Enable or disable expand/collapse animation
+</ParamField>
+
+<ParamField path="setText(String)" type="void">
+  Set panel title
+</ParamField>
+
+<ParamField path="setContent(Node)" type="void">
+  Set panel content
+</ParamField>
+
+<ParamField path="setExpanded(boolean)" type="void">
+  Expand or collapse the panel
+</ParamField>

@@ -1,0 +1,174 @@
+---
+title: JModal
+description: Modal dialog component for displaying content in an overlay
+---
+
+A modal dialog component that displays content in a centered overlay with a backdrop, supporting multiple sizes and animations.
+
+## Constructor
+
+<ParamField path="JModal(Node content)" type="constructor">
+  Creates a new modal with the specified content and medium size.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="content" type="Node" required>
+      The content to display in the modal
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="JModal(Node content, Size size)" type="constructor">
+  Creates a new modal with the specified content and size.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="content" type="Node" required>
+      The content to display in the modal
+    </ResponseField>
+    <ResponseField name="size" type="Size" required>
+      The modal size (SMALL, MEDIUM, LARGE, FULL)
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Enums
+
+### Size
+
+Defines the modal size:
+- `SMALL` - Small modal (`.modal-sm`)
+- `MEDIUM` - Medium modal (`.modal-md`) - Default
+- `LARGE` - Large modal (`.modal-lg`)
+- `FULL` - Full-screen modal (`.modal-full`)
+
+## Methods
+
+<ParamField path="show()" type="void">
+  Displays the modal with entrance animation.
+</ParamField>
+
+<ParamField path="close()" type="void">
+  Closes the modal with exit animation.
+</ParamField>
+
+<ParamField path="setCloseOnBackdropClick(boolean close)" type="JModal">
+  Configures whether clicking the backdrop closes the modal.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="close" type="boolean" required>
+      true to close on backdrop click (default), false to prevent it
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setSize(Size size)" type="JModal">
+  Changes the modal size.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="size" type="Size" required>
+      The new size (SMALL, MEDIUM, LARGE, FULL)
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Usage Examples
+
+### Basic Modal
+
+```java
+VBox content = new VBox(16);
+content.getChildren().addAll(
+    new JHeader("Confirm Action", 3),
+    new JLabel("Are you sure you want to proceed?"),
+    new HBox(12, 
+        new JButton("Cancel").setOnAction(e -> modal.close()),
+        new JButton("Confirm").addClass("btn-primary")
+    )
+);
+
+JModal modal = new JModal(content);
+modal.show();
+```
+
+### Custom Size Modal
+
+```java
+JModal largeModal = new JModal(content, JModal.Size.LARGE);
+largeModal.show();
+```
+
+### Prevent Backdrop Close
+
+```java
+JModal modal = new JModal(content);
+modal.setCloseOnBackdropClick(false);
+modal.show();
+```
+
+### Full-Screen Modal
+
+```java
+JModal fullModal = new JModal(content, JModal.Size.FULL);
+fullModal.show();
+```
+
+### Modal with Form
+
+```java
+VBox form = new VBox(16);
+form.getStyleClass().add("modal-content");
+form.setPadding(new Insets(24));
+
+form.getChildren().addAll(
+    new JHeader("Edit Profile", 2),
+    new JInput().setLabel("Name"),
+    new JInput().setLabel("Email"),
+    new HBox(12,
+        new JButton("Cancel")
+            .addClass("btn-secondary")
+            .setOnAction(e -> modal.close()),
+        new JButton("Save")
+            .addClass("btn-primary")
+            .setOnAction(e -> {
+                saveProfile();
+                modal.close();
+            })
+    )
+);
+
+JModal modal = new JModal(form, JModal.Size.MEDIUM);
+modal.show();
+```
+
+## Animations
+
+The modal includes built-in animations:
+
+**Entrance Animation:**
+- Backdrop fades in (300ms)
+- Dialog scales from 0.8 to 1.0 (300ms)
+- Dialog fades in (300ms)
+
+**Exit Animation:**
+- Backdrop fades out (200ms)
+- Dialog scales from 1.0 to 0.9 (200ms)
+- Dialog fades out (200ms)
+
+## Requirements
+
+The modal requires a modal container to be set up in your application. Use `JJArroyo.getModalContainer()` to access the modal root container.
+
+```java
+// In your main application setup:
+StackPane modalContainer = new StackPane();
+JJArroyo.setModalContainer(modalContainer);
+```
+
+## Style Classes
+
+- `.j-modal-root` - Root container
+- `.j-modal-backdrop` - Dark overlay backdrop
+- `.j-modal-dialog` - Dialog container
+- `.modal-sm` - Small size modifier
+- `.modal-md` - Medium size modifier
+- `.modal-lg` - Large size modifier
+- `.modal-full` - Full-screen modifier

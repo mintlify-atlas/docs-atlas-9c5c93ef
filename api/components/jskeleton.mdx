@@ -1,0 +1,286 @@
+---
+title: JSkeleton
+description: Animated skeleton placeholders for loading states
+---
+
+Skeleton loading placeholders with pulse animation, providing visual feedback while content is loading.
+
+## Factory Methods
+
+JSkeleton provides static factory methods for common skeleton patterns.
+
+<ParamField path="JSkeleton.line(double width)" type="JSkeleton" static>
+  Creates a single line skeleton placeholder.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="width" type="double" required>
+      Width of the line in pixels
+    </ResponseField>
+  </Expandable>
+  
+  <ResponseField name="returns" type="JSkeleton">
+    A line skeleton with 14px height
+  </ResponseField>
+</ParamField>
+
+<ParamField path="JSkeleton.rect(double width, double height)" type="Region" static>
+  Creates a rectangular skeleton placeholder.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="width" type="double" required>
+      Width in pixels
+    </ResponseField>
+    <ResponseField name="height" type="double" required>
+      Height in pixels
+    </ResponseField>
+  </Expandable>
+  
+  <ResponseField name="returns" type="Region">
+    A rectangular skeleton
+  </ResponseField>
+</ParamField>
+
+<ParamField path="JSkeleton.avatar(double size)" type="Region" static>
+  Creates a circular avatar skeleton.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="size" type="double" required>
+      Diameter of the circle in pixels
+    </ResponseField>
+  </Expandable>
+  
+  <ResponseField name="returns" type="Region">
+    A circular avatar skeleton
+  </ResponseField>
+</ParamField>
+
+<ParamField path="JSkeleton.avatar()" type="Region" static>
+  Creates a circular avatar skeleton with default size (40px).
+  
+  <ResponseField name="returns" type="Region">
+    A 40px circular avatar skeleton
+  </ResponseField>
+</ParamField>
+
+<ParamField path="JSkeleton.text(int lines)" type="Region" static>
+  Creates multiple text line skeletons.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="lines" type="int" required>
+      Number of text lines to create
+    </ResponseField>
+  </Expandable>
+  
+  <ResponseField name="returns" type="Region">
+    A VBox containing multiple line skeletons (last line is shorter)
+  </ResponseField>
+</ParamField>
+
+<ParamField path="JSkeleton.card()" type="Region" static>
+  Creates a card skeleton with image and text placeholders.
+  
+  <ResponseField name="returns" type="Region">
+    A 300px wide card skeleton with image (300x140) and text lines
+  </ResponseField>
+</ParamField>
+
+<ParamField path="JSkeleton.userRow()" type="Region" static>
+  Creates a user row skeleton with avatar and text lines.
+  
+  <ResponseField name="returns" type="Region">
+    An HBox with 40px avatar and 2 text lines
+  </ResponseField>
+</ParamField>
+
+<ParamField path="JSkeleton.table(int rows, int cols)" type="Region" static>
+  Creates a table skeleton with the specified dimensions.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="rows" type="int" required>
+      Number of rows
+    </ResponseField>
+    <ResponseField name="cols" type="int" required>
+      Number of columns
+    </ResponseField>
+  </Expandable>
+  
+  <ResponseField name="returns" type="Region">
+    A VBox containing table-like skeleton rows
+  </ResponseField>
+</ParamField>
+
+## Instance Methods
+
+<ParamField path="stop()" type="void">
+  Stops the pulse animation and hides the skeleton.
+</ParamField>
+
+## Usage Examples
+
+### Basic Skeletons
+
+```java
+// Single line
+Region line = JSkeleton.line(280);
+
+// Rectangle (e.g., image placeholder)
+Region imagePlaceholder = JSkeleton.rect(400, 250);
+
+// Avatar
+Region avatar = JSkeleton.avatar(); // 40px default
+Region largeAvatar = JSkeleton.avatar(80);
+```
+
+### Text Loading
+
+```java
+// 3 lines of text
+Region textSkeleton = JSkeleton.text(3);
+
+// Use in a container
+VBox container = new VBox(12);
+container.getChildren().add(JSkeleton.text(5));
+```
+
+### Card Loading
+
+```java
+// Pre-built card skeleton
+Region cardSkeleton = JSkeleton.card();
+
+// Or build custom card
+VBox customCard = new VBox(12);
+customCard.getChildren().addAll(
+    JSkeleton.rect(300, 200),  // Image
+    JSkeleton.line(250),        // Title
+    JSkeleton.text(3)           // Description
+);
+```
+
+### User List Loading
+
+```java
+VBox userList = new VBox(16);
+for (int i = 0; i < 5; i++) {
+    userList.getChildren().add(JSkeleton.userRow());
+}
+```
+
+### Table Loading
+
+```java
+// 5 rows x 4 columns
+Region tableSkeleton = JSkeleton.table(5, 4);
+```
+
+### Replace with Real Content
+
+```java
+VBox container = new VBox();
+Region skeleton = JSkeleton.text(3);
+container.getChildren().add(skeleton);
+
+// Load data
+loadData().thenAccept(data -> {
+    Platform.runLater(() -> {
+        skeleton.setVisible(false);
+        skeleton.setManaged(false);
+        container.getChildren().add(createRealContent(data));
+    });
+});
+```
+
+### Stop Animation
+
+```java
+JSkeleton skeleton = JSkeleton.line(300);
+// ... later
+skeleton.stop(); // Stops pulsing and hides
+```
+
+### Dashboard Skeleton
+
+```java
+GridPane dashboard = new GridPane();
+dashboard.setHgap(24);
+dashboard.setVgap(24);
+
+// Stats cards
+for (int i = 0; i < 4; i++) {
+    VBox statCard = new VBox(12);
+    statCard.getChildren().addAll(
+        JSkeleton.line(100),
+        JSkeleton.rect(60, 40)
+    );
+    dashboard.add(statCard, i % 2, i / 2);
+}
+
+// Main chart area
+VBox chartArea = new VBox(12);
+chartArea.getChildren().addAll(
+    JSkeleton.line(150),
+    JSkeleton.rect(600, 300)
+);
+dashboard.add(chartArea, 0, 2, 2, 1);
+```
+
+### Profile Page Skeleton
+
+```java
+VBox profile = new VBox(24);
+
+// Header with avatar
+HBox header = new HBox(16);
+header.getChildren().addAll(
+    JSkeleton.avatar(100),
+    new VBox(8,
+        JSkeleton.line(200),
+        JSkeleton.line(150),
+        JSkeleton.line(180)
+    )
+);
+
+// Content sections
+VBox content = new VBox(16);
+for (int i = 0; i < 3; i++) {
+    content.getChildren().addAll(
+        JSkeleton.line(120),
+        JSkeleton.text(2)
+    );
+}
+
+profile.getChildren().addAll(header, content);
+```
+
+## Animation
+
+The skeleton automatically pulses with an opacity animation:
+- Cycles between 0.6 and 0.3 opacity
+- 1600ms cycle duration (800ms fade out, 800ms fade in)
+- Infinite repeat
+- Automatically stops when removed from scene
+
+## Features
+
+- Automatic pulse animation
+- Multiple pre-built patterns
+- Customizable dimensions
+- Auto-stop when removed from scene
+- Lightweight and performant
+- Chainable factory methods
+
+## Style Classes
+
+- `.j-skeleton` - Base skeleton class
+- `.j-skeleton-line` - Line variant
+- `.j-skeleton-rect` - Rectangle variant
+- `.j-skeleton-avatar` - Circular avatar variant
+- `.j-skeleton-card` - Card container
+
+## Best Practices
+
+1. Use skeletons that match the shape of your actual content
+2. Keep the same layout structure as your real content
+3. Stop animations when replacing with real content
+4. Use appropriate sizes to avoid layout shifts
+5. Consider showing skeletons only after a short delay to avoid flashing on fast loads

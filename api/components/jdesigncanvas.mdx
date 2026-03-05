@@ -1,0 +1,240 @@
+---
+title: JDesignCanvas
+description: Interactive drag-and-drop canvas for designing label layouts
+icon: palette
+---
+
+## Overview
+
+JDesignCanvas is an interactive design surface for creating label layouts. It supports drag-and-drop field placement, reordering, and zoom controls for barcode/label design applications.
+
+## Constructor
+
+```java
+JDesignCanvas canvas = new JDesignCanvas();
+```
+
+Creates a new design canvas with default configuration.
+
+## Core Methods
+
+### Layout Configuration
+
+<ResponseField name="setSupportedLines" type="void">
+  Sets the number of text line slots on the label
+  
+  ```java
+  canvas.setSupportedLines(4);
+  ```
+  
+  <ParamField path="count" type="int">
+    Number of text line slots to display
+  </ParamField>
+  
+  - Clears existing slots and creates new ones
+  - Barcode area is always added at the bottom
+  - Each slot can accept dragged fields
+</ResponseField>
+
+### Zoom Control
+
+<ResponseField name="zoomIn" type="void">
+  Increases the canvas zoom level by 10%
+  
+  ```java
+  canvas.zoomIn();
+  ```
+  
+  - Maximum zoom: 200% (2.0x)
+  - Smooth scale transform
+</ResponseField>
+
+<ResponseField name="zoomOut" type="void">
+  Decreases the canvas zoom level by 10%
+  
+  ```java
+  canvas.zoomOut();
+  ```
+  
+  - Minimum zoom: 50% (0.5x)
+  - Smooth scale transform
+</ResponseField>
+
+### Data Export
+
+<ResponseField name="getDesignData" type="Map&lt;String, Object&gt;">
+  Exports the current label design configuration
+  
+  ```java
+  Map&lt;String, Object&gt; design = canvas.getDesignData();
+  List<Map&lt;String, String&gt;> slots = (List) design.get("slots");
+  ```
+  
+  Returns a map containing:
+  - `"slots"`: List of slot configurations in order
+  
+  Each slot map contains:
+  - `"type"`: `"text"` or `"barcode"`
+  - `"fieldId"`: Field identifier (if assigned)
+</ResponseField>
+
+### Reset
+
+<ResponseField name="reset" type="void">
+  Resets the canvas to initial state
+  
+  ```java
+  canvas.reset();
+  ```
+  
+  - Clears all slots
+  - Resets barcode area to placeholder
+  - Resets zoom to 100%
+</ResponseField>
+
+## Drag & Drop Behavior
+
+### Accepting Drops
+
+The canvas accepts drag gestures with string data (field IDs):
+
+```java
+// From a draggable source
+Dragboard db = startDragAndDrop(TransferMode.COPY);
+ClipboardContent content = new ClipboardContent();
+content.putString("customer_name");
+db.setContent(content);
+```
+
+### Drop Targets
+
+- **Text Line Slots**: Accept any field, display as uppercase label
+- **Barcode Area**: Accepts field, displays as visual barcode representation
+- **Reordering**: Slots can be reordered by dragging within the canvas
+
+### Slot Reordering
+
+Internal drag operations use the prefix `_REORDER_` + index:
+- Drag from any slot
+- Drop on another slot to swap positions
+- Visual feedback during drag
+
+## Visual Design
+
+### Label Media
+
+- Size: 420×320px (simulates physical label)
+- White background with subtle shadow
+- Rounded corners (16px radius)
+- Centered on canvas with padding
+
+### Slots
+
+- Dashed border when empty
+- Solid background when filled
+- Height: 60px per text line
+- Spacing: 15px between slots
+
+### Barcode Area
+
+- Height: 100px
+- Displays visual barcode pattern when assigned
+- 30 random-width black lines when filled
+
+## Example Usage
+
+```java
+// Create canvas
+JDesignCanvas canvas = new JDesignCanvas();
+canvas.setSupportedLines(3);
+
+// Add zoom controls
+JZoom zoom = new JZoom();
+zoom.setOnZoomIn(() -> canvas.zoomIn());
+zoom.setOnZoomOut(() -> canvas.zoomOut());
+
+// Create draggable fields
+JDraggableField nameField = new JDraggableField(
+    "customer_name", 
+    "Customer Name", 
+    JIcon.PERSON
+);
+
+JDraggableField barcodeField = new JDraggableField(
+    "order_id", 
+    "Order ID", 
+    JIcon.BARCODE
+);
+
+// Layout
+VBox sidebar = new VBox(10, nameField, barcodeField);
+HBox layout = new HBox(20);
+layout.getChildren().addAll(sidebar, canvas);
+
+StackPane root = new StackPane(layout);
+StackPane.setAlignment(zoom, Pos.TOP_RIGHT);
+StackPane.setMargin(zoom, new Insets(20));
+root.getChildren().add(zoom);
+
+// Export design
+Button saveBtn = new JButton("Save Design", JIcon.SAVE);
+saveBtn.setOnAction(e -> {
+    Map&lt;String, Object&gt; design = canvas.getDesignData();
+    System.out.println("Design: " + design);
+});
+```
+
+## Design Data Format
+
+```json
+{
+  "slots": [
+    {
+      "type": "text",
+      "fieldId": "customer_name"
+    },
+    {
+      "type": "text",
+      "fieldId": "order_date"
+    },
+    {
+      "type": "barcode",
+      "fieldId": "order_id"
+    }
+  ]
+}
+```
+
+## Styling
+
+Style classes:
+- `.j-design-canvas` - Main container
+- `.label-media` - The white label surface
+- `.canvas-slot` - Each droppable slot
+- `.barcode-drop-zone` - Barcode area
+- `.drag-over` - Applied during drag hover
+
+## Internal Components
+
+### Label Surface Properties
+
+- Background: Pure white (`#ffffff`)
+- Border: Light gray (`#e2e8f0`)
+- Shadow: Soft drop shadow with 30px blur
+- Padding: 25px
+- Border radius: 16px
+
+### Canvas Background
+
+- Color: `#f8fafc` (studio gray)
+- Padding: 40px
+- Simulates design workspace
+
+## Notes
+
+- Uses JavaFX `Scale` transform for zoom (maintains quality)
+- Pivot point is center of label media
+- Drag feedback via opacity and border color changes
+- Automatically handles slot index updates during reordering
+- Barcode visualization uses random bar widths (2px or 4px)
+- All field IDs are converted to lowercase in exported data

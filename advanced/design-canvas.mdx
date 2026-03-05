@@ -1,0 +1,527 @@
+---
+title: 'Design Canvas'
+description: 'Interactive drag-and-drop canvas for designing label layouts'
+icon: 'palette'
+---
+
+## Overview
+
+The `JDesignCanvas` component provides an interactive visual design surface for creating label layouts. It supports:
+
+- Drag-and-drop field placement from sidebar
+- Dynamic slot configuration (text lines and barcode area)
+- Visual label media with premium styling
+- Zoom controls (0.5x to 2.0x)
+- Slot reordering via drag-and-drop
+- Export design configuration as structured data
+
+<Info>
+The design canvas simulates a physical label media (420x320px) with a white background, soft shadow, and rounded corners for a premium studio look.
+</Info>
+
+## Basic Usage
+
+```java
+import com.jjarroyo.components.JDesignCanvas;
+import com.jjarroyo.components.JDraggableField;
+
+public class LabelDesigner extends Application {
+    @Override
+    public void start(Stage stage) {
+        JDesignCanvas canvas = new JDesignCanvas();
+        
+        // Configure for 4 text lines + barcode
+        canvas.setSupportedLines(4);
+        
+        Scene scene = new Scene(canvas, 800, 600);
+        stage.setScene(scene);
+        stage.show();
+    }
+}
+```
+
+## Label Media Configuration
+
+Configure the number of text slots on the label:
+
+```java
+// Set number of text lines (excludes barcode area)
+canvas.setSupportedLines(3);  // 3 text lines + barcode area
+canvas.setSupportedLines(5);  // 5 text lines + barcode area
+```
+
+<Note>
+The barcode area is always added automatically at the end of the label, regardless of the number of text lines configured.
+</Note>
+
+### Label Dimensions
+
+The label media has fixed dimensions (JDesignCanvas.java:37-48):
+
+- **Width**: 420px
+- **Height**: 320px  
+- **Padding**: 25px
+- **Spacing**: 15px between slots
+- **Border radius**: 16px
+- **Shadow**: Soft drop shadow for depth
+
+## Drag and Drop System
+
+The canvas accepts draggable fields from the sidebar:
+
+<Steps>
+  <Step title="Create draggable fields">
+    Use `JDraggableField` to create draggable items
+    
+    ```java
+    JDraggableField nameField = new JDraggableField(
+        "product_name",
+        "Product Name",
+        JIcon.TAG
+    );
+    
+    JDraggableField skuField = new JDraggableField(
+        "sku",
+        "SKU",
+        JIcon.BARCODE
+    );
+    ```
+  </Step>
+  
+  <Step title="Drop onto canvas">
+    Drag fields onto specific slots or the barcode area
+    
+    ```java
+    // Canvas automatically handles drop events
+    // Fields show their ID in uppercase when placed
+    ```
+  </Step>
+  
+  <Step title="Reorder slots">
+    Drag slots within the canvas to reorder them
+    
+    ```java
+    // Drag a filled slot onto another to swap positions
+    ```
+  </Step>
+</Steps>
+
+### Drop Zones
+
+The canvas has two types of drop zones:
+
+<CardGroup cols={2}>
+  <Card title="Text Slots" icon="text">
+    Display field data as text labels. Configurable count via `setSupportedLines()`.
+  </Card>
+  <Card title="Barcode Area" icon="barcode">
+    Displays field data as visual barcode representation with vertical lines.
+  </Card>
+</CardGroup>
+
+## Visual Feedback
+
+### Slot States
+
+<Tabs>
+  <Tab title="Empty Slot">
+    ```java
+    // Dashed border with placeholder text
+    // Style: -fx-border-style: dashed
+    // Shows: "TEXT LINE N" / "BARCODE PLACEMENT"
+    ```
+  </Tab>
+  
+  <Tab title="Hover State">
+    ```java
+    // Primary color border with light background
+    // Style: -fx-border-color: -color-primary
+    // Background: rgba(59, 130, 246, 0.05)
+    ```
+  </Tab>
+  
+  <Tab title="Filled Slot">
+    ```java
+    // Transparent border with accent background
+    // Shows field ID in uppercase (e.g., "PRODUCT NAME")
+    // Font: Large, bold, slate-800
+    ```
+  </Tab>
+</Tabs>
+
+### Barcode Visualization
+
+When a field is dropped on the barcode area (JDesignCanvas.java:251-276):
+
+```java
+// Creates visual barcode representation:
+// - 30 vertical lines with random widths (2px or 4px)
+// - 40px height
+// - Black lines on white background
+// - Field ID displayed below in uppercase
+```
+
+<Accordion title="Visual Example">
+
+```
+┌─────────────────────────────────────┐
+│  ║ ║║ ║ ║║║ ║ ║║ ║ ║║║ ║║ ║ ║  │  Barcode lines
+│  ║ ║║ ║ ║║║ ║ ║║ ║ ║║║ ║║ ║ ║  │
+│         PRODUCT SKU                 │  Field ID
+└─────────────────────────────────────┘
+```
+
+</Accordion>
+
+## Zoom Controls
+
+Zoom the canvas between 0.5x and 2.0x:
+
+```java
+// Zoom in (increment by 0.1, max 2.0)
+canvas.zoomIn();
+
+// Zoom out (decrement by 0.1, min 0.5)
+canvas.zoomOut();
+
+// Create zoom buttons
+Button zoomInBtn = new Button("+");
+zoomInBtn.setOnAction(e -> canvas.zoomIn());
+
+Button zoomOutBtn = new Button("-");
+zoomOutBtn.setOnAction(e -> canvas.zoomOut());
+```
+
+<Note>
+Zoom is applied using JavaFX `Scale` transform with the pivot point at the center of the label media for smooth scaling.
+</Note>
+
+## Export Design Data
+
+Extract the current design configuration:
+
+```java
+import java.util.Map;
+import java.util.List;
+
+Map<String, Object> designData = canvas.getDesignData();
+
+// Structure:
+// {
+//   "slots": [
+//     {"type": "text", "fieldId": "product_name"},
+//     {"type": "text", "fieldId": "description"},
+//     {"type": "barcode", "fieldId": "sku"}
+//   ]
+// }
+
+List<Map<String, String>> slots = 
+    (List<Map<String, String>>) designData.get("slots");
+
+for (Map<String, String> slot : slots) {
+    String type = slot.get("type");      // "text" or "barcode"
+    String fieldId = slot.get("fieldId"); // Field ID or null if empty
+    
+    System.out.printf("Slot type: %s, field: %s%n", type, fieldId);
+}
+```
+
+### Design Data Structure
+
+```json
+{
+  "slots": [
+    {
+      "type": "text",
+      "fieldId": "product_name"
+    },
+    {
+      "type": "text",
+      "fieldId": "sku"
+    },
+    {
+      "type": "barcode",
+      "fieldId": "barcode_value"
+    }
+  ]
+}
+```
+
+<Info>
+Empty slots (not assigned a field) will have `type` but no `fieldId` in the exported data.
+</Info>
+
+## Reset Canvas
+
+Clear all slots and reset to initial state:
+
+```java
+// Reset canvas to empty state
+canvas.reset();
+
+// After reset:
+// - All slots are cleared
+// - Zoom is reset to 1.0x
+// - Barcode area shows placeholder
+```
+
+## Complete Example
+
+<CodeGroup>
+
+```java Label Designer
+import com.jjarroyo.components.*;
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
+
+public class LabelDesignerApp extends Application {
+    @Override
+    public void start(Stage stage) {
+        BorderPane root = new BorderPane();
+        root.setPadding(new Insets(10));
+        
+        // Canvas in center
+        JDesignCanvas canvas = new JDesignCanvas();
+        canvas.setSupportedLines(4);
+        root.setCenter(canvas);
+        
+        // Sidebar with draggable fields
+        VBox sidebar = createSidebar();
+        root.setLeft(sidebar);
+        
+        // Toolbar
+        ToolBar toolbar = createToolbar(canvas);
+        root.setTop(toolbar);
+        
+        Scene scene = new Scene(root, 1200, 800);
+        stage.setTitle("Label Designer");
+        stage.setScene(scene);
+        stage.show();
+    }
+    
+    private VBox createSidebar() {
+        VBox sidebar = new VBox(10);
+        sidebar.setPadding(new Insets(10));
+        sidebar.setPrefWidth(250);
+        sidebar.setStyle("-fx-background-color: -color-bg-default;");
+        
+        JLabel title = new JLabel("Available Fields");
+        title.addClass("text-lg", "font-bold");
+        
+        // Create draggable fields
+        JDraggableField[] fields = {
+            new JDraggableField("product_name", "Product Name", JIcon.TAG),
+            new JDraggableField("sku", "SKU", JIcon.HASHTAG),
+            new JDraggableField("price", "Price", JIcon.DOLLAR_SIGN),
+            new JDraggableField("description", "Description", JIcon.ALIGN_LEFT),
+            new JDraggableField("barcode", "Barcode", JIcon.BARCODE),
+            new JDraggableField("date", "Date", JIcon.CALENDAR),
+        };
+        
+        sidebar.getChildren().add(title);
+        sidebar.getChildren().addAll(fields);
+        
+        return sidebar;
+    }
+    
+    private ToolBar createToolbar(JDesignCanvas canvas) {
+        ToolBar toolbar = new ToolBar();
+        
+        Button zoomInBtn = new Button("Zoom In");
+        zoomInBtn.setOnAction(e -> canvas.zoomIn());
+        
+        Button zoomOutBtn = new Button("Zoom Out");
+        zoomOutBtn.setOnAction(e -> canvas.zoomOut());
+        
+        Button resetBtn = new Button("Reset");
+        resetBtn.setOnAction(e -> {
+            canvas.reset();
+            canvas.setSupportedLines(4);
+        });
+        
+        Button exportBtn = new Button("Export Design");
+        exportBtn.setOnAction(e -> {
+            var data = canvas.getDesignData();
+            System.out.println("Design: " + data);
+            
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Design Exported");
+            alert.setHeaderText("Design configuration:");
+            alert.setContentText(data.toString());
+            alert.showAndWait();
+        });
+        
+        ComboBox<Integer> linesCombo = new ComboBox<>();
+        linesCombo.getItems().addAll(2, 3, 4, 5, 6);
+        linesCombo.setValue(4);
+        linesCombo.setOnAction(e -> 
+            canvas.setSupportedLines(linesCombo.getValue()));
+        
+        toolbar.getItems().addAll(
+            new Label("Lines:"),
+            linesCombo,
+            new Separator(),
+            zoomInBtn,
+            zoomOutBtn,
+            new Separator(),
+            resetBtn,
+            exportBtn
+        );
+        
+        return toolbar;
+    }
+    
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+```
+
+```java Custom Fields
+import com.jjarroyo.components.JDraggableField;
+import com.jjarroyo.components.JIcon;
+
+// Create custom draggable fields
+public class CustomFields {
+    public static JDraggableField[] createProductFields() {
+        return new JDraggableField[] {
+            new JDraggableField(
+                "product_id",
+                "Product ID",
+                JIcon.HASHTAG
+            ),
+            new JDraggableField(
+                "product_name",
+                "Product Name",
+                JIcon.TAG
+            ),
+            new JDraggableField(
+                "sku",
+                "SKU",
+                JIcon.BARCODE
+            ),
+            new JDraggableField(
+                "price",
+                "Price",
+                JIcon.DOLLAR_SIGN
+            ),
+            new JDraggableField(
+                "manufacturer",
+                "Manufacturer",
+                JIcon.BUILDING
+            )
+        };
+    }
+}
+```
+
+</CodeGroup>
+
+## Slot Reordering
+
+Slots can be reordered by dragging (JDesignCanvas.java:212-223):
+
+```java
+// User drags a slot onto another slot:
+// 1. Source slot index is determined from drag data
+// 2. Target slot index is determined from drop position
+// 3. Slots are swapped in the VBox children list
+// 4. Visual order updates automatically
+```
+
+<Steps>
+  <Step title="Start drag">
+    Click and hold on a slot (filled or empty)
+  </Step>
+  <Step title="Drag to target">
+    Drag over another slot - it highlights with primary color
+  </Step>
+  <Step title="Drop to swap">
+    Release to swap the two slots' positions
+  </Step>
+</Steps>
+
+## Integration with JDraggableField
+
+The canvas is designed to work with `JDraggableField` components:
+
+```java
+import com.jjarroyo.components.JDraggableField;
+import com.jjarroyo.components.JIcon;
+
+// JDraggableField extends JSidebarItem
+// It automatically handles drag events
+JDraggableField field = new JDraggableField(
+    "field_id",      // Transferred during drag
+    "Display Name",  // Shown in sidebar
+    JIcon.TAG        // Icon
+);
+
+// Get field properties
+String id = field.getFieldId();     // "field_id"
+String name = field.getFieldName(); // "Display Name"
+```
+
+See [Custom Components](/advanced/custom-components) for more details on `JDraggableField`.
+
+## API Reference
+
+### Constructor
+
+```java
+public JDesignCanvas()
+```
+
+Creates a new design canvas with default configuration.
+
+### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `setSupportedLines(int)` | `void` | Set number of text line slots |
+| `zoomIn()` | `void` | Zoom in by 0.1 (max 2.0) |
+| `zoomOut()` | `void` | Zoom out by 0.1 (min 0.5) |
+| `getDesignData()` | `Map<String, Object>` | Export design configuration |
+| `reset()` | `void` | Clear canvas and reset zoom |
+
+### Design Data Schema
+
+```java
+Map<String, Object> {
+    "slots": List<Map<String, String>> [
+        {
+            "type": "text" | "barcode",
+            "fieldId": String (optional)
+        }
+    ]
+}
+```
+
+## Styling
+
+The canvas uses these CSS classes:
+
+- `.j-design-canvas` - Main container (light gray studio background)
+- `.label-media` - The white label surface
+- `.canvas-slot` - Individual text slots
+- `.barcode-drop-zone` - Barcode area
+- `.drag-over` - Applied during drag hover
+
+### Custom Styling
+
+```java
+// Customize canvas background
+canvas.setStyle("-fx-background-color: #ffffff;");
+
+// Access label media for custom styling
+// (Note: labelMedia is private, use CSS classes)
+canvas.getStyleClass().add("custom-canvas");
+```
+
+<Warning>
+The label media dimensions (420x320px) are fixed to simulate a physical label. Changing these values may affect the visual design accuracy.
+</Warning>

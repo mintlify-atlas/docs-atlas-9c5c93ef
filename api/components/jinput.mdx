@@ -1,0 +1,180 @@
+---
+title: JInput
+description: A styled text input component for JavaFX forms
+icon: square-i
+---
+
+## Overview
+
+`JInput` is a customized JavaFX TextField with built-in styling and validation support. It extends `TextField` and provides additional methods for styling, validation states, and label creation.
+
+## Constructor
+
+<ParamField path="JInput()" type="constructor">
+  Creates a new JInput with no prompt text.
+  
+  ```java
+  JInput input = new JInput();
+  ```
+</ParamField>
+
+<ParamField path="JInput(String promptText)" type="constructor">
+  Creates a new JInput with the specified prompt text.
+  
+  <Expandable title="parameters">
+    <ResponseField name="promptText" type="String">
+      The placeholder text to display when the input is empty
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  JInput input = new JInput("Enter your name");
+  ```
+</ParamField>
+
+## Methods
+
+<ParamField path="addClass(String... styleClasses)" type="JInput">
+  Adds custom CSS style classes to the input.
+  
+  <Expandable title="parameters">
+    <ResponseField name="styleClasses" type="String...">
+      One or more CSS class names to add
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="JInput">
+      Returns this instance for method chaining
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  input.addClass("custom-class", "another-class");
+  ```
+</ParamField>
+
+<ParamField path="createWithLabel(String labelText, boolean required)" type="VBox">
+  Creates a VBox container with a label and this input field. If required is true, adds a red asterisk (*) next to the label.
+  
+  <Expandable title="parameters">
+    <ResponseField name="labelText" type="String">
+      The text to display in the label
+    </ResponseField>
+    <ResponseField name="required" type="boolean">
+      Whether to show a required indicator (*)
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="VBox">
+      A VBox containing the label and input with 4px spacing
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  VBox formField = input.createWithLabel("Username", true);
+  container.getChildren().add(formField);
+  ```
+</ParamField>
+
+<ParamField path="setStatus(String styleClass)" type="JInput">
+  Sets the validation status of the input by applying a status style class.
+  
+  <Expandable title="parameters">
+    <ResponseField name="styleClass" type="String">
+      The validation style class to apply. Valid values:
+      - `"form-input-success"` - Green border for valid input
+      - `"form-input-danger"` - Red border for errors
+      - `"form-input-warning"` - Orange border for warnings
+      - `"form-input-dark"` - Dark border variant
+      - `null` or empty string - Removes all validation styles
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="JInput">
+      Returns this instance for method chaining
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  // Show success state
+  input.setStatus("form-input-success");
+  
+  // Show error state
+  input.setStatus("form-input-danger");
+  
+  // Clear status
+  input.setStatus(null);
+  ```
+</ParamField>
+
+## Style Classes
+
+<ResponseField name="form-input" type="CSS class">
+  Base style class automatically applied to all JInput instances
+</ResponseField>
+
+<ResponseField name="form-label" type="CSS class">
+  Style class applied to labels created with `createWithLabel()`
+</ResponseField>
+
+<ResponseField name="required-mark" type="CSS class">
+  Style class applied to the asterisk (*) required indicator
+</ResponseField>
+
+## Usage Example
+
+```java
+import com.jjarroyo.components.JInput;
+import javafx.scene.layout.VBox;
+
+public class LoginForm {
+    public VBox createForm() {
+        VBox form = new VBox(10);
+        
+        // Basic input with label
+        JInput usernameInput = new JInput("Enter username");
+        VBox usernameField = usernameInput.createWithLabel("Username", true);
+        
+        // Input with custom styling
+        JInput emailInput = new JInput("user@example.com")
+            .addClass("email-input");
+        VBox emailField = emailInput.createWithLabel("Email", true);
+        
+        // Input with validation
+        JInput passwordInput = new JInput("Password");
+        passwordInput.textProperty().addListener((obs, old, newVal) -> {
+            if (newVal.length() < 8) {
+                passwordInput.setStatus("form-input-danger");
+            } else {
+                passwordInput.setStatus("form-input-success");
+            }
+        });
+        VBox passwordField = passwordInput.createWithLabel("Password", true);
+        
+        form.getChildren().addAll(usernameField, emailField, passwordField);
+        return form;
+    }
+}
+```
+
+## Inherited Methods
+
+Since `JInput` extends `TextField`, all standard JavaFX TextField methods are available:
+
+- `setText(String text)` - Set the text content
+- `getText()` - Get the current text
+- `setPromptText(String value)` - Set placeholder text
+- `setEditable(boolean value)` - Enable/disable editing
+- `setDisable(boolean value)` - Enable/disable the input
+- `textProperty()` - Access the text property for binding
+- And all other TextField methods
+
+## See Also
+
+- [JPasswordInput](/api/components/jpasswordinput) - Password input with visibility toggle
+- [JSearchInput](/api/components/jsearchinput) - Search input with autocomplete
+- [JNumberInput](/api/components/jnumberinput) - Numeric input with increment/decrement
+- [JTextArea](/api/components/jtextarea) - Multi-line text input

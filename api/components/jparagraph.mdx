@@ -1,0 +1,257 @@
+---
+title: JParagraph
+description: Text paragraph component with automatic wrapping, alignment options, and HTML text support.
+---
+
+## Overview
+
+JParagraph extends JavaFX Label optimized for paragraph text display with:
+
+- Automatic text wrapping enabled by default
+- Text alignment methods (left, center, right, justify)
+- HTML to plain text conversion
+- Width constraints
+- Method chaining for styling
+
+## Constructors
+
+<ParamField path="JParagraph()" type="constructor">
+  Creates an empty paragraph with text wrapping enabled.
+</ParamField>
+
+<ParamField path="JParagraph(text)" type="constructor">
+  Creates a paragraph with the specified text.
+  
+  <Expandable title="Parameters">
+    - `text` (String): Paragraph text
+  </Expandable>
+</ParamField>
+
+<ParamField path="JParagraph(text, wrap)" type="constructor">
+  Creates a paragraph with control over text wrapping.
+  
+  <Expandable title="Parameters">
+    - `text` (String): Paragraph text
+    - `wrap` (boolean): Whether to enable text wrapping
+  </Expandable>
+</ParamField>
+
+## Basic Usage
+
+```java
+JParagraph para = new JParagraph(
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
+    + "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+);
+
+// With alignment
+JParagraph centered = new JParagraph("This text is centered")
+    .setAlignCenter();
+
+// With width constraint
+JParagraph constrained = new JParagraph("Constrained width paragraph")
+    .width(400);
+```
+
+## Text Content
+
+<ParamField path="text(text)" type="JParagraph">
+  Sets the paragraph text.
+  
+  <Expandable title="Parameters">
+    - `text` (String): Text content
+  </Expandable>
+  
+  Returns the paragraph instance for method chaining.
+  
+  ```java
+  para.text("New paragraph content");
+  ```
+</ParamField>
+
+<ParamField path="setHtmlText(htmlText)" type="JParagraph">
+  Sets text from HTML, converting common HTML tags to plain text.
+  
+  <Expandable title="Parameters">
+    - `htmlText` (String): HTML formatted text
+  </Expandable>
+  
+  Returns the paragraph instance for method chaining.
+  
+  Converts:
+  - `<br>`, `<br/>` → newline
+  - `<p>` → newline
+  - Strips all other HTML tags
+  - Converts HTML entities: `&nbsp;`, `&amp;`, `&lt;`, `&gt;`
+  
+  ```java
+  para.setHtmlText("<p>First paragraph</p><p>Second paragraph</p>");
+  para.setHtmlText("Line 1<br/>Line 2<br/>Line 3");
+  ```
+</ParamField>
+
+## Width
+
+<ParamField path="width(width)" type="JParagraph">
+  Sets a fixed width for the paragraph (pref, min, and max).
+  
+  <Expandable title="Parameters">
+    - `width` (double): Width in pixels
+  </Expandable>
+  
+  Returns the paragraph instance for method chaining.
+  
+  ```java
+  para.width(500); // Fixed 500px width
+  ```
+</ParamField>
+
+## Text Alignment
+
+<ParamField path="setAlignLeft()" type="JParagraph">
+  Aligns text to the left.
+  
+  Returns the paragraph instance for method chaining.
+</ParamField>
+
+<ParamField path="setAlignCenter()" type="JParagraph">
+  Centers the text.
+  
+  Returns the paragraph instance for method chaining.
+</ParamField>
+
+<ParamField path="setAlignRight()" type="JParagraph">
+  Aligns text to the right.
+  
+  Returns the paragraph instance for method chaining.
+</ParamField>
+
+<ParamField path="setJustify()" type="JParagraph">
+  Justifies the text (stretches to fill width).
+  
+  Returns the paragraph instance for method chaining.
+</ParamField>
+
+## Styling
+
+<ParamField path="withStyle(styleClasses...)" type="JParagraph">
+  Adds one or more CSS style classes to the paragraph.
+  
+  <Expandable title="Parameters">
+    - `styleClasses` (String...): Variable number of style class names
+  </Expandable>
+  
+  Returns the paragraph instance for method chaining.
+  
+  ```java
+  para.withStyle("text-sm", "text-muted", "leading-relaxed");
+  ```
+</ParamField>
+
+<ParamField path="addClass(styleClasses...)" type="JParagraph">
+  Alias for withStyle(). Adds CSS style classes to the paragraph.
+  
+  <Expandable title="Parameters">
+    - `styleClasses` (String...): Variable number of style class names
+  </Expandable>
+  
+  Returns the paragraph instance for method chaining.
+</ParamField>
+
+## Examples
+
+### Simple Paragraph
+
+```java
+JParagraph intro = new JParagraph(
+    "Welcome to our application. This is an introductory paragraph "
+    + "that explains the main features and benefits."
+).withStyle("text-base", "text-gray-700");
+```
+
+### Centered Description
+
+```java
+JParagraph description = new JParagraph()
+    .text("This content is centered and has a maximum width for optimal readability.")
+    .setAlignCenter()
+    .width(600)
+    .withStyle("text-lg", "text-muted");
+```
+
+### HTML Content
+
+```java
+JParagraph htmlPara = new JParagraph()
+    .setHtmlText(
+        "<p>First paragraph with <strong>bold</strong> text.</p>"
+        + "<p>Second paragraph with a <br/>line break.</p>"
+    )
+    .width(500);
+```
+
+### Right-Aligned Footer Text
+
+```java
+JParagraph footer = new JParagraph("© 2024 Company Name. All rights reserved.")
+    .setAlignRight()
+    .withStyle("text-sm", "text-gray-500");
+```
+
+### Justified Body Text
+
+```java
+JParagraph body = new JParagraph(
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do "
+    + "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim "
+    + "ad minim veniam, quis nostrud exercitation ullamco laboris."
+)
+.setJustify()
+.width(700)
+.withStyle("text-base", "leading-relaxed");
+```
+
+### Multiple Paragraphs in Layout
+
+```java
+VBox content = new VBox(16);
+
+JLabel heading = new JLabel("About Us")
+    .withStyle("text-2xl", "font-bold");
+
+JParagraph para1 = new JParagraph(
+    "We are a company dedicated to creating amazing products."
+).withStyle("text-base");
+
+JParagraph para2 = new JParagraph(
+    "Our team consists of passionate individuals committed to excellence."
+).withStyle("text-base");
+
+content.getChildren().addAll(heading, para1, para2);
+```
+
+## Default Behavior
+
+By default, JParagraph:
+- Enables text wrapping (`setWrapText(true)`)
+- Sets text alignment to CENTER
+- Sets max width and height to `Double.MAX_VALUE` for flexible sizing
+
+You can override these defaults as needed:
+
+```java
+JParagraph custom = new JParagraph("Custom paragraph")
+    .setAlignLeft()  // Override center alignment
+    .width(400);     // Set specific width
+```
+
+## Inherits From
+
+JParagraph extends `javafx.scene.control.Label`, so all standard JavaFX Label methods are available:
+
+- `setText(String)` - Set text (note: text() method is preferred for chaining)
+- `getText()` - Get text
+- `setWrapText(boolean)` - Control text wrapping
+- `setTextFill(Paint)` - Set text color
+
+See [JavaFX Label documentation](https://openjfx.io/javadoc/17/javafx.controls/javafx/scene/control/Label.html) for complete API.

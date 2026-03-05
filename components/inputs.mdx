@@ -1,0 +1,470 @@
+---
+title: Form Inputs
+description: Text inputs, password fields, and search components for JavaFX forms
+icon: 'keyboard'
+---
+
+## JInput
+
+A styled text input component that extends JavaFX's `TextField` with enhanced features and validation support.
+
+### Basic Usage
+
+```java
+import com.jjarroyo.components.JInput;
+import javafx.scene.layout.VBox;
+
+// Simple input
+JInput input = new JInput();
+
+// Input with placeholder
+JInput nameInput = new JInput("Enter your name");
+
+// Programmatically set placeholder
+JInput emailInput = new JInput();
+emailInput.setPromptText("user@example.com");
+```
+
+### With Labels
+
+```java
+// Create input with label
+JInput usernameInput = new JInput("Enter username");
+VBox labeledInput = usernameInput.createWithLabel("Username", false);
+
+// Required field (shows asterisk)
+JInput emailInput = new JInput("user@example.com");
+VBox requiredInput = emailInput.createWithLabel("Email Address", true);
+
+// Add to your layout
+VBox form = new VBox(10);
+form.getChildren().addAll(labeledInput, requiredInput);
+```
+
+### Validation States
+
+```java
+JInput input = new JInput("Enter value");
+
+// Success state
+input.setStatus("form-input-success");
+
+// Error state
+input.setStatus("form-input-danger");
+
+// Warning state
+input.setStatus("form-input-warning");
+
+// Dark/neutral state
+input.setStatus("form-input-dark");
+
+// Remove validation state
+input.setStatus(null);
+```
+
+### Custom Styling
+
+```java
+JInput input = new JInput("Placeholder")
+    .addClass("custom-input", "large-font");
+```
+
+### Complete Form Example
+
+```java
+VBox form = new VBox(15);
+form.setPadding(new Insets(20));
+
+// Username field
+JInput username = new JInput("Enter username");
+VBox usernameField = username.createWithLabel("Username", true);
+
+// Email field
+JInput email = new JInput("user@example.com");
+VBox emailField = email.createWithLabel("Email", true);
+
+// Optional bio field
+JInput bio = new JInput("Tell us about yourself");
+VBox bioField = bio.createWithLabel("Bio", false);
+
+// Submit button
+JButton submit = new JButton("Submit")
+    .addClass("btn-primary");
+
+submit.setOnAction(e -> {
+    // Validation example
+    if (username.getText().isEmpty()) {
+        username.setStatus("form-input-danger");
+    } else {
+        username.setStatus("form-input-success");
+    }
+});
+
+form.getChildren().addAll(
+    usernameField,
+    emailField,
+    bioField,
+    submit
+);
+```
+
+### API Reference
+
+#### Constructors
+
+<ResponseField name="JInput()" type="constructor">
+  Creates an empty input field
+</ResponseField>
+
+<ResponseField name="JInput(String promptText)" type="constructor">
+  Creates an input with placeholder text
+  
+  <Expandable title="parameters">
+    <ResponseField name="promptText" type="String">
+      The placeholder text to display when empty
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+#### Methods
+
+<ResponseField name="addClass(String... styleClasses)" type="JInput">
+  Adds custom CSS style classes to the input
+  
+  ```java
+  input.addClass("custom-class");
+  ```
+</ResponseField>
+
+<ResponseField name="createWithLabel(String labelText, boolean required)" type="VBox">
+  Creates a VBox container with a label and this input. Required fields show an asterisk.
+  
+  <Expandable title="parameters">
+    <ResponseField name="labelText" type="String">
+      The label text to display above the input
+    </ResponseField>
+    <ResponseField name="required" type="boolean">
+      If true, displays a red asterisk next to the label
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  VBox field = input.createWithLabel("Email", true);
+  ```
+</ResponseField>
+
+<ResponseField name="setStatus(String styleClass)" type="JInput">
+  Sets the validation status of the input. Valid values: `form-input-success`, `form-input-danger`, `form-input-warning`, `form-input-dark`. Pass null to remove all validation styles.
+  
+  ```java
+  input.setStatus("form-input-success");
+  ```
+</ResponseField>
+
+---
+
+## JPasswordInput
+
+A password input component with a toggle button to show/hide the password text.
+
+### Basic Usage
+
+```java
+import com.jjarroyo.components.JPasswordInput;
+import javafx.scene.layout.VBox;
+
+// Simple password input
+JPasswordInput password = new JPasswordInput();
+
+// With placeholder
+JPasswordInput passwordWithPrompt = new JPasswordInput("Enter your password");
+```
+
+### With Label
+
+```java
+JPasswordInput password = new JPasswordInput("Enter password");
+VBox passwordField = password.createWithLabel("Password", true);
+
+// Add to your form
+VBox form = new VBox(10);
+form.getChildren().add(passwordField);
+```
+
+### Login Form Example
+
+```java
+VBox loginForm = new VBox(15);
+loginForm.setPadding(new Insets(20));
+loginForm.setMaxWidth(400);
+
+// Username
+JInput username = new JInput("Username or email");
+VBox usernameField = username.createWithLabel("Username", true);
+
+// Password
+JPasswordInput password = new JPasswordInput("Password");
+VBox passwordField = password.createWithLabel("Password", true);
+
+// Login button
+JButton loginBtn = new JButton("Login")
+    .addClass("btn-primary", "btn-lg");
+
+loginBtn.setOnAction(e -> {
+    String user = username.getText();
+    String pass = password.passwordField.getText(); // Access internal field
+    // Perform login...
+});
+
+loginForm.getChildren().addAll(
+    usernameField,
+    passwordField,
+    loginBtn
+);
+```
+
+### API Reference
+
+#### Constructors
+
+<ResponseField name="JPasswordInput()" type="constructor">
+  Creates a password input with no placeholder
+</ResponseField>
+
+<ResponseField name="JPasswordInput(String promptText)" type="constructor">
+  Creates a password input with placeholder text
+  
+  <Expandable title="parameters">
+    <ResponseField name="promptText" type="String">
+      The placeholder text
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+#### Methods
+
+<ResponseField name="createWithLabel(String labelText, boolean required)" type="VBox">
+  Creates a labeled container for the password input
+  
+  ```java
+  VBox field = password.createWithLabel("Password", true);
+  ```
+</ResponseField>
+
+#### Properties
+
+<ResponseField name="passwordField" type="PasswordField">
+  Access to the internal PasswordField for getting the password value
+  
+  ```java
+  String passwordValue = password.passwordField.getText();
+  ```
+</ResponseField>
+
+<ResponseField name="textField" type="TextField">
+  Access to the internal TextField used when password is visible
+</ResponseField>
+
+---
+
+## JSearchInput
+
+An advanced search input with autocomplete/suggestions support.
+
+### Basic Usage
+
+```java
+import com.jjarroyo.components.JSearchInput;
+import java.util.List;
+
+// Simple search input
+JSearchInput search = new JSearchInput();
+search.setPromptText("Search...");
+```
+
+### With Static Suggestions
+
+```java
+JSearchInput search = new JSearchInput();
+search.setPromptText("Search countries...");
+
+List<String> countries = List.of(
+    "United States", "Canada", "Mexico",
+    "United Kingdom", "France", "Germany",
+    "Spain", "Italy", "Japan", "China"
+);
+
+search.setSuggestions(countries);
+```
+
+### With Dynamic Suggestions
+
+```java
+JSearchInput search = new JSearchInput();
+search.setPromptText("Search users...");
+
+// Dynamic provider that fetches results
+search.setSuggestionProvider(query -> {
+    if (query == null || query.isEmpty()) {
+        return List.of();
+    }
+    // Fetch from database, API, etc.
+    return database.searchUsers(query);
+});
+```
+
+### Handling Search Events
+
+```java
+JSearchInput search = new JSearchInput();
+search.setPromptText("Search products...");
+
+search.setOnSearch(query -> {
+    System.out.println("Searching for: " + query);
+    // Perform search logic
+    performProductSearch(query);
+});
+```
+
+### Complete Search Example
+
+```java
+VBox searchContainer = new VBox(10);
+
+JSearchInput search = new JSearchInput();
+search.setPromptText("Search documentation...");
+
+// Static list of documentation pages
+List<String> docPages = List.of(
+    "Getting Started",
+    "Installation",
+    "Components Overview",
+    "Theming Guide",
+    "API Reference",
+    "Examples"
+);
+
+search.setSuggestions(docPages);
+
+search.setOnSearch(selectedPage -> {
+    System.out.println("Navigating to: " + selectedPage);
+    // Navigate to the selected page
+    navigateToPage(selectedPage);
+});
+
+// Optional: Disable clear button
+search.setClearable(false);
+
+searchContainer.getChildren().add(search);
+```
+
+### API Reference
+
+#### Constructors
+
+<ResponseField name="JSearchInput()" type="constructor">
+  Creates a new search input component
+</ResponseField>
+
+#### Methods
+
+<ResponseField name="setPromptText(String text)" type="JSearchInput">
+  Sets the placeholder text
+  
+  ```java
+  search.setPromptText("Search...");
+  ```
+</ResponseField>
+
+<ResponseField name="getText()" type="String">
+  Returns the current search text
+  
+  ```java
+  String query = search.getText();
+  ```
+</ResponseField>
+
+<ResponseField name="setText(String text)" type="JSearchInput">
+  Sets the search text programmatically
+  
+  ```java
+  search.setText("JavaFX");
+  ```
+</ResponseField>
+
+<ResponseField name="setClearable(boolean clearable)" type="JSearchInput">
+  Enables or disables the clear button (default: true)
+  
+  ```java
+  search.setClearable(true);
+  ```
+</ResponseField>
+
+<ResponseField name="setSuggestionProvider(Function<String, List<String>> provider)" type="JSearchInput">
+  Sets a dynamic suggestion provider that receives the current query and returns matching suggestions
+  
+  ```java
+  search.setSuggestionProvider(query -> fetchResults(query));
+  ```
+</ResponseField>
+
+<ResponseField name="setSuggestions(List<String> staticSuggestions)" type="JSearchInput">
+  Sets a static list of suggestions that will be filtered based on user input
+  
+  ```java
+  search.setSuggestions(List.of("Option 1", "Option 2"));
+  ```
+</ResponseField>
+
+<ResponseField name="setOnSearch(Consumer<String> callback)" type="JSearchInput">
+  Sets the callback to execute when a search is committed (Enter key or suggestion selected)
+  
+  ```java
+  search.setOnSearch(query -> System.out.println(query));
+  ```
+</ResponseField>
+
+<ResponseField name="getTextField()" type="TextField">
+  Returns the internal TextField for advanced customization
+  
+  ```java
+  TextField field = search.getTextField();
+  ```
+</ResponseField>
+
+## Keyboard Navigation
+
+### JSearchInput
+
+- **Enter** - Commit current search query
+- **Escape** - Close suggestions popup
+- **Down Arrow** - Navigate to first suggestion
+- **Up/Down** - Navigate through suggestions
+- **Click** - Select suggestion
+
+## Form Validation Example
+
+```java
+public class FormValidator {
+    public static boolean validateEmail(JInput input) {
+        String email = input.getText();
+        if (email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            input.setStatus("form-input-success");
+            return true;
+        } else {
+            input.setStatus("form-input-danger");
+            return false;
+        }
+    }
+    
+    public static boolean validateRequired(JInput input) {
+        if (input.getText().isEmpty()) {
+            input.setStatus("form-input-danger");
+            return false;
+        } else {
+            input.setStatus("form-input-success");
+            return true;
+        }
+    }
+}
+```

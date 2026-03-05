@@ -1,0 +1,154 @@
+---
+title: JList
+description: A customizable list component with pagination and infinite scroll support for displaying collections of items.
+---
+
+## Overview
+
+JList is a wrapper around JavaFX ListView that provides:
+
+- Built-in pagination controls
+- Infinite scroll capability
+- Custom cell factory support with automatic styling
+- Easy item management
+
+## Constructor
+
+<ParamField path="JList&lt;T&gt;()" type="constructor">
+  Creates a new generic list for type T.
+</ParamField>
+
+## Basic Usage
+
+```java
+JList&lt;User&gt; list = new JList&lt;&gt;();
+list.setCellFactory(param -> new ListCell<User>() {
+    @Override
+    protected void updateItem(User user, boolean empty) {
+        super.updateItem(user, empty);
+        if (empty || user == null) {
+            setText(null);
+            setGraphic(null);
+        } else {
+            setText(user.getName());
+        }
+    }
+});
+list.setItems(userData);
+```
+
+## Cell Factory
+
+<ParamField path="setCellFactory(value)" type="void">
+  Sets the cell factory for rendering list items. Automatically adds the "j-list-card-cell" style class to each cell.
+  
+  <Expandable title="Parameters">
+    - `value` (Callback&lt;ListView&lt;T&gt;, ListCell&lt;T&gt;&gt;): Factory function that creates ListCell instances
+  </Expandable>
+  
+  ```java
+  list.setCellFactory(param -> new ListCell<Product>() {
+      @Override
+      protected void updateItem(Product product, boolean empty) {
+          super.updateItem(product, empty);
+          if (empty || product == null) {
+              setGraphic(null);
+          } else {
+              JCard card = new JCard();
+              card.setTitle(product.getName());
+              card.setDescription(product.getDescription());
+              setGraphic(card);
+          }
+      }
+  });
+  ```
+</ParamField>
+
+## Data Management
+
+<ParamField path="setItems(items)" type="void">
+  Sets the list's data source.
+  
+  <Expandable title="Parameters">
+    - `items` (ObservableList&lt;T&gt;): The observable list of items to display
+  </Expandable>
+</ParamField>
+
+<ParamField path="addItem(item)" type="void">
+  Adds a single item to the list.
+  
+  <Expandable title="Parameters">
+    - `item` (T): The item to add
+  </Expandable>
+</ParamField>
+
+## Pagination
+
+<ParamField path="setPaginationVisible(boolean)" type="void">
+  Shows or hides the pagination controls.
+  
+  <Expandable title="Parameters">
+    - `visible` (boolean): Whether pagination should be visible
+  </Expandable>
+</ParamField>
+
+<ParamField path="getPagination()" type="JPagination">
+  Returns the underlying JPagination component for advanced control.
+</ParamField>
+
+## Infinite Scroll
+
+<ParamField path="setOnScrollBottom(action)" type="void">
+  Enables infinite scroll and sets a callback that fires when the user scrolls to 90% of the list.
+  
+  <Expandable title="Parameters">
+    - `action` (Runnable): Callback to execute when scroll reaches near bottom
+  </Expandable>
+  
+  ```java
+  list.setOnScrollBottom(() -> {
+      // Load more items
+      loadMoreItems();
+  });
+  ```
+</ParamField>
+
+## Access to Underlying Components
+
+<ParamField path="getListView()" type="ListView<T>">
+  Returns the underlying JavaFX ListView for advanced customization.
+</ParamField>
+
+## Example: Card List
+
+```java
+JList&lt;Article&gt; articleList = new JList&lt;&gt;();
+
+articleList.setCellFactory(param -> new ListCell<Article>() {
+    @Override
+    protected void updateItem(Article article, boolean empty) {
+        super.updateItem(article, empty);
+        if (empty || article == null) {
+            setGraphic(null);
+        } else {
+            VBox card = new VBox(8);
+            card.getStyleClass().add("article-card");
+            
+            JLabel title = new JLabel(article.getTitle());
+            title.withStyle("text-lg", "font-bold");
+            
+            JParagraph excerpt = new JParagraph(article.getExcerpt());
+            excerpt.withStyle("text-muted");
+            
+            JButton readMore = new JButton("Read More");
+            readMore.setVariant("link");
+            
+            card.getChildren().addAll(title, excerpt, readMore);
+            setGraphic(card);
+        }
+    }
+});
+
+articleList.setItems(articles);
+articleList.setOnScrollBottom(() -> loadMoreArticles());
+```

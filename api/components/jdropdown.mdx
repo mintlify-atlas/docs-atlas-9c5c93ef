@@ -1,0 +1,262 @@
+---
+title: JDropdown
+description: Styled dropdown menu button with fluent API
+icon: chevron-down
+---
+
+## Overview
+
+JDropdown is a styled MenuButton component with a fluent API for easily adding menu items and actions.
+
+## Constructors
+
+```java
+// Text only
+JDropdown dropdown = new JDropdown(String text);
+
+// With graphic icon
+JDropdown dropdown = new JDropdown(String text, Node graphic);
+```
+
+<ParamField path="text" type="String" required>
+  Button text label
+</ParamField>
+
+<ParamField path="graphic" type="Node">
+  Icon or graphic node displayed with the text
+</ParamField>
+
+## Fluent API Methods
+
+### Adding Items
+
+<ResponseField name="addItem" type="JDropdown">
+  Adds a single menu item
+  
+  ```java
+  MenuItem item = new MenuItem("Option 1");
+  dropdown.addItem(item);
+  ```
+  
+  <ParamField path="item" type="MenuItem" required>
+    MenuItem to add to the dropdown
+  </ParamField>
+  
+  Returns `this` for method chaining.
+</ResponseField>
+
+<ResponseField name="addItems" type="JDropdown">
+  Adds multiple menu items
+  
+  ```java
+  dropdown.addItems(
+      new MenuItem("Option 1"),
+      new MenuItem("Option 2"),
+      new MenuItem("Option 3")
+  );
+  ```
+  
+  <ParamField path="items" type="MenuItem..." required>
+    Variable number of MenuItems to add
+  </ParamField>
+  
+  Returns `this` for method chaining.
+</ResponseField>
+
+<ResponseField name="addAction" type="JDropdown">
+  Adds a simple text menu item with an action handler
+  
+  ```java
+  dropdown.addAction("Delete", e -> {
+      System.out.println("Delete clicked");
+  });
+  ```
+  
+  <ParamField path="text" type="String" required>
+    Menu item text
+  </ParamField>
+  
+  <ParamField path="action" type="EventHandler<ActionEvent>" required>
+    Action handler to execute when item is clicked
+  </ParamField>
+  
+  Returns `this` for method chaining.
+</ResponseField>
+
+### Styling
+
+<ResponseField name="addClass" type="JDropdown">
+  Adds custom style classes to the dropdown
+  
+  ```java
+  dropdown.addClass("btn-primary", "text-sm");
+  ```
+  
+  <ParamField path="styleClasses" type="String..." required>
+    Variable number of CSS class names to add
+  </ParamField>
+  
+  Returns `this` for method chaining.
+</ResponseField>
+
+## Example Usage
+
+### Basic Dropdown
+
+```java
+JDropdown menu = new JDropdown("Actions")
+    .addAction("Edit", e -> editItem())
+    .addAction("Delete", e -> deleteItem())
+    .addAction("Duplicate", e -> duplicateItem());
+```
+
+### With Icons
+
+```java
+JDropdown userMenu = new JDropdown("John Doe", JIcon.USER.view())
+    .addClass("btn-ghost")
+    .addAction("Profile", e -> showProfile())
+    .addAction("Settings", e -> showSettings())
+    .addAction("Sign Out", e -> signOut());
+```
+
+### With Separators and Custom Items
+
+```java
+MenuItem editItem = new MenuItem("Edit");
+editItem.setGraphic(JIcon.EDIT.view());
+
+MenuItem deleteItem = new MenuItem("Delete");
+deleteItem.setGraphic(JIcon.DELETE.view());
+deleteItem.setStyle("-fx-text-fill: red;");
+
+JDropdown menu = new JDropdown("Options", JIcon.MORE_VERT.view())
+    .addItem(editItem)
+    .addItem(new SeparatorMenuItem())
+    .addItem(deleteItem);
+```
+
+### Filter Dropdown
+
+```java
+ToggleGroup filterGroup = new ToggleGroup();
+
+RadioMenuItem allFilter = new RadioMenuItem("All Items");
+allFilter.setToggleGroup(filterGroup);
+allFilter.setSelected(true);
+
+RadioMenuItem activeFilter = new RadioMenuItem("Active Only");
+activeFilter.setToggleGroup(filterGroup);
+
+RadioMenuItem archivedFilter = new RadioMenuItem("Archived");
+archivedFilter.setToggleGroup(filterGroup);
+
+JDropdown filterMenu = new JDropdown("Filter", JIcon.FILTER_LIST.view())
+    .addClass("btn-outline")
+    .addItems(allFilter, activeFilter, archivedFilter);
+
+filterGroup.selectedToggleProperty().addListener((obs, old, sel) -> {
+    if (sel != null) {
+        RadioMenuItem selected = (RadioMenuItem) sel;
+        applyFilter(selected.getText());
+    }
+});
+```
+
+### Context Menu Alternative
+
+```java
+TableView<User> table = new TableView<>();
+
+table.setOnContextMenuRequested(event -> {
+    User selectedUser = table.getSelectionModel().getSelectedItem();
+    if (selectedUser != null) {
+        ContextMenu contextMenu = new ContextMenu();
+        
+        MenuItem viewItem = new MenuItem("View Details");
+        viewItem.setOnAction(e -> viewUser(selectedUser));
+        
+        MenuItem editItem = new MenuItem("Edit");
+        editItem.setOnAction(e -> editUser(selectedUser));
+        
+        MenuItem deleteItem = new MenuItem("Delete");
+        deleteItem.setOnAction(e -> deleteUser(selectedUser));
+        
+        contextMenu.getItems().addAll(viewItem, editItem, 
+            new SeparatorMenuItem(), deleteItem);
+        
+        contextMenu.show(table, event.getScreenX(), event.getScreenY());
+    }
+});
+```
+
+### Chained Configuration
+
+```java
+JDropdown exportMenu = new JDropdown("Export", JIcon.DOWNLOAD.view())
+    .addClass("btn-secondary", "btn-sm")
+    .addAction("Export as CSV", e -> exportCSV())
+    .addAction("Export as Excel", e -> exportExcel())
+    .addAction("Export as PDF", e -> exportPDF())
+    .addAction("Print", e -> print());
+```
+
+## Accessing MenuButton Features
+
+JDropdown extends `MenuButton`, so you have access to all standard features:
+
+```java
+JDropdown menu = new JDropdown("Menu");
+
+// Access menu items
+ObservableList&lt;MenuItem&gt; items = menu.getItems();
+
+// Show programmatically
+menu.show();
+
+// Hide
+menu.hide();
+
+// Check if showing
+boolean isShowing = menu.isShowing();
+
+// Set popup side
+menu.setPopupSide(Side.BOTTOM);
+```
+
+## Styling
+
+Style classes:
+- `.j-dropdown` - Applied to all instances
+- Additional classes via `addClass()`
+
+Custom CSS:
+
+```css
+.j-dropdown {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 6px;
+    -fx-padding: 8px 12px;
+}
+
+.j-dropdown:hover {
+    -fx-background-color: #f8fafc;
+}
+
+.j-dropdown .menu-item {
+    -fx-padding: 8px 16px;
+}
+
+.j-dropdown .menu-item:hover {
+    -fx-background-color: rgba(59, 130, 246, 0.1);
+}
+```
+
+## Notes
+
+- Extends JavaFX `MenuButton` for full compatibility
+- Fluent API enables concise, readable configuration
+- `addAction()` is a convenience method for simple click handlers
+- Use standard `MenuItem`, `RadioMenuItem`, `CheckMenuItem`, `SeparatorMenuItem`
+- Icons can be added via `JIcon.NAME.view()` or any JavaFX `Node`

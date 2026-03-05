@@ -1,0 +1,491 @@
+---
+title: "JChip"
+description: "Chip/tag component for categories, filters, and removable items"
+icon: "tags"
+---
+
+## Overview
+
+The `JChip` class provides a modern chip/tag component inspired by Tailwind CSS. It's ideal for categories, tags, filters, and removable items. Chips support multiple variants (filled, outlined, soft), colors, sizes, icons, and can be made dismissible.
+
+## Package
+
+```java
+com.jjarroyo.components.JChip
+```
+
+## Constructors
+
+### JChip(String text)
+
+Creates a chip with the specified text and default styling (soft variant, primary color, medium size).
+
+<ParamField path="text" type="String" required>
+  The chip text
+</ParamField>
+
+```java
+public JChip(String text)
+```
+
+#### Example
+
+```java
+JChip chip = new JChip("JavaScript");
+```
+
+### JChip(String text, Node icon)
+
+Creates a chip with text and an icon.
+
+<ParamField path="text" type="String" required>
+  The chip text
+</ParamField>
+
+<ParamField path="icon" type="Node" required>
+  The icon node to display (typically from JIcon.view())
+</ParamField>
+
+```java
+public JChip(String text, Node icon)
+```
+
+#### Example
+
+```java
+JChip chip = new JChip("Active", JIcon.CHECK.view());
+```
+
+## Enums
+
+### Variant
+
+Defines the visual style of the chip:
+
+- `FILLED` - Solid background color
+- `OUTLINED` - Transparent background with colored border
+- `SOFT` - Light, subtle background color (default)
+
+```java
+public enum Variant { FILLED, OUTLINED, SOFT }
+```
+
+### Size
+
+Defines the size of the chip:
+
+- `SM` - Small
+- `MD` - Medium (default)
+- `LG` - Large
+
+```java
+public enum Size { SM, MD, LG }
+```
+
+## Methods
+
+### setColor
+
+Sets the color scheme for the chip.
+
+<ParamField path="color" type="String" required>
+  Color name: "primary", "success", "danger", "warning", "info", or "slate"
+</ParamField>
+
+<ResponseField name="return" type="JChip">
+  Returns this chip instance for method chaining
+</ResponseField>
+
+```java
+public JChip setColor(String color)
+```
+
+#### Example
+
+```java
+JChip chip = new JChip("Success");
+chip.setColor("success");
+
+// Method chaining
+JChip chip = new JChip("Warning").setColor("warning");
+```
+
+### setVariant
+
+Sets the visual style variant.
+
+<ParamField path="variant" type="Variant" required>
+  The variant: FILLED, OUTLINED, or SOFT
+</ParamField>
+
+<ResponseField name="return" type="JChip">
+  Returns this chip instance for method chaining
+</ResponseField>
+
+```java
+public JChip setVariant(Variant variant)
+```
+
+#### Example
+
+```java
+JChip chip = new JChip("Tag");
+chip.setVariant(JChip.Variant.FILLED);
+
+// Method chaining
+JChip chip = new JChip("Tag")
+    .setColor("primary")
+    .setVariant(JChip.Variant.OUTLINED);
+```
+
+### setChipSize
+
+Sets the size of the chip.
+
+<ParamField path="size" type="Size" required>
+  The size: SM, MD, or LG
+</ParamField>
+
+<ResponseField name="return" type="JChip">
+  Returns this chip instance for method chaining
+</ResponseField>
+
+```java
+public JChip setChipSize(Size size)
+```
+
+#### Example
+
+```java
+JChip chip = new JChip("Small");
+chip.setChipSize(JChip.Size.SM);
+
+// Method chaining
+JChip chip = new JChip("Large")
+    .setColor("info")
+    .setChipSize(JChip.Size.LG);
+```
+
+### setText
+
+Sets or updates the chip's text.
+
+<ParamField path="text" type="String" required>
+  The new text for the chip
+</ParamField>
+
+<ResponseField name="return" type="JChip">
+  Returns this chip instance for method chaining
+</ResponseField>
+
+```java
+public JChip setText(String text)
+```
+
+#### Example
+
+```java
+JChip chip = new JChip("Old Text");
+chip.setText("New Text");
+```
+
+### getText
+
+Retrieves the chip's current text.
+
+<ResponseField name="return" type="String">
+  The chip's text
+</ResponseField>
+
+```java
+public String getText()
+```
+
+#### Example
+
+```java
+JChip chip = new JChip("JavaScript");
+String text = chip.getText(); // Returns "JavaScript"
+```
+
+### setIcon
+
+Sets or updates the chip's icon.
+
+<ParamField path="icon" type="Node" required>
+  The icon node to display
+</ParamField>
+
+<ResponseField name="return" type="JChip">
+  Returns this chip instance for method chaining
+</ResponseField>
+
+```java
+public JChip setIcon(Node icon)
+```
+
+#### Example
+
+```java
+JChip chip = new JChip("Status");
+chip.setIcon(JIcon.CHECK.view());
+chip.setColor("success");
+```
+
+### setDismissible
+
+Enables or disables the dismiss/close button on the chip.
+
+<ParamField path="dismissible" type="boolean" required>
+  true to show a close button, false to hide it
+</ParamField>
+
+<ResponseField name="return" type="JChip">
+  Returns this chip instance for method chaining
+</ResponseField>
+
+```java
+public JChip setDismissible(boolean dismissible)
+```
+
+#### Example
+
+```java
+JChip chip = new JChip("Removable");
+chip.setDismissible(true);
+```
+
+### setOnDismiss
+
+Sets the callback to execute when the dismiss button is clicked.
+
+<ParamField path="onDismiss" type="Runnable" required>
+  The callback to run when dismissed
+</ParamField>
+
+<ResponseField name="return" type="JChip">
+  Returns this chip instance for method chaining
+</ResponseField>
+
+```java
+public JChip setOnDismiss(Runnable onDismiss)
+```
+
+#### Example
+
+```java
+FlowPane container = new FlowPane();
+JChip chip = new JChip("Remove Me");
+chip.setDismissible(true);
+chip.setOnDismiss(() -> {
+    container.getChildren().remove(chip);
+    System.out.println("Chip removed!");
+});
+```
+
+## Color Options
+
+Chips support the following colors:
+
+- `primary` - Blue (default)
+- `success` - Green
+- `danger` - Red
+- `warning` - Orange/Yellow
+- `info` - Cyan
+- `slate` - Gray
+
+```java
+JChip primary = new JChip("primary").setColor("primary");
+JChip success = new JChip("success").setColor("success");
+JChip danger = new JChip("danger").setColor("danger");
+JChip warning = new JChip("warning").setColor("warning");
+JChip info = new JChip("info").setColor("info");
+JChip slate = new JChip("slate").setColor("slate");
+```
+
+## Variant Styles
+
+### Soft (Default)
+
+Light, subtle background with colored text:
+
+```java
+JChip chip = new JChip("Soft Variant")
+    .setColor("primary")
+    .setVariant(JChip.Variant.SOFT);
+```
+
+### Filled
+
+Solid background color with white text:
+
+```java
+JChip chip = new JChip("Filled Variant")
+    .setColor("success")
+    .setVariant(JChip.Variant.FILLED);
+```
+
+### Outlined
+
+Transparent background with colored border:
+
+```java
+JChip chip = new JChip("Outlined Variant")
+    .setColor("danger")
+    .setVariant(JChip.Variant.OUTLINED);
+```
+
+## Sizes
+
+```java
+JChip small = new JChip("Small")
+    .setChipSize(JChip.Size.SM)
+    .setColor("info");
+
+JChip medium = new JChip("Medium")
+    .setChipSize(JChip.Size.MD)
+    .setColor("info");
+
+JChip large = new JChip("Large")
+    .setChipSize(JChip.Size.LG)
+    .setColor("info");
+```
+
+## Icon Chips
+
+Chips can display icons to convey meaning:
+
+```java
+JChip active = new JChip("Active", JIcon.CHECK.view())
+    .setColor("success");
+
+JChip error = new JChip("Error", JIcon.ERROR.view())
+    .setColor("danger");
+
+JChip info = new JChip("Info", JIcon.INFO.view())
+    .setColor("info");
+
+JChip alert = new JChip("Alert", JIcon.WARNING.view())
+    .setColor("warning");
+```
+
+## Dismissible Chips
+
+Create removable chips for tag management:
+
+```java
+import com.jjarroyo.components.JChip;
+import com.jjarroyo.components.JToast;
+import javafx.scene.layout.FlowPane;
+
+FlowPane tagContainer = new FlowPane(8, 8);
+String[] tags = {"JavaScript", "Java", "Python", "TypeScript", "Rust"};
+String[] colors = {"primary", "success", "danger", "warning", "info"};
+
+for (int i = 0; i < tags.length; i++) {
+    final JChip chip = new JChip(tags[i]);
+    chip.setColor(colors[i])
+        .setDismissible(true)
+        .setOnDismiss(() -> {
+            tagContainer.getChildren().remove(chip);
+            JToast.show(
+                stage,
+                "Chip removed: " + chip.getText(),
+                JToast.Type.INFO,
+                JToast.Position.BOTTOM_RIGHT,
+                2000
+            );
+        });
+    tagContainer.getChildren().add(chip);
+}
+```
+
+## Complete Example
+
+```java
+import com.jjarroyo.components.JChip;
+import com.jjarroyo.components.JIcon;
+import javafx.geometry.Insets;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
+
+public class ChipExample {
+    public void createChips() {
+        VBox container = new VBox(20);
+        container.setPadding(new Insets(20));
+        
+        // Soft variant (default)
+        FlowPane softRow = new FlowPane(8, 8);
+        String[] colors = {"primary", "success", "danger", "warning", "info", "slate"};
+        for (String color : colors) {
+            softRow.getChildren().add(
+                new JChip(color).setColor(color)
+            );
+        }
+        
+        // Filled variant
+        FlowPane filledRow = new FlowPane(8, 8);
+        for (String color : colors) {
+            filledRow.getChildren().add(
+                new JChip(color)
+                    .setColor(color)
+                    .setVariant(JChip.Variant.FILLED)
+            );
+        }
+        
+        // Outlined variant
+        FlowPane outlinedRow = new FlowPane(8, 8);
+        for (String color : colors) {
+            outlinedRow.getChildren().add(
+                new JChip(color)
+                    .setColor(color)
+                    .setVariant(JChip.Variant.OUTLINED)
+            );
+        }
+        
+        // Different sizes
+        FlowPane sizeRow = new FlowPane(8, 8);
+        sizeRow.getChildren().addAll(
+            new JChip("Small").setChipSize(JChip.Size.SM).setColor("info"),
+            new JChip("Medium").setChipSize(JChip.Size.MD).setColor("info"),
+            new JChip("Large").setChipSize(JChip.Size.LG).setColor("info")
+        );
+        
+        // With icons
+        FlowPane iconRow = new FlowPane(8, 8);
+        iconRow.getChildren().addAll(
+            new JChip("Active", JIcon.CHECK.view()).setColor("success"),
+            new JChip("Error", JIcon.ERROR.view()).setColor("danger"),
+            new JChip("Info", JIcon.INFO.view()).setColor("info"),
+            new JChip("Alert", JIcon.WARNING.view()).setColor("warning")
+        );
+        
+        // Dismissible chips
+        FlowPane dismissRow = new FlowPane(8, 8);
+        String[] tags = {"JavaScript", "Java", "Python"};
+        for (int i = 0; i < tags.length; i++) {
+            final JChip chip = new JChip(tags[i]);
+            chip.setColor(colors[i])
+                .setDismissible(true)
+                .setOnDismiss(() -> {
+                    dismissRow.getChildren().remove(chip);
+                });
+            dismissRow.getChildren().add(chip);
+        }
+        
+        container.getChildren().addAll(
+            softRow, filledRow, outlinedRow, 
+            sizeRow, iconRow, dismissRow
+        );
+    }
+}
+```
+
+## Notes
+
+- The default style is soft variant with primary color and medium size
+- Chips extend `HBox` and are centered-aligned by default
+- The dismiss button appears as "✕" when `dismissible` is true
+- Use method chaining for cleaner, more readable code
+- Icons should be passed as `Node` objects, typically using `JIcon.view()`
+- The chip automatically rebuilds its UI when icon or dismissible state changes

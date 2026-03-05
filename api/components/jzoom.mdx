@@ -1,0 +1,293 @@
+---
+title: JZoom
+description: Compact zoom control with plus/minus buttons
+icon: search-plus
+---
+
+## Overview
+
+JZoom is a horizontal control with two round buttons for zoom in/out functionality. Designed for use with zoomable canvases and image viewers.
+
+## Constructor
+
+```java
+JZoom zoom = new JZoom();
+```
+
+Creates a compact zoom control with plus and minus buttons.
+
+## Appearance
+
+- **Size**: 32px height (fixed)
+- **Buttons**: 24×24px round buttons
+- **Spacing**: 6px between buttons
+- **Padding**: 12px horizontal
+- **Background**: Semi-transparent gray overlay
+- **Alignment**: CENTER
+
+## Methods
+
+<ResponseField name="setOnZoomIn" type="void">
+  Sets the action to execute when zoom in is clicked
+  
+  ```java
+  zoom.setOnZoomIn(() -> {
+      canvas.zoomIn();
+  });
+  ```
+  
+  <ParamField path="onZoomIn" type="Runnable" required>
+    Action to execute on zoom in
+  </ParamField>
+</ResponseField>
+
+<ResponseField name="setOnZoomOut" type="void">
+  Sets the action to execute when zoom out is clicked
+  
+  ```java
+  zoom.setOnZoomOut(() -> {
+      canvas.zoomOut();
+  });
+  ```
+  
+  <ParamField path="onZoomOut" type="Runnable" required>
+    Action to execute on zoom out
+  </ParamField>
+</ResponseField>
+
+## Example Usage
+
+### With JDesignCanvas
+
+```java
+JDesignCanvas canvas = new JDesignCanvas();
+canvas.setSupportedLines(3);
+
+JZoom zoom = new JZoom();
+zoom.setOnZoomIn(() -> canvas.zoomIn());
+zoom.setOnZoomOut(() -> canvas.zoomOut());
+
+// Position in top-right corner
+StackPane root = new StackPane(canvas);
+StackPane.setAlignment(zoom, Pos.TOP_RIGHT);
+StackPane.setMargin(zoom, new Insets(20));
+root.getChildren().add(zoom);
+```
+
+### With ImageView
+
+```java
+ImageView imageView = new ImageView(new Image("photo.jpg"));
+imageView.setPreserveRatio(true);
+
+DoubleProperty zoomLevel = new SimpleDoubleProperty(1.0);
+
+zoomLevel.addListener((obs, old, newVal) -> {
+    double scale = newVal.doubleValue();
+    imageView.setScaleX(scale);
+    imageView.setScaleY(scale);
+});
+
+JZoom zoom = new JZoom();
+zoom.setOnZoomIn(() -> {
+    double current = zoomLevel.get();
+    zoomLevel.set(Math.min(current + 0.1, 3.0)); // Max 300%
+});
+
+zoom.setOnZoomOut(() -> {
+    double current = zoomLevel.get();
+    zoomLevel.set(Math.max(current - 0.1, 0.5)); // Min 50%
+});
+
+StackPane viewer = new StackPane(imageView);
+StackPane.setAlignment(zoom, Pos.BOTTOM_RIGHT);
+StackPane.setMargin(zoom, new Insets(16));
+viewer.getChildren().add(zoom);
+```
+
+### Custom Zoom Logic
+
+```java
+public class ZoomableCanvas extends Pane {
+    
+    private double zoom = 1.0;
+    private final Scale scaleTransform = new Scale(1, 1);
+    
+    public ZoomableCanvas() {
+        getTransforms().add(scaleTransform);
+    }
+    
+    public void zoomIn() {
+        zoom = Math.min(zoom + 0.1, 2.0);
+        updateScale();
+    }
+    
+    public void zoomOut() {
+        zoom = Math.max(zoom - 0.1, 0.5);
+        updateScale();
+    }
+    
+    private void updateScale() {
+        scaleTransform.setX(zoom);
+        scaleTransform.setY(zoom);
+    }
+}
+
+// Usage
+ZoomableCanvas canvas = new ZoomableCanvas();
+
+JZoom zoom = new JZoom();
+zoom.setOnZoomIn(canvas::zoomIn);
+zoom.setOnZoomOut(canvas::zoomOut);
+```
+
+### With Zoom Display
+
+```java
+DoubleProperty zoomLevel = new SimpleDoubleProperty(1.0);
+
+JLabel zoomLabel = new JLabel();
+zoomLabel.textProperty().bind(
+    zoomLevel.multiply(100).asString("%.0f%%")
+);
+zoomLabel.addClass("text-sm", "text-gray-500");
+
+JZoom zoom = new JZoom();
+zoom.setOnZoomIn(() -> {
+    zoomLevel.set(Math.min(zoomLevel.get() + 0.1, 2.0));
+});
+zoom.setOnZoomOut(() -> {
+    zoomLevel.set(Math.max(zoomLevel.get() - 0.1, 0.5));
+});
+
+HBox zoomControls = new HBox(8, zoom, zoomLabel);
+zoomControls.setAlignment(Pos.CENTER);
+```
+
+### Keyboard Shortcuts
+
+```java
+Scene scene = new Scene(root);
+
+scene.setOnKeyPressed(event -> {
+    if (event.isControlDown()) {
+        switch (event.getCode()) {
+            case PLUS, EQUALS -> canvas.zoomIn();
+            case MINUS -> canvas.zoomOut();
+            case DIGIT0 -> canvas.resetZoom(); // Ctrl+0 = reset
+        }
+    }
+});
+```
+
+### Animated Zoom
+
+```java
+DoubleProperty zoomLevel = new SimpleDoubleProperty(1.0);
+Scale scaleTransform = new Scale();
+
+scaleTransform.xProperty().bind(zoomLevel);
+scaleTransform.yProperty().bind(zoomLevel);
+
+canvas.getTransforms().add(scaleTransform);
+
+JZoom zoom = new JZoom();
+
+zoom.setOnZoomIn(() -> {
+    double target = Math.min(zoomLevel.get() + 0.1, 2.0);
+    Timeline timeline = new Timeline(
+        new KeyFrame(Duration.millis(200),
+            new KeyValue(zoomLevel, target, Interpolator.EASE_OUT)
+        )
+    );
+    timeline.play();
+});
+
+zoom.setOnZoomOut(() -> {
+    double target = Math.max(zoomLevel.get() - 0.1, 0.5);
+    Timeline timeline = new Timeline(
+        new KeyFrame(Duration.millis(200),
+            new KeyValue(zoomLevel, target, Interpolator.EASE_OUT)
+        )
+    );
+    timeline.play();
+});
+```
+
+## Styling
+
+Style classes:
+- `.j-zoom` - Main container
+- Buttons use inline styles for round appearance
+
+Custom CSS:
+
+```css
+.j-zoom {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-background-radius: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);
+}
+
+.j-zoom .j-button {
+    -fx-background-radius: 50%;
+    -fx-background-color: rgba(203, 213, 225, 0.4);
+}
+
+.j-zoom .j-button:hover {
+    -fx-background-color: rgba(203, 213, 225, 0.7);
+}
+```
+
+## Button Behavior
+
+### Default State
+- Background: `rgba(203, 213, 225, 0.4)`
+- Border radius: 50% (perfect circle)
+- Size: 24×24px
+
+### Hover State
+- Background: `rgba(203, 213, 225, 0.7)`
+- Smooth transition
+
+### Icons
+- Minus button: `JIcon.MINUS`
+- Plus button: `JIcon.PLUS`
+
+## Layout Tips
+
+### Floating Corner Position
+
+```java
+StackPane.setAlignment(zoom, Pos.TOP_RIGHT);
+StackPane.setMargin(zoom, new Insets(20));
+```
+
+### Bottom Center
+
+```java
+StackPane.setAlignment(zoom, Pos.BOTTOM_CENTER);
+StackPane.setMargin(zoom, new Insets(0, 0, 20, 0));
+```
+
+### In Toolbar
+
+```java
+HBox toolbar = new HBox(8);
+toolbar.setAlignment(Pos.CENTER_LEFT);
+toolbar.setPadding(new Insets(8));
+toolbar.getChildren().addAll(
+    new JButton("Reset", JIcon.REFRESH),
+    new Separator(Orientation.VERTICAL),
+    zoom
+);
+```
+
+## Notes
+
+- Buttons are always 24×24px (fixed size)
+- Container height is fixed at 32px
+- Semi-transparent background blends with any background
+- Hover effect provides clear visual feedback
+- Designed to float over content without obscuring it
+- Works with any zoomable component via Runnable callbacks

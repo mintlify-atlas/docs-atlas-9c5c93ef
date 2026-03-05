@@ -1,0 +1,257 @@
+---
+title: JDraggableField
+description: Draggable sidebar item for label designer fields
+icon: hand
+---
+
+## Overview
+
+JDraggableField extends JSidebarItem to create draggable field items for use with JDesignCanvas. It enables drag-and-drop field assignment in label design applications.
+
+## Constructor
+
+```java
+JDraggableField field = new JDraggableField(
+    String fieldId,
+    String fieldName,
+    JIcon icon
+);
+```
+
+<ParamField path="fieldId" type="String" required>
+  Unique identifier for the field (e.g., `"customer_name"`)
+  
+  - Used as drag data payload
+  - Typically lowercase with underscores
+</ParamField>
+
+<ParamField path="fieldName" type="String" required>
+  Display name shown in the sidebar (e.g., `"Customer Name"`)
+  
+  - Human-readable label
+  - Shown with the icon
+</ParamField>
+
+<ParamField path="icon" type="JIcon">
+  Icon displayed next to the field name
+  
+  - Can be `null` for no icon
+  - Rendered as SVG graphic
+</ParamField>
+
+## Properties
+
+<ResponseField name="getFieldId" type="String">
+  Returns the field's unique identifier
+  
+  ```java
+  String id = field.getFieldId();
+  ```
+</ResponseField>
+
+<ResponseField name="getFieldName" type="String">
+  Returns the field's display name
+  
+  ```java
+  String name = field.getFieldName();
+  ```
+</ResponseField>
+
+## Drag Behavior
+
+### Automatic Drag Detection
+
+- Drag starts on mouse press + drag gesture
+- Transfer mode: `COPY` (does not remove source)
+- Drag view: Snapshot of the field item
+- Clipboard content: The `fieldId` string
+
+### Drag Data
+
+When dragged, the component places the `fieldId` in the dragboard:
+
+```java
+Dragboard db = startDragAndDrop(TransferMode.COPY);
+ClipboardContent content = new ClipboardContent();
+content.putString(fieldId); // e.g., "customer_name"
+db.setContent(content);
+```
+
+Drop targets (like JDesignCanvas) can read this string to identify the field.
+
+## Example Usage
+
+### Creating Draggable Fields
+
+```java
+// Customer information fields
+JDraggableField nameField = new JDraggableField(
+    "customer_name",
+    "Customer Name",
+    JIcon.PERSON
+);
+
+JDraggableField addressField = new JDraggableField(
+    "customer_address",
+    "Address",
+    JIcon.PLACE
+);
+
+JDraggableField phoneField = new JDraggableField(
+    "customer_phone",
+    "Phone Number",
+    JIcon.CALL
+);
+
+// Order fields
+JDraggableField orderIdField = new JDraggableField(
+    "order_id",
+    "Order ID",
+    JIcon.BARCODE
+);
+
+JDraggableField orderDateField = new JDraggableField(
+    "order_date",
+    "Order Date",
+    JIcon.CALENDAR
+);
+```
+
+### Organizing in Sidebar
+
+```java
+JLabel customerHeader = new JLabel("Customer Info");
+customerHeader.addClass("text-sm", "font-bold", "text-gray-600");
+
+JLabel orderHeader = new JLabel("Order Info");
+orderHeader.addClass("text-sm", "font-bold", "text-gray-600");
+
+VBox sidebar = new VBox(8);
+sidebar.setPadding(new Insets(16));
+sidebar.getStyleClass().add("j-sidebar");
+sidebar.getChildren().addAll(
+    customerHeader,
+    nameField,
+    addressField,
+    phoneField,
+    new Separator(),
+    orderHeader,
+    orderIdField,
+    orderDateField
+);
+```
+
+### Complete Label Designer
+
+```java
+public class LabelDesigner extends BorderPane {
+    
+    private final JDesignCanvas canvas;
+    private final VBox fieldsSidebar;
+    
+    public LabelDesigner() {
+        canvas = new JDesignCanvas();
+        canvas.setSupportedLines(3);
+        
+        // Create fields
+        List&lt;JDraggableField&gt; fields = List.of(
+            new JDraggableField("name", "Full Name", JIcon.PERSON),
+            new JDraggableField("email", "Email", JIcon.EMAIL),
+            new JDraggableField("phone", "Phone", JIcon.CALL),
+            new JDraggableField("barcode", "Barcode", JIcon.BARCODE)
+        );
+        
+        fieldsSidebar = new VBox(10);
+        fieldsSidebar.setPadding(new Insets(20));
+        fieldsSidebar.setPrefWidth(250);
+        fieldsSidebar.getStyleClass().add("fields-panel");
+        
+        JLabel title = new JLabel("Available Fields");
+        title.addClass("text-lg", "font-bold");
+        
+        fieldsSidebar.getChildren().add(title);
+        fieldsSidebar.getChildren().addAll(fields);
+        
+        // Layout
+        setLeft(fieldsSidebar);
+        setCenter(canvas);
+        
+        // Add zoom controls
+        JZoom zoom = new JZoom();
+        zoom.setOnZoomIn(() -> canvas.zoomIn());
+        zoom.setOnZoomOut(() -> canvas.zoomOut());
+        
+        StackPane canvasWrapper = new StackPane(canvas);
+        StackPane.setAlignment(zoom, Pos.TOP_RIGHT);
+        StackPane.setMargin(zoom, new Insets(20));
+        canvasWrapper.getChildren().add(zoom);
+        
+        setCenter(canvasWrapper);
+    }
+}
+```
+
+### Programmatic Field Data
+
+```java
+// Load fields from database
+List&lt;FieldDefinition&gt; fieldDefs = database.getFieldDefinitions();
+
+VBox sidebar = new VBox(8);
+for (FieldDefinition def : fieldDefs) {
+    JIcon icon = switch (def.getType()) {
+        case "text" -> JIcon.FILE_TEXT;
+        case "barcode" -> JIcon.BARCODE;
+        case "date" -> JIcon.CALENDAR;
+        default -> JIcon.TAG;
+    };
+    
+    JDraggableField field = new JDraggableField(
+        def.getId(),
+        def.getDisplayName(),
+        icon
+    );
+    
+    sidebar.getChildren().add(field);
+}
+```
+
+## Styling
+
+Style classes:
+- `.j-draggable-field` - Main container
+- Inherits all styles from `JSidebarItem`
+
+Custom styling:
+
+```css
+.j-draggable-field {
+    -fx-cursor: hand;
+}
+
+.j-draggable-field:hover {
+    -fx-background-color: rgba(59, 130, 246, 0.1);
+}
+```
+
+## Integration with JDesignCanvas
+
+The canvas automatically handles dropped fields:
+
+```java
+// Canvas receives the fieldId string
+setOnDragDropped(event -> {
+    String fieldId = event.getDragboard().getString();
+    // fieldId = "customer_name"
+    updateSlot(slot, fieldId);
+});
+```
+
+## Notes
+
+- Extends `JSidebarItem` for consistent sidebar appearance
+- Drag snapshot provides visual feedback during drag
+- Field remains in sidebar after drag (copy mode)
+- Can be used with any drop target that accepts string data
+- Icon is optional (pass `null` for text-only fields)
+- fieldId should be unique within the field set

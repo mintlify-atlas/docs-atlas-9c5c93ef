@@ -1,0 +1,347 @@
+---
+title: Buttons & Badges
+description: Interactive button components, badges, and chips for your JavaFX application
+icon: 'hand-pointer'
+---
+
+## JButton
+
+A styled button component that extends JavaFX's `Button` class with automatic theme support and icon integration.
+
+### Basic Usage
+
+```java
+import com.jjarroyo.components.JButton;
+import com.jjarroyo.components.JIcon;
+
+// Simple button
+JButton button = new JButton("Click Me");
+
+// Button with text
+JButton textButton = new JButton("Submit");
+
+// Button with icon
+JButton iconButton = new JButton("Save", JIcon.SAVE);
+```
+
+### Variants
+
+```java
+// Primary button (default)
+JButton primary = new JButton("Primary");
+
+// Success variant
+JButton success = new JButton("Success")
+    .addClass("btn-success");
+
+// Danger variant
+JButton danger = new JButton("Delete")
+    .addClass("btn-danger");
+
+// Warning variant
+JButton warning = new JButton("Warning")
+    .addClass("btn-warning");
+
+// Secondary variant
+JButton secondary = new JButton("Secondary")
+    .addClass("btn-secondary");
+```
+
+### Sizes
+
+```java
+// Small button
+JButton small = new JButton("Small")
+    .addClass("btn-sm");
+
+// Default size
+JButton normal = new JButton("Normal");
+
+// Large button
+JButton large = new JButton("Large")
+    .addClass("btn-lg");
+```
+
+### With Icons
+
+```java
+// Icon with text
+JButton saveBtn = new JButton("Save", JIcon.SAVE);
+
+// Programmatically set icon
+JButton btn = new JButton("Delete");
+btn.setIcon(JIcon.DELETE);
+
+// Remove icon
+btn.setIcon(null);
+```
+
+### API Reference
+
+#### Constructors
+
+<ResponseField name="JButton()" type="constructor">
+  Creates an empty button
+</ResponseField>
+
+<ResponseField name="JButton(String text)" type="constructor">
+  Creates a button with the specified text
+  
+  <Expandable title="parameters">
+    <ResponseField name="text" type="String">
+      The button label text
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="JButton(String text, JIcon icon)" type="constructor">
+  Creates a button with text and an icon
+  
+  <Expandable title="parameters">
+    <ResponseField name="text" type="String">
+      The button label text
+    </ResponseField>
+    <ResponseField name="icon" type="JIcon">
+      The icon to display
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+#### Methods
+
+<ResponseField name="addClass(String... styleClasses)" type="JButton">
+  Adds one or more CSS style classes to the button. Automatically removes default `btn-primary` when a new variant is added.
+  
+  ```java
+  button.addClass("btn-success", "btn-lg");
+  ```
+</ResponseField>
+
+<ResponseField name="setIcon(JIcon icon)" type="void">
+  Sets or removes the button icon. Pass `null` to remove the icon.
+  
+  ```java
+  button.setIcon(JIcon.CHECK);
+  ```
+</ResponseField>
+
+---
+
+## JBadge
+
+A label component designed for displaying tags, counts, or status indicators.
+
+### Basic Usage
+
+```java
+import com.jjarroyo.components.JBadge;
+
+// Simple badge
+JBadge badge = new JBadge("New");
+
+// Badge with variant
+JBadge successBadge = new JBadge("Active", "badge-success");
+
+// Badge with icon
+JBadge iconBadge = new JBadge("5", JIcon.NOTIFICATIONS);
+```
+
+### Variants
+
+```java
+JBadge primary = new JBadge("Primary");
+JBadge success = new JBadge("Success").addClass("badge-success");
+JBadge danger = new JBadge("Error").addClass("badge-danger");
+JBadge warning = new JBadge("Warning").addClass("badge-warning");
+JBadge info = new JBadge("Info").addClass("badge-info");
+```
+
+### Sizes & Shapes
+
+```java
+// Small badge
+JBadge small = new JBadge("3").addClass("badge-sm");
+
+// Large badge
+JBadge large = new JBadge("99+").addClass("badge-lg");
+
+// Circular badge (for counts)
+JBadge circle = new JBadge("5").addClass("badge-circle");
+```
+
+### API Reference
+
+#### Constructors
+
+<ResponseField name="JBadge()" type="constructor">
+  Creates an empty badge
+</ResponseField>
+
+<ResponseField name="JBadge(String text)" type="constructor">
+  Creates a badge with text
+</ResponseField>
+
+<ResponseField name="JBadge(String text, JIcon icon)" type="constructor">
+  Creates a badge with text and icon
+</ResponseField>
+
+<ResponseField name="JBadge(String text, String... styleClasses)" type="constructor">
+  Creates a badge with text and custom style classes
+</ResponseField>
+
+#### Methods
+
+<ResponseField name="addClass(String... styleClasses)" type="JBadge">
+  Adds CSS style classes, automatically managing variant replacements
+</ResponseField>
+
+<ResponseField name="setIcon(JIcon icon)" type="void">
+  Sets or removes the badge icon
+</ResponseField>
+
+---
+
+## JChip
+
+An interactive tag/chip component inspired by Material Design, perfect for filters, tags, and categories.
+
+### Basic Usage
+
+```java
+import com.jjarroyo.components.JChip;
+import com.jjarroyo.components.JChip.Variant;
+import com.jjarroyo.components.JChip.Size;
+
+// Simple chip
+JChip chip = new JChip("JavaFX");
+
+// Chip with icon
+JChip iconChip = new JChip("Technology", JIcon.CODE.view());
+```
+
+### Variants
+
+```java
+// Filled variant (default)
+JChip filled = new JChip("Filled")
+    .setVariant(Variant.FILLED)
+    .setColor("primary");
+
+// Outlined variant
+JChip outlined = new JChip("Outlined")
+    .setVariant(Variant.OUTLINED)
+    .setColor("success");
+
+// Soft variant
+JChip soft = new JChip("Soft")
+    .setVariant(Variant.SOFT)
+    .setColor("info");
+```
+
+### Colors
+
+```java
+chip.setColor("primary");   // Blue
+chip.setColor("success");   // Green
+chip.setColor("danger");    // Red
+chip.setColor("warning");   // Yellow
+chip.setColor("info");      // Cyan
+chip.setColor("slate");     // Gray
+```
+
+### Sizes
+
+```java
+JChip small = new JChip("Small").setChipSize(Size.SM);
+JChip medium = new JChip("Medium").setChipSize(Size.MD);
+JChip large = new JChip("Large").setChipSize(Size.LG);
+```
+
+### Dismissible Chips
+
+```java
+HBox container = new HBox();
+JChip dismissible = new JChip("Remove Me")
+    .setDismissible(true)
+    .setOnDismiss(() -> {
+        container.getChildren().remove(dismissible);
+        System.out.println("Chip removed!");
+    });
+
+container.getChildren().add(dismissible);
+```
+
+### Complete Example
+
+```java
+HBox tagContainer = new HBox(8);
+
+String[] tags = {"Java", "JavaFX", "UI", "Design"};
+for (String tag : tags) {
+    JChip chip = new JChip(tag)
+        .setColor("primary")
+        .setVariant(Variant.SOFT)
+        .setDismissible(true)
+        .setOnDismiss(() -> tagContainer.getChildren().remove(chip));
+    
+    tagContainer.getChildren().add(chip);
+}
+```
+
+### API Reference
+
+#### Constructors
+
+<ResponseField name="JChip(String text)" type="constructor">
+  Creates a chip with the specified text
+</ResponseField>
+
+<ResponseField name="JChip(String text, Node icon)" type="constructor">
+  Creates a chip with text and an icon node
+</ResponseField>
+
+#### Methods
+
+<ResponseField name="setColor(String color)" type="JChip">
+  Sets the color variant: `primary`, `success`, `danger`, `warning`, `info`, `slate`
+</ResponseField>
+
+<ResponseField name="setVariant(Variant variant)" type="JChip">
+  Sets the visual variant: `FILLED`, `OUTLINED`, `SOFT`
+</ResponseField>
+
+<ResponseField name="setChipSize(Size size)" type="JChip">
+  Sets the size: `SM`, `MD`, `LG`
+</ResponseField>
+
+<ResponseField name="setText(String text)" type="JChip">
+  Updates the chip text
+</ResponseField>
+
+<ResponseField name="getText()" type="String">
+  Returns the current text
+</ResponseField>
+
+<ResponseField name="setIcon(Node icon)" type="JChip">
+  Sets or updates the icon
+</ResponseField>
+
+<ResponseField name="setDismissible(boolean dismissible)" type="JChip">
+  Enables or disables the close button
+</ResponseField>
+
+<ResponseField name="setOnDismiss(Runnable onDismiss)" type="JChip">
+  Sets the callback to execute when the chip is dismissed
+</ResponseField>
+
+## Available Icons
+
+All components support the `JIcon` enum with 150+ icons. Common examples:
+
+- Navigation: `ARROW_BACK`, `ARROW_FORWARD`, `HOME`, `MENU`, `CLOSE`
+- Actions: `ADD`, `DELETE`, `EDIT`, `SEARCH`, `SETTINGS`, `SAVE`
+- Status: `CHECK`, `ERROR`, `WARNING`, `INFO`
+- Social: `PERSON`, `GROUP`, `SHARE`, `FAVORITE`
+- File: `FILE`, `FOLDER`, `UPLOAD`, `DOWNLOAD`
+
+See `JIcon.java` for the complete list.

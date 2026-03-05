@@ -1,0 +1,336 @@
+---
+title: Tables & Lists
+description: Display and manage tabular data with JTable and list items with JList
+icon: table
+---
+
+## JTable
+
+Enterprise-grade table component with checkboxes, search/filter, row actions, custom cell renderers, bulk actions, CSV export, and pagination.
+
+### Basic Usage
+
+```java
+JTable<User> table = new JTable<>();
+table.setStriped(true);
+table.addColumn("Name", "name");
+table.addColumn("Email", "email");
+table.addColumn("Role", "role");
+
+ObservableList<User> data = FXCollections.observableArrayList(
+    new User("John Doe", "john@example.com", "Admin"),
+    new User("Jane Smith", "jane@example.com", "User")
+);
+
+table.setItems(data);
+```
+
+### Searchable Table
+
+Enable built-in search functionality:
+
+```java
+JTable<Product> table = new JTable<>();
+table.setSearchable(true);
+table.setSearchPlaceholder("Search products...");
+table.addColumn("Name", "name");
+table.addColumn("SKU", "sku");
+table.addColumn("Price", "price");
+table.setItems(products);
+```
+
+### Checkable Rows with Bulk Actions
+
+```java
+JTable<Task> table = new JTable<>();
+table.setCheckable(true);
+table.setBulkActionsEnabled(true);
+
+table.addColumn("Task", "title");
+table.addColumn("Status", "status");
+
+table.setOnCheckChange(selectedItems -> {
+    System.out.println("Selected: " + selectedItems.size());
+});
+
+table.setOnBulkDelete(items -> {
+    // Handle bulk deletion
+    table.removeItems(items);
+});
+
+table.setItems(tasks);
+```
+
+### Custom Cell Renderers
+
+Render custom nodes in table cells:
+
+```java
+JTable<User> table = new JTable<>();
+
+table.addColumn("Name", "name");
+
+// Render role as a JChip
+table.addColumn("Role", "role", user -> 
+    new JChip(user.getRole())
+        .setColor(user.getRole().equals("Admin") ? "primary" : "secondary")
+);
+
+// Render status as JBadge
+table.addColumn("Status", "status", user -> 
+    new JBadge(user.getStatus())
+        .setVariant(user.isActive() ? JBadge.Variant.SUCCESS : JBadge.Variant.DANGER)
+);
+
+table.setItems(users);
+```
+
+### Row Actions
+
+Add action buttons to each row:
+
+```java
+JTable<User> table = new JTable<>();
+table.addColumn("Name", "name");
+table.addColumn("Email", "email");
+
+table.setRowActions((user, box) -> {
+    JButton editBtn = new JButton("Edit")
+        .setSize(JButton.ButtonSize.SM)
+        .setVariant(JButton.ButtonVariant.LIGHT_PRIMARY);
+    editBtn.setOnAction(e -> editUser(user));
+    
+    JButton deleteBtn = new JButton("Delete")
+        .setSize(JButton.ButtonSize.SM)
+        .setVariant(JButton.ButtonVariant.LIGHT_DANGER);
+    deleteBtn.setOnAction(e -> deleteUser(user));
+    
+    box.getChildren().addAll(editBtn, deleteBtn);
+});
+
+table.setItems(users);
+```
+
+### Visual Modes
+
+```java
+// Striped rows
+table.setStriped(true);
+
+// Dense mode (compact spacing)
+table.setDense(true);
+
+// Status bar
+table.setStatusBarEnabled(true);
+```
+
+### Row Click Handling
+
+```java
+table.setOnRowClick(user -> {
+    System.out.println("Clicked: " + user.getName());
+    navigateToDetails(user);
+});
+```
+
+### Pagination
+
+```java
+JTable<Item> table = new JTable<>();
+table.setItemsPerPage(20);
+table.addColumn("Name", "name");
+table.setItems(largeDataset);
+
+// Access pagination control
+JPagination pagination = table.getPagination();
+pagination.setOnPageChange(() -> {
+    System.out.println("Page: " + pagination.currentPageProperty().get());
+});
+
+// Hide pagination for infinite scroll
+table.setPaginationVisible(false);
+table.setOnScrollBottom(() -> {
+    loadMoreData();
+});
+```
+
+### CSV Export
+
+```java
+JButton exportBtn = new JButton("Export CSV");
+exportBtn.setOnAction(e -> {
+    FileChooser chooser = new FileChooser();
+    chooser.setTitle("Export to CSV");
+    chooser.getExtensionFilters().add(
+        new FileChooser.ExtensionFilter("CSV Files", "*.csv")
+    );
+    File file = chooser.showSaveDialog(stage);
+    
+    if (file != null) {
+        try {
+            table.exportToCSV(file);
+            JToast.show(stage, "Export successful", JToast.Type.SUCCESS, 
+                       JToast.Position.TOP_RIGHT, 3000);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+});
+```
+
+### Empty State
+
+```java
+table.setEmptyText("No users found");
+table.setEmptyGraphic(new Label("📋"));
+```
+
+### API Reference
+
+<ParamField path="setCheckable(boolean)" type="void">
+  Enable checkbox selection mode
+</ParamField>
+
+<ParamField path="setSearchable(boolean)" type="void">
+  Enable built-in search bar
+</ParamField>
+
+<ParamField path="setStriped(boolean)" type="void">
+  Enable alternating row colors
+</ParamField>
+
+<ParamField path="setDense(boolean)" type="void">
+  Enable compact row spacing
+</ParamField>
+
+<ParamField path="addColumn(String, String)" type="TableColumn">
+  Add a sortable column with title and property name
+</ParamField>
+
+<ParamField path="addColumn(String, String, Function<T, Node>)" type="TableColumn">
+  Add a column with custom cell renderer
+</ParamField>
+
+<ParamField path="setRowActions(BiConsumer<T, HBox>)" type="void">
+  Add action buttons to each row
+</ParamField>
+
+<ParamField path="setOnRowClick(Consumer<T>)" type="void">
+  Handle row click events
+</ParamField>
+
+<ParamField path="setItems(ObservableList<T>)" type="void">
+  Set table data
+</ParamField>
+
+<ParamField path="getCheckedItems()" type="ObservableList<T>">
+  Get selected items in checkable mode
+</ParamField>
+
+<ParamField path="exportToCSV(File)" type="void">
+  Export table data to CSV file
+</ParamField>
+
+---
+
+## JList
+
+Scrollable list component with pagination and infinite scroll support.
+
+### Basic Usage
+
+```java
+JList<String> list = new JList<>();
+ObservableList<String> items = FXCollections.observableArrayList(
+    "Item 1", "Item 2", "Item 3"
+);
+list.setItems(items);
+```
+
+### Custom Cell Factory
+
+```java
+JList<User> list = new JList<>();
+
+list.setCellFactory(param -> new ListCell<User>() {
+    @Override
+    protected void updateItem(User user, boolean empty) {
+        super.updateItem(user, empty);
+        if (empty || user == null) {
+            setGraphic(null);
+        } else {
+            HBox card = new HBox(10);
+            card.setAlignment(Pos.CENTER_LEFT);
+            
+            JAvatar avatar = new JAvatar(user.getFirstName(), user.getLastName());
+            
+            VBox info = new VBox(4);
+            Label name = new Label(user.getName());
+            name.setStyle("-fx-font-weight: bold;");
+            Label email = new Label(user.getEmail());
+            email.setStyle("-fx-text-fill: -color-text-muted;");
+            info.getChildren().addAll(name, email);
+            
+            card.getChildren().addAll(avatar, info);
+            setGraphic(card);
+        }
+    }
+});
+
+list.setItems(users);
+```
+
+### Infinite Scroll
+
+```java
+JList<Item> list = new JList<>();
+list.setPaginationVisible(false);
+
+list.setOnScrollBottom(() -> {
+    System.out.println("Loading more...");
+    loadMoreItems();
+});
+
+list.setItems(initialItems);
+```
+
+### With Pagination
+
+```java
+JList<Product> list = new JList<>();
+
+JPagination pagination = list.getPagination();
+pagination.totalPagesProperty().set(10);
+pagination.setOnPageChange(() -> {
+    int page = pagination.currentPageProperty().get();
+    loadPage(page);
+});
+
+list.setItems(products);
+```
+
+### API Reference
+
+<ParamField path="setItems(ObservableList<T>)" type="void">
+  Set list items
+</ParamField>
+
+<ParamField path="setCellFactory(Callback)" type="void">
+  Set custom cell renderer
+</ParamField>
+
+<ParamField path="setOnScrollBottom(Runnable)" type="void">
+  Handle scroll to bottom (infinite scroll)
+</ParamField>
+
+<ParamField path="setPaginationVisible(boolean)" type="void">
+  Show or hide pagination controls
+</ParamField>
+
+<ParamField path="getListView()" type="ListView<T>">
+  Access underlying ListView
+</ParamField>
+
+<ParamField path="getPagination()" type="JPagination">
+  Access pagination control
+</ParamField>

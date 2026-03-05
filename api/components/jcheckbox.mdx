@@ -1,0 +1,164 @@
+---
+title: JCheckBox
+description: A styled checkbox component with customizable colors and sizes
+---
+
+## Overview
+
+`JCheckBox` is a customizable checkbox component that extends JavaFX's `CheckBox` with theme-aware styling options.
+
+## Constructors
+
+### JCheckBox()
+
+Creates a checkbox with no text label.
+
+```java
+JCheckBox checkbox = new JCheckBox();
+```
+
+### JCheckBox(String text)
+
+Creates a checkbox with the specified text label.
+
+<ParamField path="text" type="String">
+  The text label to display next to the checkbox
+</ParamField>
+
+```java
+JCheckBox checkbox = new JCheckBox("Accept terms");
+```
+
+## Properties
+
+### colorStyle
+
+<ParamField path="colorStyle" type="CheckBoxStyle" default="PRIMARY">
+  The color style of the checkbox
+</ParamField>
+
+**Available Values:**
+- `PRIMARY` - Primary theme color
+- `SUCCESS` - Success/green color
+- `DANGER` - Danger/red color
+- `WARNING` - Warning/yellow color
+- `INFO` - Info/blue color
+- `DARK` - Dark color
+- `SECONDARY` - Secondary theme color
+
+### size
+
+<ParamField path="size" type="CheckBoxSize" default="DEFAULT">
+  The size of the checkbox
+</ParamField>
+
+**Available Values:**
+- `SMALL` - Small checkbox
+- `DEFAULT` - Default/medium checkbox
+- `LARGE` - Large checkbox
+
+## Methods
+
+### setColorStyle(CheckBoxStyle style)
+
+Sets the color style of the checkbox.
+
+<ParamField path="style" type="CheckBoxStyle" required>
+  The color style to apply
+</ParamField>
+
+```java
+checkbox.setColorStyle(JCheckBox.CheckBoxStyle.SUCCESS);
+```
+
+### getColorStyle()
+
+Returns the current color style.
+
+<ResponseField name="colorStyle" type="CheckBoxStyle">
+  The current color style of the checkbox
+</ResponseField>
+
+```java
+CheckBoxStyle style = checkbox.getColorStyle();
+```
+
+### colorStyleProperty()
+
+Returns the color style property for binding.
+
+<ResponseField name="colorStyleProperty" type="ObjectProperty<CheckBoxStyle>">
+  The observable property for color style
+</ResponseField>
+
+```java
+checkbox.colorStyleProperty().addListener((obs, old, newVal) -> {
+    System.out.println("Style changed to: " + newVal);
+});
+```
+
+### setSize(CheckBoxSize size)
+
+Sets the size of the checkbox.
+
+<ParamField path="size" type="CheckBoxSize" required>
+  The size to apply
+</ParamField>
+
+```java
+checkbox.setSize(JCheckBox.CheckBoxSize.LARGE);
+```
+
+### getSize()
+
+Returns the current size.
+
+<ResponseField name="size" type="CheckBoxSize">
+  The current size of the checkbox
+</ResponseField>
+
+```java
+CheckBoxSize size = checkbox.getSize();
+```
+
+### sizeProperty()
+
+Returns the size property for binding.
+
+<ResponseField name="sizeProperty" type="ObjectProperty<CheckBoxSize>">
+  The observable property for size
+</ResponseField>
+
+```java
+checkbox.sizeProperty().addListener((obs, old, newVal) -> {
+    System.out.println("Size changed to: " + newVal);
+});
+```
+
+## Example Usage
+
+```java
+import com.jjarroyo.components.JCheckBox;
+
+// Create a checkbox with custom style and size
+JCheckBox checkbox = new JCheckBox("Enable notifications");
+checkbox.setColorStyle(JCheckBox.CheckBoxStyle.PRIMARY);
+checkbox.setSize(JCheckBox.CheckBoxSize.DEFAULT);
+
+// Listen to selection changes
+checkbox.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+    if (isSelected) {
+        System.out.println("Checkbox selected");
+    }
+});
+
+// Set initial state
+checkbox.setSelected(true);
+```
+
+## CSS Style Classes
+
+The component applies the following style classes:
+- `j-checkbox` - Base style class
+- `checkbox-primary`, `checkbox-success`, etc. - Color style classes
+- `checkbox-sm`, `checkbox-md`, `checkbox-lg` - Size style classes

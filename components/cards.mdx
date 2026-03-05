@@ -1,0 +1,366 @@
+---
+title: Cards
+description: Flexible container components with headers, bodies, and footers
+icon: 'window'
+---
+
+## JCard
+
+A versatile container component that provides structured sections for headers, content, and footers. Perfect for dashboard widgets, content panels, and data displays.
+
+### Basic Usage
+
+```java
+import com.jjarroyo.components.JCard;
+import javafx.scene.control.Label;
+
+// Simple card with content
+JCard card = new JCard();
+card.setBody(new Label("This is the card content"));
+
+// Card with title and content
+JCard titleCard = new JCard("Card Title", new Label("Card content goes here"));
+
+// Card with title and subtitle
+JCard subtitleCard = new JCard("Main Title", "Subtitle text");
+```
+
+### Card Structure
+
+A complete card can have three main sections:
+
+```java
+JCard card = new JCard();
+
+// Header with title and subtitle
+card.setTitle("User Profile");
+card.setSubtitle("Manage your account settings");
+
+// Body content
+VBox content = new VBox(10);
+content.getChildren().addAll(
+    new Label("Name: John Doe"),
+    new Label("Email: john@example.com")
+);
+card.setBody(content);
+
+// Footer with actions
+HBox footer = new HBox(10);
+footer.getChildren().addAll(
+    new JButton("Cancel").addClass("btn-secondary"),
+    new JButton("Save").addClass("btn-primary")
+);
+card.setFooter(footer);
+```
+
+### Header Features
+
+#### Title and Subtitle
+
+```java
+JCard card = new JCard();
+card.setTitle("Dashboard");
+card.setSubtitle("Overview of your activity");
+```
+
+#### Header Toolbar
+
+```java
+JCard card = new JCard();
+card.setTitle("Settings");
+
+// Add toolbar items (right side of header)
+card.addToolbarItem(new JButton("Edit", JIcon.EDIT));
+card.addToolbarItem(new JButton("Delete", JIcon.DELETE).addClass("btn-danger"));
+```
+
+#### Header Divider Line
+
+```java
+JCard card = new JCard();
+card.setTitle("Report");
+card.setLine(true); // Adds divider line below header
+```
+
+### Scrollable Content
+
+```java
+JCard card = new JCard();
+card.setTitle("Long Content");
+
+VBox longContent = new VBox(10);
+for (int i = 0; i < 50; i++) {
+    longContent.getChildren().add(new Label("Item " + i));
+}
+
+card.setBody(longContent);
+card.makeScrollable(); // Enables scrolling for body content
+```
+
+### Collapsible Cards
+
+```java
+JCard card = new JCard();
+card.setTitle("Collapsible Section");
+card.setBody(new Label("This content can be collapsed"));
+
+// Enable collapse functionality
+card.setCollapsible(true);
+
+// Set initial state
+card.setExpanded(true); // or false to start collapsed
+```
+
+### Custom Styling
+
+```java
+JCard card = new JCard();
+card.setTitle("Styled Card");
+card.addClass("custom-card", "shadow-lg");
+```
+
+### Complete Dashboard Example
+
+```java
+// Stats Card
+JCard statsCard = new JCard();
+statsCard.setTitle("Total Users");
+statsCard.setSubtitle("Active accounts this month");
+
+VBox stats = new VBox(5);
+JLabel count = new JLabel("1,234");
+count.setStyle("-fx-font-size: 32px; -fx-font-weight: bold;");
+JLabel growth = new JLabel("+12% from last month");
+growth.setStyle("-fx-text-fill: green;");
+stats.getChildren().addAll(count, growth);
+
+statsCard.setBody(stats);
+
+// Activity Card with Toolbar
+JCard activityCard = new JCard();
+activityCard.setTitle("Recent Activity");
+activityCard.addToolbarItem(new JButton("Refresh", JIcon.REFRESH));
+activityCard.setLine(true);
+
+VBox activities = new VBox(10);
+for (int i = 0; i < 5; i++) {
+    activities.getChildren().add(
+        new Label("Activity item " + (i + 1))
+    );
+}
+
+activityCard.setBody(activities);
+activityCard.makeScrollable();
+
+// Settings Card with Footer
+JCard settingsCard = new JCard();
+settingsCard.setTitle("Preferences");
+settingsCard.setCollapsible(true);
+
+VBox settings = new VBox(10);
+settings.getChildren().addAll(
+    new JCheckBox("Enable notifications"),
+    new JCheckBox("Dark mode"),
+    new JCheckBox("Auto-save")
+);
+
+HBox footer = new HBox(10);
+footer.getChildren().addAll(
+    new JButton("Cancel").addClass("btn-secondary"),
+    new JButton("Apply").addClass("btn-primary")
+);
+
+settingsCard.setBody(settings);
+settingsCard.setFooter(footer);
+
+// Layout all cards
+VBox dashboard = new VBox(20);
+dashboard.setPadding(new Insets(20));
+dashboard.getChildren().addAll(statsCard, activityCard, settingsCard);
+```
+
+### Grid Layout Example
+
+```java
+GridPane grid = new GridPane();
+grid.setHgap(15);
+grid.setVgap(15);
+grid.setPadding(new Insets(20));
+
+// Card 1
+JCard card1 = new JCard("Sales", "Total revenue");
+card1.setBody(new Label("$12,345"));
+grid.add(card1, 0, 0);
+
+// Card 2
+JCard card2 = new JCard("Orders", "Total orders");
+card2.setBody(new Label("856"));
+grid.add(card2, 1, 0);
+
+// Card 3
+JCard card3 = new JCard("Customers", "Active users");
+card3.setBody(new Label("1,234"));
+grid.add(card3, 0, 1);
+
+// Card 4
+JCard card4 = new JCard("Growth", "Month over month");
+card4.setBody(new Label("+18%"));
+grid.add(card4, 1, 1);
+```
+
+## API Reference
+
+### Constructors
+
+<ResponseField name="JCard()" type="constructor">
+  Creates an empty card
+</ResponseField>
+
+<ResponseField name="JCard(String titleText, Node content)" type="constructor">
+  Creates a card with a title and body content
+  
+  <Expandable title="parameters">
+    <ResponseField name="titleText" type="String">
+      The card title
+    </ResponseField>
+    <ResponseField name="content" type="Node">
+      The body content node
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="JCard(String titleText, String subtitleText)" type="constructor">
+  Creates a card with title and subtitle
+  
+  <Expandable title="parameters">
+    <ResponseField name="titleText" type="String">
+      The card title
+    </ResponseField>
+    <ResponseField name="subtitleText" type="String">
+      The subtitle text
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Methods
+
+<ResponseField name="setTitle(String titleText)" type="JCard">
+  Sets the card title
+  
+  ```java
+  card.setTitle("My Card");
+  ```
+</ResponseField>
+
+<ResponseField name="setSubtitle(String subtitleText)" type="JCard">
+  Sets the subtitle text (appears below title)
+  
+  ```java
+  card.setSubtitle("Additional information");
+  ```
+</ResponseField>
+
+<ResponseField name="addToolbarItem(Node node)" type="JCard">
+  Adds a node to the toolbar area (right side of header)
+  
+  ```java
+  card.addToolbarItem(new JButton("Action"));
+  ```
+</ResponseField>
+
+<ResponseField name="setLine(boolean show)" type="void">
+  Shows or hides a divider line below the header
+  
+  ```java
+  card.setLine(true);
+  ```
+</ResponseField>
+
+<ResponseField name="setBody(Node content)" type="JCard">
+  Sets the main body content of the card
+  
+  ```java
+  card.setBody(new Label("Content"));
+  ```
+</ResponseField>
+
+<ResponseField name="setFooter(Node content)" type="JCard">
+  Sets the footer content (typically action buttons)
+  
+  ```java
+  HBox footer = new HBox(new JButton("OK"), new JButton("Cancel"));
+  card.setFooter(footer);
+  ```
+</ResponseField>
+
+<ResponseField name="makeScrollable()" type="JCard">
+  Wraps the body content in a ScrollPane to enable scrolling
+  
+  ```java
+  card.makeScrollable();
+  ```
+</ResponseField>
+
+<ResponseField name="setCollapsible(boolean collapsible)" type="JCard">
+  Enables or disables collapse functionality. Adds a chevron icon to the header.
+  
+  ```java
+  card.setCollapsible(true);
+  ```
+</ResponseField>
+
+<ResponseField name="setExpanded(boolean expanded)" type="JCard">
+  Sets the expanded/collapsed state (only works if collapsible is enabled)
+  
+  ```java
+  card.setExpanded(false); // Start collapsed
+  ```
+</ResponseField>
+
+<ResponseField name="addClass(String... styleClasses)" type="JCard">
+  Adds custom CSS style classes
+  
+  ```java
+  card.addClass("custom-card", "elevated");
+  ```
+</ResponseField>
+
+## CSS Style Classes
+
+Cards generate the following CSS classes:
+
+- `card` - Root card container
+- `card-header` - Header section
+- `card-header-line` - Header with divider line
+- `card-title-box` - Container for title and subtitle
+- `card-title` - Title label
+- `card-subtitle` - Subtitle label
+- `card-toolbar` - Toolbar container (right side of header)
+- `card-body` - Body content area
+- `card-footer` - Footer section
+- `card-scroll` - Scrollable body wrapper
+- `card-chevron` - Collapse/expand chevron icon
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Use Cards for Grouped Content">
+    Cards work best when grouping related information or controls together. Use them for dashboard widgets, settings panels, or data displays.
+  </Accordion>
+  
+  <Accordion title="Keep Headers Concise">
+    Card titles should be brief and descriptive. Use subtitles for additional context if needed.
+  </Accordion>
+  
+  <Accordion title="Limit Footer Actions">
+    Keep footer actions to 2-3 primary buttons. Too many actions can overwhelm users.
+  </Accordion>
+  
+  <Accordion title="Use Scrollable for Long Content">
+    If your card body contains many items, use `makeScrollable()` to keep the card at a reasonable height.
+  </Accordion>
+  
+  <Accordion title="Collapsible for Optional Content">
+    Use collapsible cards for sections that users may want to hide, like advanced settings or detailed information.
+  </Accordion>
+</AccordionGroup>

@@ -1,80 +1,444 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: Quickstart
+description: Get started with JJArroyo in minutes by building your first themed JavaFX application
 ---
 
-## Get started in three steps
+This guide will walk you through creating a simple JavaFX application with JJArroyo theme components.
 
-Get your documentation site running locally and make your first customization.
+## Initialize the Theme
 
-### Step 1: Set up your local environment
+The first step is to initialize JJArroyo in your JavaFX application. This applies the theme's stylesheets to your scene.
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
+<Steps>
+  <Step title="Create your Application class">
+    Create a JavaFX Application class and initialize JJArroyo in the `start()` method:
+
+    ```java
+    import com.jjarroyo.JJArroyo;
+    import javafx.application.Application;
+    import javafx.scene.Scene;
+    import javafx.scene.layout.StackPane;
+    import javafx.stage.Stage;
+
+    public class MyApp extends Application {
+        
+        @Override
+        public void start(Stage stage) {
+            // Create your root layout
+            StackPane root = new StackPane();
+            
+            // Create the scene
+            Scene scene = new Scene(root, 1280, 800);
+            
+            // Initialize JJArroyo theme
+            JJArroyo.init(scene);
+            
+            // Configure and show the stage
+            stage.setTitle("My JJArroyo Application");
+            stage.setScene(scene);
+            stage.show();
+        }
+
+        public static void main(String[] args) {
+            launch(args);
+        }
+    }
+    ```
+  </Step>
+
+  <Step title="Understanding JJArroyo.init()">
+    The `JJArroyo.init(Scene scene)` method:
+    - Loads the main theme stylesheet (`jjarroyo-theme.css`)
+    - Applies global styling to all JJArroyo components
+    - Ensures components render with the correct visual design
+
+    <Warning>
+      Always call `JJArroyo.init(scene)` before showing your stage to ensure all styles are properly applied.
+    </Warning>
+  </Step>
+</Steps>
+
+## Build a Simple UI
+
+Now let's create a simple user interface using JJArroyo components.
+
+```java
+import com.jjarroyo.JJArroyo;
+import com.jjarroyo.components.*;
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class QuickstartApp extends Application {
     
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
+    @Override
+    public void start(Stage stage) {
+        // Create main container
+        VBox root = new VBox(20);
+        root.setPadding(new Insets(40));
+        root.setAlignment(Pos.TOP_CENTER);
+        
+        // Add a header
+        JLabel title = new JLabel("Welcome to JJArroyo")
+            .withStyle("text-3xl", "font-bold", "text-slate-800");
+        
+        JLabel subtitle = new JLabel("A modern JavaFX theme library")
+            .withStyle("text-lg", "text-slate-500");
+        
+        // Create a card with content
+        JCard card = new JCard();
+        card.setTitle("Getting Started");
+        card.setSubtitle("Start building beautiful JavaFX applications");
+        card.setLine(true);
+        
+        // Add some components to the card body
+        VBox cardContent = new VBox(12);
+        
+        JInput nameInput = new JInput("Enter your name");
+        JButton primaryBtn = new JButton("Submit");
+        JButton secondaryBtn = new JButton("Cancel");
+        secondaryBtn.addClass("btn-secondary");
+        
+        // Create button container
+        VBox buttonBox = new VBox(8);
+        buttonBox.getChildren().addAll(primaryBtn, secondaryBtn);
+        
+        cardContent.getChildren().addAll(
+            new JLabel("Name:"),
+            nameInput,
+            buttonBox
+        );
+        
+        card.setBody(cardContent);
+        card.setMaxWidth(500);
+        
+        // Add everything to root
+        root.getChildren().addAll(title, subtitle, card);
+        
+        // Create scene and initialize theme
+        Scene scene = new Scene(root, 800, 600);
+        JJArroyo.init(scene);
+        
+        // Show the application
+        stage.setTitle("JJArroyo Quickstart");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+```
+
+## Add Interactivity
+
+Let's enhance the example with event handling and more components:
+
+```java
+import com.jjarroyo.JJArroyo;
+import com.jjarroyo.components.*;
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class InteractiveApp extends Application {
     
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+    @Override
+    public void start(Stage stage) {
+        VBox root = new VBox(20);
+        root.setPadding(new Insets(40));
+        root.setMaxWidth(600);
+        
+        // Create a form card
+        JCard formCard = new JCard();
+        formCard.setTitle("User Registration");
+        formCard.setLine(true);
+        
+        VBox formContent = new VBox(16);
+        
+        // Form fields
+        JInput emailInput = new JInput("Email address");
+        JPasswordInput passwordInput = new JPasswordInput("Password");
+        
+        // Checkbox and switch
+        JCheckBox termsCheckbox = new JCheckBox("I agree to the terms");
+        JSwitch notificationsSwitch = new JSwitch();
+        
+        VBox switchContainer = new VBox(4);
+        switchContainer.getChildren().addAll(
+            new JLabel("Enable notifications"),
+            notificationsSwitch
+        );
+        
+        // Buttons with icons
+        JButton submitBtn = new JButton("Create Account", JIcon.CHECK);
+        submitBtn.setMaxWidth(Double.MAX_VALUE);
+        
+        JButton cancelBtn = new JButton("Cancel", JIcon.X);
+        cancelBtn.addClass("btn-outline-primary");
+        cancelBtn.setMaxWidth(Double.MAX_VALUE);
+        
+        // Alert for feedback
+        JAlert alert = new JAlert(
+            "Success!",
+            "Your account has been created successfully.",
+            "success"
+        );
+        alert.setVisible(false);
+        alert.setManaged(false);
+        
+        // Button click handler
+        submitBtn.setOnAction(e -> {
+            if (termsCheckbox.isSelected()) {
+                alert.setVisible(true);
+                alert.setManaged(true);
+                
+                // Show toast notification
+                JToast.show(
+                    formCard,
+                    "Account created successfully!",
+                    "success",
+                    3000
+                );
+            } else {
+                JToast.show(
+                    formCard,
+                    "Please accept the terms and conditions",
+                    "error",
+                    3000
+                );
+            }
+        });
+        
+        cancelBtn.setOnAction(e -> {
+            emailInput.clear();
+            passwordInput.clear();
+            termsCheckbox.setSelected(false);
+            notificationsSwitch.setSelected(false);
+            alert.setVisible(false);
+            alert.setManaged(false);
+        });
+        
+        // Add all components to form
+        formContent.getChildren().addAll(
+            alert,
+            new JLabel("Email"),
+            emailInput,
+            new JLabel("Password"),
+            passwordInput,
+            termsCheckbox,
+            switchContainer,
+            submitBtn,
+            cancelBtn
+        );
+        
+        formCard.setBody(formContent);
+        root.getChildren().add(formCard);
+        
+        // Create scene and initialize theme
+        Scene scene = new Scene(root, 700, 700);
+        JJArroyo.init(scene);
+        
+        stage.setTitle("Interactive JJArroyo App");
+        stage.setScene(scene);
+        stage.show();
+    }
 
-### Step 2: Deploy your changes
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+```
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
+## Component Styling
+
+JJArroyo components support multiple styling variants:
+
+### Button Variants
+
+```java
+// Solid buttons
+JButton primary = new JButton("Primary");  // Default
+JButton success = new JButton("Success").addClass("btn-success");
+JButton danger = new JButton("Danger").addClass("btn-danger");
+JButton warning = new JButton("Warning").addClass("btn-warning");
+
+// Outline buttons
+JButton outline = new JButton("Outline").addClass("btn-outline-primary");
+
+// Light buttons
+JButton light = new JButton("Light").addClass("btn-light-primary");
+
+// Sizes
+JButton small = new JButton("Small").addClass("btn-sm");
+JButton large = new JButton("Large").addClass("btn-lg");
+```
+
+### Input Validation States
+
+```java
+JInput input = new JInput("Enter value");
+
+// Success state
+input.setStatus("form-input-success");
+
+// Error state
+input.setStatus("form-input-danger");
+
+// Warning state
+input.setStatus("form-input-warning");
+
+// Reset to default
+input.setStatus(null);
+```
+
+### Card Customization
+
+```java
+JCard card = new JCard();
+card.setTitle("Card Title");
+card.setSubtitle("Card subtitle");
+card.setLine(true);  // Add header border line
+card.setCollapsible(true);  // Make card collapsible
+card.makeScrollable();  // Make content scrollable
+
+// Add toolbar items
+JButton editBtn = new JButton("", JIcon.EDIT);
+card.addToolbarItem(editBtn);
+```
+
+## Modal Container Setup
+
+For using modals (JModal), you need to set up a modal container:
+
+```java
+import javafx.scene.layout.StackPane;
+
+@Override
+public void start(Stage stage) {
+    // Use StackPane as root for modal support
+    StackPane root = new StackPane();
     
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+    // Register modal container
+    JJArroyo.setModalContainer(root);
+    
+    // Add your main content
+    VBox content = new VBox();
+    // ... add components
+    
+    root.getChildren().add(content);
+    
+    Scene scene = new Scene(root, 1280, 800);
+    JJArroyo.init(scene);
+    
+    stage.setScene(scene);
+    stage.show();
+}
+```
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+Now you can show modals:
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+```java
+JModal modal = new JModal("Confirmation", "Are you sure?");
+modal.show();
+```
 
-### Step 3: Go live
-
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
-
-## Next steps
-
-Now that you have your docs running, explore these key features:
+## Best Practices
 
 <CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
+  <Card title="Initialize Early" icon="bolt">
+    Always call `JJArroyo.init(scene)` immediately after creating your Scene and before showing the Stage.
+  </Card>
+  
+  <Card title="Use Method Chaining" icon="link">
+    Most JJArroyo components support method chaining for cleaner code:
+    ```java
+    JButton btn = new JButton("Click me")
+        .addClass("btn-success", "btn-lg");
+    ```
+  </Card>
+  
+  <Card title="Leverage Built-in Layouts" icon="layer-group">
+    Use JCard, JHeader, and JSidebar for consistent layouts without manual CSS.
+  </Card>
+  
+  <Card title="Combine with JavaFX" icon="cubes">
+    JJArroyo components extend standard JavaFX controls, so you can use them anywhere you'd use native components.
+  </Card>
 </CardGroup>
 
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>
+## Common Patterns
+
+### Form with Validation
+
+```java
+JInput emailInput = new JInput("Email");
+JButton submitBtn = new JButton("Submit");
+
+submitBtn.setOnAction(e -> {
+    String email = emailInput.getText();
+    if (email.contains("@")) {
+        emailInput.setStatus("form-input-success");
+        JToast.show(root, "Valid email!", "success", 2000);
+    } else {
+        emailInput.setStatus("form-input-danger");
+        JToast.show(root, "Invalid email format", "error", 2000);
+    }
+});
+```
+
+### Loading State
+
+```java
+JButton loadBtn = new JButton("Load Data");
+
+loadBtn.setOnAction(e -> {
+    // Show loading state
+    ProgressIndicator spinner = new ProgressIndicator();
+    spinner.setMaxSize(20, 20);
+    loadBtn.setGraphic(spinner);
+    loadBtn.setDisable(true);
+    
+    // Simulate async operation
+    new Thread(() -> {
+        try {
+            Thread.sleep(2000);
+            javafx.application.Platform.runLater(() -> {
+                loadBtn.setGraphic(null);
+                loadBtn.setDisable(false);
+                JToast.show(root, "Data loaded!", "success", 2000);
+            });
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }).start();
+});
+```
+
+## Next Steps
+
+You're now ready to build complete applications with JJArroyo!
+
+<CardGroup cols={2}>
+  <Card title="Explore Components" icon="puzzle-piece" href="/components/overview">
+    Discover all 47 components available in JJArroyo
+  </Card>
+  
+  <Card title="Styling Guide" icon="brush" href="/guides/styling">
+    Learn how to style components with CSS classes
+  </Card>
+  
+  <Card title="Dark Mode" icon="moon" href="/guides/dark-mode">
+    Enable dark mode in your application
+  </Card>
+  
+  <Card title="API Reference" icon="book" href="/api/jjarroyo">
+    Dive into the complete API documentation
+  </Card>
+</CardGroup>

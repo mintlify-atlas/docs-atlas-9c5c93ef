@@ -1,0 +1,184 @@
+---
+title: JLabel
+description: Enhanced text label component with icon support and utility methods for styling.
+---
+
+## Overview
+
+JLabel extends JavaFX Label with:
+
+- Integrated JIcon support
+- Icon color customization
+- Method chaining for styles
+- Multiline text support
+
+## Constructors
+
+<ParamField path="JLabel()" type="constructor">
+  Creates an empty label.
+</ParamField>
+
+<ParamField path="JLabel(text)" type="constructor">
+  Creates a label with the specified text.
+  
+  <Expandable title="Parameters">
+    - `text` (String): Label text
+  </Expandable>
+</ParamField>
+
+<ParamField path="JLabel(icon)" type="constructor">
+  Creates a label with only an icon.
+  
+  <Expandable title="Parameters">
+    - `icon` (JIcon): Icon to display
+  </Expandable>
+</ParamField>
+
+<ParamField path="JLabel(text, icon)" type="constructor">
+  Creates a label with both text and icon.
+  
+  <Expandable title="Parameters">
+    - `text` (String): Label text
+    - `icon` (JIcon): Icon to display
+  </Expandable>
+</ParamField>
+
+## Basic Usage
+
+```java
+// Simple text label
+JLabel label = new JLabel("User Name");
+
+// Label with icon
+JIcon userIcon = new JIcon("user");
+JLabel labelWithIcon = new JLabel("Profile", userIcon);
+
+// Method chaining
+JLabel styledLabel = new JLabel("Important")
+    .withStyle("text-lg", "font-bold", "text-danger");
+```
+
+## Icon Support
+
+<ParamField path="setIcon(icon)" type="JLabel">
+  Sets or removes the label's icon.
+  
+  <Expandable title="Parameters">
+    - `icon` (JIcon): Icon to display, or null to remove
+  </Expandable>
+  
+  Returns the label instance for method chaining.
+  
+  ```java
+  JIcon checkIcon = new JIcon("check");
+  label.setIcon(checkIcon);
+  
+  // Remove icon
+  label.setIcon(null);
+  ```
+</ParamField>
+
+<ParamField path="setIconColor(cssColor)" type="JLabel">
+  Sets the color of the icon graphic.
+  
+  <Expandable title="Parameters">
+    - `cssColor` (String): CSS color string (e.g., "#ff0000", "red", "rgba(255,0,0,0.5)")
+  </Expandable>
+  
+  Returns the label instance for method chaining.
+  
+  ```java
+  label.setIconColor("#4f46e5");
+  label.setIconColor("red");
+  ```
+</ParamField>
+
+## Styling
+
+<ParamField path="withStyle(styleClasses...)" type="JLabel">
+  Adds one or more CSS style classes to the label.
+  
+  <Expandable title="Parameters">
+    - `styleClasses` (String...): Variable number of style class names
+  </Expandable>
+  
+  Returns the label instance for method chaining.
+  
+  ```java
+  label.withStyle("text-lg", "font-bold", "text-primary");
+  ```
+</ParamField>
+
+<ParamField path="addClass(styleClasses...)" type="JLabel">
+  Alias for withStyle(). Adds CSS style classes to the label.
+  
+  <Expandable title="Parameters">
+    - `styleClasses` (String...): Variable number of style class names
+  </Expandable>
+  
+  Returns the label instance for method chaining.
+</ParamField>
+
+## Multiline
+
+<ParamField path="setMultiline(multiline)" type="JLabel">
+  Enables or disables text wrapping.
+  
+  <Expandable title="Parameters">
+    - `multiline` (boolean): true to enable text wrapping, false to disable
+  </Expandable>
+  
+  Returns the label instance for method chaining.
+  
+  ```java
+  label.setMultiline(true);
+  label.setText("This is a long text that will wrap to multiple lines when the label width is constrained.");
+  ```
+</ParamField>
+
+## Examples
+
+### Label with Icon and Color
+
+```java
+JIcon warningIcon = new JIcon("alert-triangle");
+JLabel warningLabel = new JLabel("Warning: System Update Required", warningIcon)
+    .setIconColor("#f59e0b")
+    .withStyle("text-warning", "font-semibold");
+```
+
+### Styled Section Header
+
+```java
+JLabel header = new JLabel("Account Settings")
+    .withStyle("text-2xl", "font-bold", "text-gray-900");
+```
+
+### Icon-Only Label
+
+```java
+JIcon infoIcon = new JIcon("info");
+JLabel iconLabel = new JLabel(infoIcon)
+    .setIconColor("#2563eb");
+```
+
+### Multiline Label
+
+```java
+JLabel description = new JLabel()
+    .setText("This is a detailed description that may span multiple lines when displayed in a constrained layout.")
+    .setMultiline(true)
+    .withStyle("text-sm", "text-muted");
+```
+
+## Inherits From
+
+JLabel extends `javafx.scene.control.Label`, so all standard JavaFX Label methods are available:
+
+- `setText(String)` - Set label text
+- `getText()` - Get label text
+- `setTextAlignment(TextAlignment)` - Set text alignment
+- `setContentDisplay(ContentDisplay)` - Control icon/text positioning
+- `setGraphic(Node)` - Set custom graphic (note: setIcon() is preferred for JIcon)
+
+See [JavaFX Label documentation](https://openjfx.io/javadoc/17/javafx.controls/javafx/scene/control/Label.html) for complete API.

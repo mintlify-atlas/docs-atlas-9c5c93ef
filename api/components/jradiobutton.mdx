@@ -1,0 +1,175 @@
+---
+title: JRadioButton
+description: A styled radio button component with customizable colors and sizes
+---
+
+## Overview
+
+`JRadioButton` is a customizable radio button component that extends JavaFX's `RadioButton` with theme-aware styling options.
+
+## Constructors
+
+### JRadioButton()
+
+Creates a radio button with no text label.
+
+```java
+JRadioButton radioButton = new JRadioButton();
+```
+
+### JRadioButton(String text)
+
+Creates a radio button with the specified text label.
+
+<ParamField path="text" type="String">
+  The text label to display next to the radio button
+</ParamField>
+
+```java
+JRadioButton radioButton = new JRadioButton("Option 1");
+```
+
+## Properties
+
+### colorStyle
+
+<ParamField path="colorStyle" type="RadioStyle" default="PRIMARY">
+  The color style of the radio button
+</ParamField>
+
+**Available Values:**
+- `PRIMARY` - Primary theme color
+- `SUCCESS` - Success/green color
+- `DANGER` - Danger/red color
+- `WARNING` - Warning/yellow color
+- `INFO` - Info/blue color
+- `DARK` - Dark color
+- `SECONDARY` - Secondary theme color
+
+### size
+
+<ParamField path="size" type="RadioSize" default="DEFAULT">
+  The size of the radio button
+</ParamField>
+
+**Available Values:**
+- `SMALL` - Small radio button
+- `DEFAULT` - Default/medium radio button
+- `LARGE` - Large radio button
+
+## Methods
+
+### setColorStyle(RadioStyle style)
+
+Sets the color style of the radio button.
+
+<ParamField path="style" type="RadioStyle" required>
+  The color style to apply
+</ParamField>
+
+```java
+radioButton.setColorStyle(JRadioButton.RadioStyle.SUCCESS);
+```
+
+### getColorStyle()
+
+Returns the current color style.
+
+<ResponseField name="colorStyle" type="RadioStyle">
+  The current color style of the radio button
+</ResponseField>
+
+```java
+RadioStyle style = radioButton.getColorStyle();
+```
+
+### colorStyleProperty()
+
+Returns the color style property for binding.
+
+<ResponseField name="colorStyleProperty" type="ObjectProperty<RadioStyle>">
+  The observable property for color style
+</ResponseField>
+
+```java
+radioButton.colorStyleProperty().addListener((obs, old, newVal) -> {
+    System.out.println("Style changed to: " + newVal);
+});
+```
+
+### setSize(RadioSize size)
+
+Sets the size of the radio button.
+
+<ParamField path="size" type="RadioSize" required>
+  The size to apply
+</ParamField>
+
+```java
+radioButton.setSize(JRadioButton.RadioSize.LARGE);
+```
+
+### getSize()
+
+Returns the current size.
+
+<ResponseField name="size" type="RadioSize">
+  The current size of the radio button
+</ResponseField>
+
+```java
+RadioSize size = radioButton.getSize();
+```
+
+### sizeProperty()
+
+Returns the size property for binding.
+
+<ResponseField name="sizeProperty" type="ObjectProperty<RadioSize>">
+  The observable property for size
+</ResponseField>
+
+```java
+radioButton.sizeProperty().addListener((obs, old, newVal) -> {
+    System.out.println("Size changed to: " + newVal);
+});
+```
+
+## Example Usage
+
+```java
+import com.jjarroyo.components.JRadioButton;
+import javafx.scene.control.ToggleGroup;
+
+// Create a toggle group for mutually exclusive selection
+ToggleGroup group = new ToggleGroup();
+
+// Create radio buttons with custom styles
+JRadioButton option1 = new JRadioButton("Option 1");
+option1.setColorStyle(JRadioButton.RadioStyle.PRIMARY);
+option1.setSize(JRadioButton.RadioSize.DEFAULT);
+option1.setToggleGroup(group);
+
+JRadioButton option2 = new JRadioButton("Option 2");
+option2.setColorStyle(JRadioButton.RadioStyle.PRIMARY);
+option2.setSize(JRadioButton.RadioSize.DEFAULT);
+option2.setToggleGroup(group);
+
+// Listen to selection changes
+group.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+    if (newToggle != null) {
+        JRadioButton selected = (JRadioButton) newToggle;
+        System.out.println("Selected: " + selected.getText());
+    }
+});
+
+// Set initial selection
+option1.setSelected(true);
+```
+
+## CSS Style Classes
+
+The component applies the following style classes:
+- `j-radio` - Base style class
+- `radio-primary`, `radio-success`, etc. - Color style classes
+- `radio-sm`, `radio-md`, `radio-lg` - Size style classes

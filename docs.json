@@ -1,122 +1,176 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "JJArroyo JavaFX Theme",
+  "theme": "willow",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#2563eb",
+    "light": "#dbeafe",
+    "dark": "#1d4ed8"
   },
   "favicon": "/favicon.svg",
-  "navigation": {
-    "tabs": [
-      {
-        "tab": "Guides",
-        "groups": [
-          {
-            "group": "Getting started",
-            "pages": [
-              "index",
-              "quickstart",
-              "development"
-            ]
-          },
-          {
-            "group": "Customization",
-            "pages": [
-              "essentials/settings",
-              "essentials/navigation"
-            ]
-          },
-          {
-            "group": "Writing content",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "API reference",
-        "groups": [
-          {
-            "group": "API documentation",
-            "pages": [
-              "api-reference/introduction"
-            ]
-          },
-          {
-            "group": "Endpoint examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
-            ]
-          }
-        ]
-      }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
   "logo": {
     "light": "/logo/light.svg",
     "dark": "/logo/dark.svg"
   },
   "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
     "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "type": "github",
+      "href": "https://github.com/jjarroyo/javafx-jjarroyo-theme"
     }
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "github": "https://github.com/jjarroyo/javafx-jjarroyo-theme"
     }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/theme-initialization",
+              "guides/styling",
+              "guides/dark-mode",
+              "guides/custom-colors"
+            ]
+          },
+          {
+            "group": "Components",
+            "pages": [
+              "components/overview",
+              "components/buttons",
+              "components/inputs",
+              "components/cards",
+              "components/alerts",
+              "components/modals",
+              "components/tables",
+              "components/navigation",
+              "components/layout",
+              "components/data-display",
+              "components/forms",
+              "components/feedback"
+            ]
+          },
+          {
+            "group": "Advanced",
+            "pages": [
+              "advanced/sql-editor",
+              "advanced/design-canvas",
+              "advanced/custom-components"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Core",
+            "pages": [
+              "api/jjarroyo"
+            ]
+          },
+          {
+            "group": "Button Components",
+            "pages": [
+              "api/components/jbutton",
+              "api/components/jbadge",
+              "api/components/jchip"
+            ]
+          },
+          {
+            "group": "Input Components",
+            "pages": [
+              "api/components/jinput",
+              "api/components/jpasswordinput",
+              "api/components/jsearchinput",
+              "api/components/jnumberinput",
+              "api/components/jtextarea",
+              "api/components/jselect",
+              "api/components/jdatepicker"
+            ]
+          },
+          {
+            "group": "Form Controls",
+            "pages": [
+              "api/components/jcheckbox",
+              "api/components/jradiobutton",
+              "api/components/jswitch",
+              "api/components/jslider"
+            ]
+          },
+          {
+            "group": "Layout Components",
+            "pages": [
+              "api/components/jcard",
+              "api/components/jaccordion",
+              "api/components/jtabs",
+              "api/components/jheader",
+              "api/components/jsidebar"
+            ]
+          },
+          {
+            "group": "Navigation Components",
+            "pages": [
+              "api/components/jbreadcrumb",
+              "api/components/jpagination",
+              "api/components/jstepper"
+            ]
+          },
+          {
+            "group": "Feedback Components",
+            "pages": [
+              "api/components/jalert",
+              "api/components/jtoast",
+              "api/components/jmodal",
+              "api/components/jpopover",
+              "api/components/jprogressbar",
+              "api/components/jcircularprogress",
+              "api/components/jskeleton"
+            ]
+          },
+          {
+            "group": "Data Display",
+            "pages": [
+              "api/components/jtable",
+              "api/components/jlist",
+              "api/components/javatar",
+              "api/components/jstatcard",
+              "api/components/jtimeline"
+            ]
+          },
+          {
+            "group": "Typography",
+            "pages": [
+              "api/components/jlabel",
+              "api/components/jparagraph"
+            ]
+          },
+          {
+            "group": "Advanced Components",
+            "pages": [
+              "api/components/jsqleditor",
+              "api/components/jdesigncanvas",
+              "api/components/jdraggablefield",
+              "api/components/jdropdown",
+              "api/components/jfile",
+              "api/components/jicon",
+              "api/components/jzoom"
+            ]
+          }
+        ]
+      }
+    ]
   }
 }

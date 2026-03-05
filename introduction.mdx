@@ -1,0 +1,108 @@
+---
+title: "Introduction"
+description: "A modern, customizable JavaFX theme library inspired by Metronic design and Tailwind CSS concepts"
+---
+
+# Welcome to JJArroyo JavaFX Theme
+
+JJArroyo is a comprehensive JavaFX theme library that brings modern design patterns and beautiful UI components to your JavaFX applications. Inspired by the Metronic design system and Tailwind CSS concepts, it provides 47 professionally styled components with built-in dark mode support.
+
+## Key Features
+
+<CardGroup cols={2}>
+  <Card title="47 Modern Components" icon="grid">
+    Comprehensive set of UI components including buttons, inputs, cards, tables, and more
+  </Card>
+  <Card title="Tailwind-Inspired Design" icon="palette">
+    Semantic color tokens and utility-first CSS approach adapted for JavaFX
+  </Card>
+  <Card title="Dark Mode Support" icon="moon">
+    Built-in dark theme with automatic switching using CSS variables
+  </Card>
+  <Card title="Advanced Features" icon="sparkles">
+    SQL editor with syntax highlighting, design canvas, and drag-and-drop components
+  </Card>
+</CardGroup>
+
+## What's Included
+
+The library provides everything you need to build beautiful JavaFX applications:
+
+- **Form Controls**: Inputs, text areas, selects, date pickers, checkboxes, radio buttons, switches, and sliders
+- **Data Display**: Tables, lists, cards, avatars, stat cards, and timelines
+- **Navigation**: Sidebar, breadcrumbs, pagination, tabs, and steppers
+- **Feedback**: Alerts, toasts, modals, popovers, progress bars, and skeleton loaders
+- **Typography**: Labels and paragraphs with consistent styling
+- **Advanced Components**: SQL editor, design canvas, and custom drag-and-drop fields
+
+## Quick Example
+
+Get started with JJArroyo in just a few lines of code:
+
+```java HelloWorld.java
+import com.jjarroyo.JJArroyo;
+import com.jjarroyo.components.JButton;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class HelloWorld extends Application {
+    @Override
+    public void start(Stage primaryStage) {
+        // Create a button with primary style
+        JButton button = new JButton("Click me!");
+        button.setStyle("primary");
+        
+        VBox root = new VBox(button);
+        Scene scene = new Scene(root, 400, 300);
+        
+        // Initialize the JJArroyo theme
+        JJArroyo.init(scene);
+        
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+    
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+```
+
+## Why JJArroyo?
+
+<AccordionGroup>
+  <Accordion title="Consistent Design Language">
+    All components follow a cohesive design system with semantic color tokens, consistent spacing, and unified styling patterns. Build professional-looking applications without wrestling with CSS.
+  </Accordion>
+  
+  <Accordion title="Modern & Responsive">
+    Inspired by modern web frameworks, JJArroyo brings contemporary design patterns to JavaFX. Components are built with responsiveness and user experience in mind.
+  </Accordion>
+  
+  <Accordion title="Developer-Friendly">
+    Simple API with intuitive method names and comprehensive JavaDoc documentation. Initialize the theme with a single method call and start building immediately.
+  </Accordion>
+  
+  <Accordion title="Extensive Component Library">
+    From basic buttons to advanced SQL editors, JJArroyo provides 47 components covering all common UI needs. No need to build everything from scratch.
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/installation">
+    Add JJArroyo to your JavaFX project
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Build your first JJArroyo application in 5 minutes
+  </Card>
+  <Card title="Components" icon="grid" href="/components/overview">
+    Browse the complete component library
+  </Card>
+  <Card title="API Reference" icon="code" href="/api/jjarroyo">
+    Explore detailed API documentation
+  </Card>
+</CardGroup>

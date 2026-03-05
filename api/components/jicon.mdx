@@ -1,0 +1,330 @@
+---
+title: JIcon
+description: Comprehensive icon library with 200+ Material Design and custom SVG icons
+icon: star
+---
+
+## Overview
+
+JIcon is an enum-based icon library providing 200+ SVG icons for JavaFX applications. All icons are rendered as scalable vector graphics.
+
+## Usage
+
+```java
+// Get icon as JavaFX Node
+Node icon = JIcon.NAME.view();
+
+// Use in components
+JButton btn = new JButton("Save", JIcon.SAVE);
+JLabel label = new JLabel("Home", JIcon.HOME.view());
+```
+
+## Methods
+
+<ResponseField name="view" type="Node">
+  Returns the icon as a styled SVGPath node
+  
+  ```java
+  Node iconNode = JIcon.CHECK.view();
+  iconNode.getStyleClass(); // ["j-icon"]
+  ```
+</ResponseField>
+
+<ResponseField name="getPath" type="String">
+  Returns the raw SVG path data
+  
+  ```java
+  String pathData = JIcon.STAR.getPath();
+  ```
+</ResponseField>
+
+## Icon Categories
+
+### Navigation
+
+| Icon | Name |
+|------|------|
+| ← | `ARROW_BACK` |
+| → | `ARROW_FORWARD` |
+| ↑ | `ARROW_UP` |
+| ↓ | `ARROW_DOWN` |
+| ‹ | `CHEVRON_LEFT` |
+| › | `CHEVRON_RIGHT` |
+| ☰ | `MENU` |
+| ✕ | `CLOSE` |
+| ⌂ | `HOME` |
+| ⊞ | `APPS` |
+| ∨ | `EXPAND_MORE` |
+| ∧ | `EXPAND_LESS` |
+| ⋮ | `MORE_VERT` |
+| ⋯ | `MORE_HORIZ` |
+| ↻ | `REFRESH` |
+| ▼ | `ARROW_DROP_DOWN` |
+| ▲ | `ARROW_DROP_UP` |
+| ⦻ | `CANCEL` |
+| ✓ | `CHECK` |
+| ⛶ | `FULLSCREEN` |
+| ⛶ | `FULLSCREEN_EXIT` |
+
+### Action
+
+- `SEARCH`, `SETTINGS`, `DONE`, `DONE_ALL`
+- `DELETE`, `DELETE_FOREVER`, `ADD`, `REMOVE`
+- `EDIT`, `VISIBILITY`, `VISIBILITY_OFF`
+- `FAVORITE`, `HEART`, `FAVORITE_BORDER`
+- `STAR`, `STAR_BORDER`
+- `POWER_SETTINGS_NEW`, `LOCK`, `LOCK_OPEN`
+- `INFO`, `HELP`, `ERROR`, `WARNING`, `WARNING_CIRCLE`
+- `CROSS_CIRCLE`, `LANGUAGE`
+
+### Social
+
+- `PERSON`, `USER`
+- `GROUP`, `PEOPLE`
+- `SHARE`
+- `THUMB_UP`, `THUMB_DOWN`
+
+### File
+
+- `FILE`, `FOLDER`, `FOLDER_OPEN`
+- `CLOUD_UPLOAD`, `CLOUD_DOWNLOAD`
+- `ATTACHMENT`
+- `DESCRIPTION`, `RECEIPT`, `INVOICE`
+
+### Communication
+
+- `EMAIL`, `MESSAGE`, `CHAT`, `CALL`, `PHONE`
+
+### Image
+
+- `IMAGE`, `CAMERA`, `CAMERA_ALT`
+- `EDIT_IMAGE`
+
+### Maps
+
+- `PLACE`, `LOCATION_ON`, `LOCATION_OFF`
+- `MAP`
+
+### Hardware
+
+- `KEYBOARD_ARROW_UP`, `KEYBOARD_ARROW_DOWN`
+- `KEYBOARD_ARROW_LEFT`, `KEYBOARD_ARROW_RIGHT`
+
+### Editor
+
+- `FORMAT_BOLD`, `FORMAT_ITALIC`, `FORMAT_UNDERLINED`
+- `FORMAT_ALIGN_LEFT`, `FORMAT_ALIGN_CENTER`
+- `FORMAT_ALIGN_RIGHT`, `FORMAT_ALIGN_JUSTIFY`
+
+### Notification
+
+- `NOTIFICATIONS`, `NOTIFICATIONS_OFF`, `BELL`
+
+### AV (Audio/Video)
+
+- `PLAY_ARROW`, `PAUSE`, `STOP`
+- `SKIP_NEXT`, `SKIP_PREVIOUS`
+- `VOLUME_UP`, `VOLUME_OFF`
+
+### Misc
+
+- `DASHBOARD`, `ASSIGNMENT`
+- `CALENDAR`, `CALENDAR_TODAY`, `CLOCK`, `SCHEDULE`
+- `CREDIT_CARD`, `SHOPPING_CART`, `PRINT`
+- `UNDO`, `REDO`, `CODE`
+- `BUG_REPORT`, `BUILD`, `ANDROID`
+- `ROCKET`, `FLAG`, `LAYERS`, `LIST`
+- `CHECK_CIRCLE`, `LAYOUT`, `FILE_TEXT`
+
+### Upload/Download
+
+- `UPLOAD_CLOUD`, `UPLOAD`, `DOWNLOAD`, `SAVE`, `TRASH`
+
+### Theme
+
+- `SUN`, `MOON`
+
+### Business/Finance
+
+- `MONEY`, `MONEY_OFF`, `PAYMENT`, `WALLET`
+- `TRENDING_UP`, `TRENDING_DOWN`
+- `MONEY_WITH_WINGS`, `ACCOUNT_BALANCE`
+
+### Charts/Stats
+
+- `PIE_CHART`, `BAR_CHART`, `CHART`, `TIMELINE`
+
+### Misc
+
+- `EYE`, `EYE_OFF` (aliases for VISIBILITY)
+- `FILTER_LIST`, `FUNNEL`
+- `DATE_RANGE`, `EVENT`
+- `LINK`, `TAG`, `BARCODE`, `DATABASE`
+- `SYNC`, `LOG_OUT`
+- `PLUS`, `MINUS` (aliases for ADD/REMOVE)
+- `DO_NOT_DISTURB`
+
+### Programming Languages
+
+- `JAVA` - Coffee cup logo
+- `PHP` - PHP logo
+- `PYTHON` - Python logo
+- `TYPESCRIPT` - TypeScript logo
+
+## Example Usage
+
+### Basic Button Icons
+
+```java
+JButton saveBtn = new JButton("Save", JIcon.SAVE);
+JButton deleteBtn = new JButton("Delete", JIcon.DELETE);
+JButton editBtn = new JButton("Edit", JIcon.EDIT);
+```
+
+### Icon-Only Buttons
+
+```java
+JButton btn = new JButton(null, JIcon.SEARCH);
+btn.setPrefSize(32, 32);
+btn.addClass("btn-icon");
+```
+
+### Labels with Icons
+
+```java
+JLabel userLabel = new JLabel("John Doe");
+userLabel.setGraphic(JIcon.PERSON.view());
+
+JLabel emailLabel = new JLabel("email@example.com");
+emailLabel.setGraphic(JIcon.EMAIL.view());
+```
+
+### Menu Items
+
+```java
+MenuItem saveItem = new MenuItem("Save");
+saveItem.setGraphic(JIcon.SAVE.view());
+
+MenuItem deleteItem = new MenuItem("Delete");
+deleteItem.setGraphic(JIcon.DELETE.view());
+```
+
+### Custom Styling
+
+```java
+Node icon = JIcon.STAR.view();
+icon.setStyle("-fx-fill: gold; -fx-scale-x: 1.5; -fx-scale-y: 1.5;");
+```
+
+### Status Indicators
+
+```java
+public Node getStatusIcon(String status) {
+    return switch (status) {
+        case "success" -> JIcon.CHECK_CIRCLE.view();
+        case "error" -> JIcon.ERROR.view();
+        case "warning" -> JIcon.WARNING.view();
+        default -> JIcon.INFO.view();
+    };
+}
+```
+
+### Dynamic Icon Selection
+
+```java
+public JIcon getFileIcon(String extension) {
+    return switch (extension.toLowerCase()) {
+        case "pdf" -> JIcon.DESCRIPTION;
+        case "jpg", "png", "gif" -> JIcon.IMAGE;
+        case "zip", "rar" -> JIcon.FOLDER;
+        case "mp3", "wav" -> JIcon.VOLUME_UP;
+        case "mp4", "avi" -> JIcon.PLAY_ARROW;
+        default -> JIcon.FILE;
+    };
+}
+```
+
+### Toolbar
+
+```java
+HBox toolbar = new HBox(8);
+
+JButton[] buttons = {
+    new JButton(null, JIcon.ADD),
+    new JButton(null, JIcon.EDIT),
+    new JButton(null, JIcon.DELETE),
+    new JButton(null, JIcon.REFRESH)
+};
+
+for (JButton btn : buttons) {
+    btn.addClass("btn-icon", "btn-ghost");
+    btn.setPrefSize(36, 36);
+}
+
+toolbar.getChildren().addAll(buttons);
+```
+
+### Navigation Menu
+
+```java
+VBox menu = new VBox(4);
+
+String[][] items = {
+    {"Dashboard", "DASHBOARD"},
+    {"Users", "PERSON"},
+    {"Settings", "SETTINGS"},
+    {"Log Out", "LOG_OUT"}
+};
+
+for (String[] item : items) {
+    JIcon icon = JIcon.valueOf(item[1]);
+    JButton menuItem = new JButton(item[0], icon);
+    menuItem.addClass("menu-item");
+    menu.getChildren().add(menuItem);
+}
+```
+
+## Styling Icons
+
+All icons have the `.j-icon` style class:
+
+```css
+.j-icon {
+    -fx-fill: currentColor;
+    -fx-scale-x: 1.0;
+    -fx-scale-y: 1.0;
+}
+
+/* Size variants */
+.icon-sm .j-icon {
+    -fx-scale-x: 0.875;
+    -fx-scale-y: 0.875;
+}
+
+.icon-lg .j-icon {
+    -fx-scale-x: 1.25;
+    -fx-scale-y: 1.25;
+}
+
+/* Color variants */
+.text-primary .j-icon {
+    -fx-fill: #3b82f6;
+}
+
+.text-danger .j-icon {
+    -fx-fill: #ef4444;
+}
+
+.text-success .j-icon {
+    -fx-fill: #10b981;
+}
+```
+
+## Notes
+
+- All icons are 24×24 viewBox by default
+- Icons scale cleanly to any size
+- SVG paths are from Material Design Icons
+- Programming language icons are official logos
+- Use `-fx-fill` CSS property to change color
+- Icons inherit text color when using `currentColor`

@@ -1,0 +1,105 @@
+---
+title: JAccordion
+description: An accordion component for collapsible content sections
+---
+
+## Overview
+
+`JAccordion` is a themed wrapper around JavaFX's `Accordion` control. It provides a container for multiple `JAccordionPane` components, allowing only one pane to be expanded at a time.
+
+## Constructor
+
+<ParamField path="JAccordion()" type="constructor">
+  Creates an empty accordion.
+</ParamField>
+
+<ParamField path="JAccordion(TitledPane... panes)" type="constructor">
+  Creates an accordion with the specified panes.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="panes" type="TitledPane...">
+      Variable number of `TitledPane` or `JAccordionPane` objects to add
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Inherited Methods
+
+As `JAccordion` extends JavaFX's `Accordion`, it inherits all standard accordion functionality:
+
+<ParamField path="getPanes()" type="ObservableList&lt;TitledPane&gt;">
+  Returns the observable list of panes in the accordion.
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="ObservableList&lt;TitledPane&gt;">
+      The list of accordion panes
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setExpandedPane(TitledPane pane)" type="void">
+  Sets the currently expanded pane.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="pane" type="TitledPane">
+      The pane to expand, or `null` to collapse all
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="getExpandedPane()" type="TitledPane">
+  Gets the currently expanded pane.
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="TitledPane">
+      The currently expanded pane, or `null` if none is expanded
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="expandedPaneProperty()" type="ObjectProperty<TitledPane>">
+  Property representing the currently expanded pane.
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="ObjectProperty<TitledPane>">
+      The expanded pane property
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Related Components
+
+- [JAccordionPane](/api/components/jaccordionpane) - Individual panes for use within the accordion
+
+## Style Classes
+
+<ResponseField name="j-accordion" type="String">
+  Base style class applied to the accordion container
+</ResponseField>
+
+## Example Usage
+
+```java
+// Create accordion with panes
+JAccordion accordion = new JAccordion();
+
+// Add panes
+accordion.getPanes().addAll(
+    new JAccordionPane("Section 1", new Label("Content 1")),
+    new JAccordionPane("Section 2", new Label("Content 2")),
+    new JAccordionPane("Section 3", new Label("Content 3"))
+);
+
+// Set initially expanded pane
+accordion.setExpandedPane(accordion.getPanes().get(0));
+
+// Using constructor
+JAccordion accordion = new JAccordion(
+    new JAccordionPane("Section 1", new Label("Content 1")),
+    new JAccordionPane("Section 2", new Label("Content 2"))
+);
+```
+
+## Source
+
+`com.jjarroyo.components.JAccordion` in JAccordion.java:6

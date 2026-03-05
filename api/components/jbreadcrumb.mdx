@@ -1,0 +1,129 @@
+---
+title: JBreadcrumb
+description: Navigation breadcrumb component for displaying hierarchical page paths
+---
+
+A breadcrumb navigation component that displays a hierarchical trail of links, helping users understand their current location within the application.
+
+## Constructor
+
+<ParamField path="JBreadcrumb()" type="constructor">
+  Creates a new breadcrumb component with default settings.
+</ParamField>
+
+## Methods
+
+### addItem
+
+<ParamField path="addItem(String text, Runnable action)" type="JBreadcrumb">
+  Adds a clickable breadcrumb item.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="text" type="String" required>
+      The text to display for this breadcrumb item
+    </ResponseField>
+    <ResponseField name="action" type="Runnable" required>
+      The action to execute when the item is clicked
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="addItem(String text, Node icon, Runnable action)" type="JBreadcrumb">
+  Adds a clickable breadcrumb item with an icon.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="text" type="String" required>
+      The text to display for this breadcrumb item
+    </ResponseField>
+    <ResponseField name="icon" type="Node" required>
+      The icon to display alongside the text
+    </ResponseField>
+    <ResponseField name="action" type="Runnable" required>
+      The action to execute when the item is clicked
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="addItem(String text)" type="JBreadcrumb">
+  Adds the current (last) breadcrumb item without an action.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="text" type="String" required>
+      The text to display for the current breadcrumb item
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="addItem(String text, Node icon)" type="JBreadcrumb">
+  Adds the current (last) breadcrumb item with an icon.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="text" type="String" required>
+      The text to display for the current breadcrumb item
+    </ResponseField>
+    <ResponseField name="icon" type="Node" required>
+      The icon to display alongside the text
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+### Configuration
+
+<ParamField path="setSeparator(String sep)" type="JBreadcrumb">
+  Changes the separator character between breadcrumb items.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="sep" type="String" required>
+      The separator string (default: "/")
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setActiveColor(String color)" type="JBreadcrumb">
+  Changes the color of the active (current) breadcrumb item.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="color" type="String" required>
+      The color variant: "primary", "success", "danger", "warning", or "info"
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="clear()" type="JBreadcrumb">
+  Removes all breadcrumb items.
+</ParamField>
+
+<ParamField path="setPath(String... paths)" type="JBreadcrumb">
+  Sets multiple breadcrumb items at once. All items except the last are navigable.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="paths" type="String..." required>
+      Variable number of path strings to display
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Usage Example
+
+```java
+JBreadcrumb bc = new JBreadcrumb();
+bc.addItem("Home", () -> navigate("home"));
+bc.addItem("Users", () -> navigate("users"));
+bc.addItem("Profile"); // Current page (no action)
+
+// With custom separator
+bc.setSeparator(">");
+
+// With active color
+bc.setActiveColor("primary");
+```
+
+## Style Classes
+
+- `.j-breadcrumb` - Main container
+- `.j-breadcrumb-separator` - Separator element
+- `.j-breadcrumb-item` - Normal (clickable) item
+- `.j-breadcrumb-item-active` - Active (current) item
+- `.j-breadcrumb-link` - Link label
+- `.j-breadcrumb-active` - Active label
+- `.j-breadcrumb-color-{variant}` - Color variant classes

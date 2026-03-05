@@ -1,0 +1,241 @@
+---
+title: JSlider
+description: A styled slider component with gradient track fill visualization
+---
+
+## Overview
+
+`JSlider` is a customizable slider component that extends JavaFX's `Slider` with an enhanced visual design featuring a gradient track that fills based on the current value.
+
+## Constructors
+
+### JSlider()
+
+Creates a slider with default range (0 to 100) and initial value at 0.
+
+```java
+JSlider slider = new JSlider();
+```
+
+### JSlider(double min, double max, double value)
+
+Creates a slider with specified minimum, maximum, and initial value.
+
+<ParamField path="min" type="double" required>
+  The minimum value of the slider
+</ParamField>
+
+<ParamField path="max" type="double" required>
+  The maximum value of the slider
+</ParamField>
+
+<ParamField path="value" type="double" required>
+  The initial value of the slider
+</ParamField>
+
+```java
+JSlider volumeSlider = new JSlider(0, 100, 50);
+```
+
+## Features
+
+### Dynamic Track Fill
+
+The slider automatically updates its track visualization to show a gradient fill from the minimum value to the current value. The filled portion uses the primary theme color, while the unfilled portion uses a neutral gray.
+
+- The track fill updates automatically when the value changes
+- The fill percentage is calculated based on the current value relative to the min/max range
+- Uses CSS linear gradient for smooth visual appearance
+
+## Inherited Properties
+
+As an extension of JavaFX's `Slider`, `JSlider` inherits all standard slider properties:
+
+### value
+
+The current value of the slider.
+
+```java
+slider.setValue(75);
+double currentValue = slider.getValue();
+```
+
+### min
+
+The minimum value of the slider.
+
+```java
+slider.setMin(0);
+double minValue = slider.getMin();
+```
+
+### max
+
+The maximum value of the slider.
+
+```java
+slider.setMax(100);
+double maxValue = slider.getMax();
+```
+
+### blockIncrement
+
+The amount to increment/decrement when using keyboard navigation.
+
+```java
+slider.setBlockIncrement(10);
+```
+
+### majorTickUnit
+
+The spacing between major tick marks.
+
+```java
+slider.setMajorTickUnit(25);
+slider.setShowTickMarks(true);
+```
+
+### showTickMarks
+
+Whether to display tick marks.
+
+```java
+slider.setShowTickMarks(true);
+```
+
+### showTickLabels
+
+Whether to display tick labels.
+
+```java
+slider.setShowTickLabels(true);
+```
+
+### snapToTicks
+
+Whether the slider snaps to tick marks.
+
+```java
+slider.setSnapToTicks(true);
+```
+
+### orientation
+
+The orientation of the slider (HORIZONTAL or VERTICAL).
+
+```java
+import javafx.geometry.Orientation;
+
+slider.setOrientation(Orientation.VERTICAL);
+```
+
+## Inherited Methods
+
+### setValue(double value)
+
+Sets the current value of the slider.
+
+<ParamField path="value" type="double" required>
+  The value to set (clamped between min and max)
+</ParamField>
+
+```java
+slider.setValue(50);
+```
+
+### getValue()
+
+Returns the current value.
+
+<ResponseField name="value" type="double">
+  The current value of the slider
+</ResponseField>
+
+```java
+double value = slider.getValue();
+```
+
+### valueProperty()
+
+Returns the value property for binding.
+
+<ResponseField name="valueProperty" type="DoubleProperty">
+  The observable property for the slider value
+</ResponseField>
+
+```java
+slider.valueProperty().addListener((obs, oldVal, newVal) -> {
+    System.out.println("Value changed to: " + newVal);
+});
+```
+
+### setMin(double value)
+
+Sets the minimum value.
+
+<ParamField path="value" type="double" required>
+  The minimum value
+</ParamField>
+
+### setMax(double value)
+
+Sets the maximum value.
+
+<ParamField path="value" type="double" required>
+  The maximum value
+</ParamField>
+
+## Example Usage
+
+```java
+import com.jjarroyo.components.JSlider;
+import javafx.scene.control.Label;
+
+// Create a volume slider
+JSlider volumeSlider = new JSlider(0, 100, 50);
+volumeSlider.setBlockIncrement(10);
+volumeSlider.setMajorTickUnit(25);
+volumeSlider.setShowTickMarks(true);
+volumeSlider.setShowTickLabels(true);
+
+// Create a label to display the current value
+Label valueLabel = new Label("50");
+
+// Listen to value changes
+volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+    int roundedValue = newVal.intValue();
+    valueLabel.setText(String.valueOf(roundedValue));
+    System.out.println("Volume: " + roundedValue + "%");
+});
+
+// Bind to another property
+DoubleProperty volume = new SimpleDoubleProperty();
+volume.bind(volumeSlider.valueProperty());
+
+// Create a brightness slider with snapping
+JSlider brightnessSlider = new JSlider(0, 10, 5);
+brightnessSlider.setMajorTickUnit(1);
+brightnessSlider.setMinorTickCount(0);
+brightnessSlider.setShowTickMarks(true);
+brightnessSlider.setSnapToTicks(true);
+```
+
+## CSS Style Classes
+
+The component applies the following style class:
+- `j-slider` - Base style class for custom styling
+
+## Implementation Details
+
+### Track Fill Update
+
+The slider uses a listener on the `valueProperty()` to dynamically update the track fill:
+
+1. Calculates the percentage of the current value relative to the range
+2. Applies a CSS linear gradient to the `.track` node
+3. The gradient transitions from the primary color to a neutral gray at the calculated percentage
+4. The fill percentage is clamped between 0% and 100%
+
+### Initialization Timing
+
+The component waits for the slider's skin to be applied before performing the initial track fill update. This ensures that the `.track` node is available in the scene graph.

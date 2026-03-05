@@ -1,0 +1,349 @@
+---
+title: Alerts
+description: Notification and alert components for user feedback
+icon: 'bell'
+---
+
+## JAlert
+
+A flexible alert component for displaying important messages, notifications, and status updates to users.
+
+### Basic Usage
+
+```java
+import com.jjarroyo.components.JAlert;
+import com.jjarroyo.components.JIcon;
+
+// Simple alert with title only
+JAlert alert = new JAlert("Operation successful!");
+
+// Alert with title and description
+JAlert detailedAlert = new JAlert(
+    "Account Created",
+    "Your account has been successfully created. Check your email for verification."
+);
+```
+
+### Alert Variants
+
+```java
+// Success alert
+JAlert success = new JAlert("Success!", "Your changes have been saved.")
+    .addClass("alert-success")
+    .setIcon(JIcon.CHECK_CIRCLE);
+
+// Error alert
+JAlert error = new JAlert("Error!", "Something went wrong. Please try again.")
+    .addClass("alert-danger")
+    .setIcon(JIcon.ERROR);
+
+// Warning alert
+JAlert warning = new JAlert("Warning!", "This action cannot be undone.")
+    .addClass("alert-warning")
+    .setIcon(JIcon.WARNING);
+
+// Info alert
+JAlert info = new JAlert("Info", "New features are available in this version.")
+    .addClass("alert-info")
+    .setIcon(JIcon.INFO);
+```
+
+### With Icons
+
+```java
+// Using JIcon enum
+JAlert alert = new JAlert("Upload Complete")
+    .setIcon(JIcon.CLOUD_UPLOAD)
+    .addClass("alert-success");
+
+// Using custom SVG node
+SVGPath customIcon = new SVGPath();
+customIcon.setContent("M12 2L2 7v10l10 5 10-5V7L12 2z");
+JAlert customAlert = new JAlert("Custom Icon")
+    .setIcon(customIcon);
+```
+
+### Dismissible Alerts
+
+```java
+VBox container = new VBox(10);
+
+JAlert dismissible = new JAlert(
+    "Cookie Notice",
+    "This website uses cookies to improve your experience."
+)
+.addClass("alert-info")
+.setIcon(JIcon.INFO)
+.setDismissible(true); // Adds close button
+
+container.getChildren().add(dismissible);
+
+// Alert will hide itself when dismissed
+// You can also handle manual removal:
+dismissible.setOnMouseClicked(e -> {
+    if (dismissed) {
+        container.getChildren().remove(dismissible);
+    }
+});
+```
+
+### Complete Examples
+
+#### Form Validation Feedback
+
+```java
+VBox form = new VBox(15);
+
+// Success alert (initially hidden)
+JAlert successAlert = new JAlert(
+    "Form Submitted",
+    "Your information has been successfully saved."
+)
+.addClass("alert-success")
+.setIcon(JIcon.CHECK_CIRCLE)
+.setDismissible(true);
+successAlert.setVisible(false);
+successAlert.setManaged(false);
+
+// Error alert (initially hidden)
+JAlert errorAlert = new JAlert(
+    "Validation Error",
+    "Please fill in all required fields."
+)
+.addClass("alert-danger")
+.setIcon(JIcon.ERROR)
+.setDismissible(true);
+errorAlert.setVisible(false);
+errorAlert.setManaged(false);
+
+JInput nameInput = new JInput("Enter your name");
+JButton submitBtn = new JButton("Submit").addClass("btn-primary");
+
+submitBtn.setOnAction(e -> {
+    if (nameInput.getText().isEmpty()) {
+        // Show error
+        errorAlert.setVisible(true);
+        errorAlert.setManaged(true);
+        successAlert.setVisible(false);
+        successAlert.setManaged(false);
+    } else {
+        // Show success
+        successAlert.setVisible(true);
+        successAlert.setManaged(true);
+        errorAlert.setVisible(false);
+        errorAlert.setManaged(false);
+    }
+});
+
+form.getChildren().addAll(
+    errorAlert,
+    successAlert,
+    nameInput.createWithLabel("Name", true),
+    submitBtn
+);
+```
+
+#### System Notifications Panel
+
+```java
+VBox notificationPanel = new VBox(10);
+notificationPanel.setPadding(new Insets(20));
+
+// Multiple notifications
+JAlert notification1 = new JAlert(
+    "System Update Available",
+    "Version 2.0.1 is ready to install."
+)
+.addClass("alert-info")
+.setIcon(JIcon.DOWNLOAD)
+.setDismissible(true);
+
+JAlert notification2 = new JAlert(
+    "Low Disk Space",
+    "You have less than 10% disk space remaining."
+)
+.addClass("alert-warning")
+.setIcon(JIcon.WARNING)
+.setDismissible(true);
+
+JAlert notification3 = new JAlert(
+    "Backup Complete",
+    "Your data has been successfully backed up."
+)
+.addClass("alert-success")
+.setIcon(JIcon.CHECK_CIRCLE)
+.setDismissible(true);
+
+notificationPanel.getChildren().addAll(
+    notification1,
+    notification2,
+    notification3
+);
+```
+
+#### Inline Alert in Card
+
+```java
+JCard card = new JCard();
+card.setTitle("Delete Account");
+
+VBox content = new VBox(15);
+
+JAlert warningAlert = new JAlert(
+    "Warning: This action is permanent",
+    "Deleting your account will remove all your data and cannot be undone."
+)
+.addClass("alert-danger")
+.setIcon(JIcon.WARNING_CIRCLE);
+
+JButton deleteBtn = new JButton("Delete My Account")
+    .addClass("btn-danger");
+
+JButton cancelBtn = new JButton("Cancel")
+    .addClass("btn-secondary");
+
+HBox actions = new HBox(10, cancelBtn, deleteBtn);
+
+content.getChildren().addAll(warningAlert, actions);
+card.setBody(content);
+```
+
+## API Reference
+
+### Constructors
+
+<ResponseField name="JAlert(String title)" type="constructor">
+  Creates an alert with only a title
+  
+  <Expandable title="parameters">
+    <ResponseField name="title" type="String">
+      The main alert message
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="JAlert(String title, String description)" type="constructor">
+  Creates an alert with title and description
+  
+  <Expandable title="parameters">
+    <ResponseField name="title" type="String">
+      The main alert message
+    </ResponseField>
+    <ResponseField name="description" type="String">
+      Additional descriptive text
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Methods
+
+<ResponseField name="setIcon(Node icon)" type="JAlert">
+  Sets a custom icon node (like SVGPath)
+  
+  ```java
+  SVGPath icon = new SVGPath();
+  icon.setContent("M12 2L2 7l10 5 10-5-10-5z");
+  alert.setIcon(icon);
+  ```
+</ResponseField>
+
+<ResponseField name="setIcon(JIcon iconEnum)" type="JAlert">
+  Sets an icon using the JIcon enum
+  
+  ```java
+  alert.setIcon(JIcon.CHECK_CIRCLE);
+  ```
+</ResponseField>
+
+<ResponseField name="setDismissible(boolean dismissible)" type="JAlert">
+  Enables or disables the close button. When dismissed, the alert hides itself (setVisible(false) and setManaged(false)).
+  
+  ```java
+  alert.setDismissible(true);
+  ```
+</ResponseField>
+
+<ResponseField name="addClass(String... styleClasses)" type="JAlert">
+  Adds custom CSS style classes to the alert
+  
+  ```java
+  alert.addClass("alert-success", "custom-class");
+  ```
+</ResponseField>
+
+## CSS Style Classes
+
+Alerts use the following CSS classes:
+
+- `alert` - Base alert container
+- `alert-success` - Success/positive variant (green)
+- `alert-danger` - Error/danger variant (red)
+- `alert-warning` - Warning variant (yellow)
+- `alert-info` - Info variant (blue)
+- `alert-icon-container` - Icon wrapper
+- `alert-icon` - Icon element
+- `alert-title` - Title text
+- `alert-description` - Description text
+- `alert-dismiss-container` - Close button container
+- `alert-dismiss-btn` - Close button
+- `alert-close-icon` - Close icon (X)
+
+## Alert Types Guide
+
+<CardGroup cols={2}>
+  <Card title="Success" icon="check-circle" color="green">
+    Use for successful operations, confirmations, and positive feedback.
+    
+    **Examples:** Form submitted, file uploaded, settings saved
+  </Card>
+  
+  <Card title="Error" icon="circle-xmark" color="red">
+    Use for errors, failed operations, and critical issues.
+    
+    **Examples:** Invalid input, server error, operation failed
+  </Card>
+  
+  <Card title="Warning" icon="triangle-exclamation" color="yellow">
+    Use for warnings, cautions, and important notices.
+    
+    **Examples:** Unsaved changes, destructive action, expiring soon
+  </Card>
+  
+  <Card title="Info" icon="circle-info" color="blue">
+    Use for informational messages and helpful tips.
+    
+    **Examples:** New features, tips, general notifications
+  </Card>
+</CardGroup>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Keep Messages Concise">
+    Alert titles should be brief (5-10 words). Use the description for additional details if needed.
+  </Accordion>
+  
+  <Accordion title="Use Appropriate Icons">
+    Always pair alerts with relevant icons to improve scannability and accessibility.
+  </Accordion>
+  
+  <Accordion title="Make Important Alerts Dismissible">
+    Allow users to dismiss informational alerts, but consider keeping critical errors visible until resolved.
+  </Accordion>
+  
+  <Accordion title="Position Strategically">
+    Place alerts near the content they relate to. For global messages, position at the top of the interface.
+  </Accordion>
+  
+  <Accordion title="Don't Overuse">
+    Too many alerts can overwhelm users. Use them sparingly for truly important information.
+  </Accordion>
+</AccordionGroup>
+
+## Accessibility
+
+- Alerts use semantic colors that work in both light and dark themes
+- Icons provide visual reinforcement of the message type
+- Text wrapping ensures descriptions remain readable
+- Dismissible alerts provide clear close buttons
+- High contrast between text and background for readability

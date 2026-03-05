@@ -1,0 +1,358 @@
+---
+title: JFile
+description: File upload component with multiple modes (button, avatar, square, drop zone)
+icon: upload
+---
+
+## Overview
+
+JFile is a versatile file upload component supporting multiple display modes, drag-and-drop, file validation, and image previews.
+
+## Constructors
+
+```java
+// Default mode (BUTTON)
+JFile fileUpload = new JFile();
+
+// With specific mode
+JFile fileUpload = new JFile(JFile.Mode mode);
+```
+
+<ParamField path="mode" type="JFile.Mode">
+  Display mode (BUTTON, AVATAR, SQUARE, DROP_ZONE)
+</ParamField>
+
+## Modes
+
+### Mode Enum
+
+```java
+public enum Mode {
+    BUTTON,      // Standard upload button
+    AVATAR,      // Circular avatar uploader (120x120)
+    SQUARE,      // Square image uploader (120x120)
+    DROP_ZONE    // Large drag-and-drop area
+}
+```
+
+## Properties
+
+<ParamField path="mode" type="ObjectProperty<Mode>">
+  Current display mode
+  
+  ```java
+  fileUpload.setMode(JFile.Mode.AVATAR);
+  Mode current = fileUpload.getMode();
+  ```
+</ParamField>
+
+<ParamField path="selectedFiles" type="ObservableList&lt;File&gt;">
+  List of selected files
+  
+  ```java
+  ObservableList&lt;File&gt; files = fileUpload.getSelectedFiles();
+  ```
+  
+  - Read-only, observable
+  - Automatically updated on file selection
+</ParamField>
+
+<ParamField path="validExtensions" type="ObservableList&lt;String&gt;">
+  Allowed file extensions
+  
+  ```java
+  fileUpload.getValidExtensions().addAll(".png", ".jpg", ".jpeg");
+  ```
+  
+  - Empty list = all extensions allowed
+  - Include the dot: `".pdf"` not `"pdf"`
+</ParamField>
+
+<ParamField path="maxFileSize" type="LongProperty">
+  Maximum file size in bytes
+  
+  ```java
+  fileUpload.setMaxFileSize(5 * 1024 * 1024); // 5 MB
+  long max = fileUpload.getMaxFileSize();
+  ```
+  
+  - Default: 10 MB (10,485,760 bytes)
+</ParamField>
+
+<ParamField path="maxFileCount" type="IntegerProperty">
+  Maximum number of files allowed
+  
+  ```java
+  fileUpload.setMaxFileCount(3);
+  int max = fileUpload.getMaxFileCount();
+  ```
+  
+  - Default: 1
+  - When > 1, enables multi-file selection
+</ParamField>
+
+<ParamField path="showRemove" type="BooleanProperty">
+  Show remove button on AVATAR/SQUARE modes
+  
+  ```java
+  fileUpload.setShowRemove(true);
+  ```
+  
+  - Default: `false`
+</ParamField>
+
+<ParamField path="showEdit" type="BooleanProperty">
+  Show edit button on AVATAR/SQUARE modes
+  
+  ```java
+  fileUpload.setShowEdit(true);
+  ```
+  
+  - Default: `false`
+</ParamField>
+
+## Methods
+
+### File Management
+
+<ResponseField name="clear" type="void">
+  Clears all selected files
+  
+  ```java
+  fileUpload.clear();
+  ```
+</ResponseField>
+
+<ResponseField name="getSelectedFiles" type="ObservableList&lt;File&gt;">
+  Returns the list of selected files
+  
+  ```java
+  ObservableList&lt;File&gt; files = fileUpload.getSelectedFiles();
+  if (!files.isEmpty()) {
+      File first = files.get(0);
+      System.out.println("Selected: " + first.getName());
+  }
+  ```
+</ResponseField>
+
+### Image Preview
+
+<ResponseField name="setPreviewImage" type="void">
+  Sets a preview image (AVATAR/SQUARE modes)
+  
+  ```java
+  Image img = new Image("file:/path/to/image.png");
+  fileUpload.setPreviewImage(img);
+  ```
+  
+  <ParamField path="img" type="Image">
+    JavaFX Image to display, or `null` to clear
+  </ParamField>
+</ResponseField>
+
+<ResponseField name="setPreviewFromFile" type="void">
+  Loads and sets preview from a file
+  
+  ```java
+  File imageFile = new File("/path/to/profile.jpg");
+  fileUpload.setPreviewFromFile(imageFile);
+  ```
+  
+  <ParamField path="file" type="File">
+    Image file to load and display
+  </ParamField>
+</ResponseField>
+
+### Mode Control
+
+<ResponseField name="rebuildUI" type="void">
+  Rebuilds the UI for the current mode
+  
+  ```java
+  fileUpload.rebuildUI();
+  ```
+  
+  - Called automatically when mode changes
+  - Useful for manual refresh after property changes
+</ResponseField>
+
+## Example Usage
+
+### Button Mode (Default)
+
+```java
+JFile fileUpload = new JFile();
+fileUpload.setMaxFileSize(20 * 1024 * 1024); // 20 MB
+fileUpload.getValidExtensions().addAll(".pdf", ".doc", ".docx");
+
+fileUpload.getSelectedFiles().addListener(
+    (ListChangeListener.Change<? extends File> c) -> {
+        while (c.next()) {
+            if (c.wasAdded()) {
+                c.getAddedSubList().forEach(file -> 
+                    System.out.println("Uploaded: " + file.getName())
+                );
+            }
+        }
+    }
+);
+```
+
+### Avatar Mode (Profile Picture)
+
+```java
+JFile avatarUpload = new JFile(JFile.Mode.AVATAR);
+avatarUpload.getValidExtensions().addAll(".png", ".jpg", ".jpeg");
+avatarUpload.setMaxFileSize(2 * 1024 * 1024); // 2 MB
+avatarUpload.setShowRemove(true);
+avatarUpload.setShowEdit(true);
+
+// Load existing avatar
+File existingAvatar = user.getAvatarFile();
+if (existingAvatar != null) {
+    avatarUpload.setPreviewFromFile(existingAvatar);
+}
+
+// Listen for changes
+avatarUpload.getSelectedFiles().addListener(
+    (ListChangeListener.Change<? extends File> c) -> {
+        if (!avatarUpload.getSelectedFiles().isEmpty()) {
+            File newAvatar = avatarUpload.getSelectedFiles().get(0);
+            uploadAvatarToServer(newAvatar);
+        }
+    }
+);
+```
+
+### Square Mode (Product Image)
+
+```java
+JFile productImage = new JFile(JFile.Mode.SQUARE);
+productImage.getValidExtensions().addAll(".png", ".jpg", ".webp");
+productImage.setMaxFileSize(5 * 1024 * 1024); // 5 MB
+productImage.setShowEdit(true);
+
+// Set from URL
+Image defaultImage = new Image(product.getImageUrl());
+productImage.setPreviewImage(defaultImage);
+```
+
+### Drop Zone Mode (Multiple Files)
+
+```java
+JFile dropZone = new JFile(JFile.Mode.DROP_ZONE);
+dropZone.setMaxFileCount(10);
+dropZone.setMaxFileSize(50 * 1024 * 1024); // 50 MB per file
+dropZone.getValidExtensions().addAll(".pdf", ".doc", ".xls", ".ppt");
+
+dropZone.setPrefHeight(200);
+
+dropZone.getSelectedFiles().addListener(
+    (ListChangeListener.Change<? extends File> c) -> {
+        int count = dropZone.getSelectedFiles().size();
+        System.out.println(count + " files selected");
+    }
+);
+```
+
+### Form Integration
+
+```java
+public class UserProfileForm extends VBox {
+    
+    private final JTextField nameField;
+    private final JTextField emailField;
+    private final JFile avatarUpload;
+    
+    public UserProfileForm() {
+        setSpacing(16);
+        setPadding(new Insets(20));
+        
+        nameField = new JTextField();
+        nameField.setPlaceholder("Full Name");
+        
+        emailField = new JTextField();
+        emailField.setPlaceholder("Email Address");
+        
+        avatarUpload = new JFile(JFile.Mode.AVATAR);
+        avatarUpload.getValidExtensions().addAll(".png", ".jpg");
+        avatarUpload.setShowRemove(true);
+        avatarUpload.setShowEdit(true);
+        
+        JLabel avatarLabel = new JLabel("Profile Picture");
+        avatarLabel.addClass("text-sm", "font-bold");
+        
+        getChildren().addAll(
+            new JLabel("Personal Information").addClass("text-lg", "font-bold"),
+            nameField,
+            emailField,
+            avatarLabel,
+            avatarUpload
+        );
+    }
+    
+    public void loadUser(User user) {
+        nameField.setText(user.getName());
+        emailField.setText(user.getEmail());
+        if (user.getAvatarPath() != null) {
+            avatarUpload.setPreviewFromFile(new File(user.getAvatarPath()));
+        }
+    }
+    
+    public void save() {
+        User user = new User();
+        user.setName(nameField.getText());
+        user.setEmail(emailField.getText());
+        
+        if (!avatarUpload.getSelectedFiles().isEmpty()) {
+            File avatar = avatarUpload.getSelectedFiles().get(0);
+            user.setAvatar(avatar);
+        }
+        
+        userService.save(user);
+    }
+}
+```
+
+## Validation
+
+The component automatically validates:
+
+1. **File count**: Ensures `selectedFiles.size() <= maxFileCount`
+2. **File size**: Each file must be `<= maxFileSize`
+3. **Extensions**: Files must match `validExtensions` (if not empty)
+
+Errors are displayed below the component with the `.error-text` style class.
+
+## Drag & Drop
+
+- All modes support drag-and-drop from file explorer
+- Visual feedback with `.drag-over` style class
+- Validates files before accepting drop
+- Shows error message if validation fails
+
+## Styling
+
+Style classes:
+- `.j-file` - Main container
+- `.j-file.button` - Button mode
+- `.j-file.avatar` - Avatar mode
+- `.j-file.square` - Square mode
+- `.j-file.drop-zone` - Drop zone mode
+- `.j-file-preview-wrapper` - Image preview container
+- `.j-file-overlay` - Hover overlay (AVATAR/SQUARE)
+- `.j-file-actions` - Action buttons container
+- `.j-file-action-btn` - Edit/remove buttons
+- `.error-text` - Validation error label
+- `.drag-over` - Applied during drag hover
+
+## Notes
+
+- Avatar and Square modes are 120×120px by default
+- Avatar uses circular clipping (`Circle`)
+- Square uses rounded rectangle clipping (12px arc)
+- Drop zone adapts height to content
+- File chooser dialog respects `maxFileCount` (single vs. multiple)
+- Image preview uses `ImagePattern` for proper scaling
+- Error state applies `.error` class to main container
+- Supports both click-to-upload and drag-and-drop

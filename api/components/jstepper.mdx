@@ -1,0 +1,227 @@
+---
+title: JStepper
+description: Multi-step process component for guiding users through sequential workflows
+---
+
+A stepper component that guides users through a multi-step process, displaying progress and providing navigation controls.
+
+## Constructor
+
+<ParamField path="JStepper()" type="constructor">
+  Creates a new stepper component with horizontal orientation.
+</ParamField>
+
+## Methods
+
+### Step Management
+
+<ParamField path="addStep(String title, String subtitle, Node content)" type="void">
+  Adds a new step to the stepper.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="title" type="String" required>
+      The step title to display
+    </ResponseField>
+    <ResponseField name="subtitle" type="String">
+      Optional subtitle for additional context
+    </ResponseField>
+    <ResponseField name="content" type="Node" required>
+      The content to display when this step is active
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="addStep(Step step)" type="void">
+  Adds a pre-configured Step object.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="step" type="JStepper.Step" required>
+      The step instance to add
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setSteps(Iterable<Step> newSteps)" type="void">
+  Replaces all steps with a new collection.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="newSteps" type="Iterable<Step>" required>
+      The new steps to set
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="getSteps()" type="ObservableList&lt;Step&gt;">
+  Returns the observable list of steps.
+  
+  <ResponseField name="returns" type="ObservableList&lt;Step&gt;">
+    The list of all steps
+  </ResponseField>
+</ParamField>
+
+### Navigation
+
+<ParamField path="getCurrentStepIndex()" type="int">
+  Gets the current step index (0-based).
+  
+  <ResponseField name="returns" type="int">
+    The current step index
+  </ResponseField>
+</ParamField>
+
+<ParamField path="setCurrentStepIndex(int index)" type="void">
+  Sets the current step by index.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="index" type="int" required>
+      The step index to navigate to (0-based)
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="nextStep()" type="void">
+  Advances to the next step if available.
+</ParamField>
+
+<ParamField path="previousStep()" type="void">
+  Returns to the previous step if available.
+</ParamField>
+
+<ParamField path="finish()" type="void">
+  Triggers the finish callback if set.
+</ParamField>
+
+### Configuration
+
+<ParamField path="setOrientation(Orientation orientation)" type="void">
+  Sets the stepper orientation.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="orientation" type="Orientation" required>
+      Either `Orientation.HORIZONTAL` or `Orientation.VERTICAL`
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="getOrientation()" type="Orientation">
+  Gets the current orientation.
+  
+  <ResponseField name="returns" type="Orientation">
+    The current orientation
+  </ResponseField>
+</ParamField>
+
+### Callbacks
+
+<ParamField path="setOnStepChange(BiConsumer&lt;Integer, Integer&gt; callback)" type="void">
+  Sets a callback that fires when the step changes.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="callback" type="BiConsumer&lt;Integer, Integer&gt;" required>
+      Callback receiving (oldIndex, newIndex)
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setOnFinish(Runnable callback)" type="void">
+  Sets a callback to execute when the finish button is clicked.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="callback" type="Runnable" required>
+      The finish callback
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+### Component Access
+
+<ParamField path="getBackButton()" type="JButton">
+  Returns the back button for customization.
+</ParamField>
+
+<ParamField path="getNextButton()" type="JButton">
+  Returns the next button for customization.
+</ParamField>
+
+<ParamField path="getFinishButton()" type="JButton">
+  Returns the finish button for customization.
+</ParamField>
+
+<ParamField path="getHeaderBox()" type="Pane">
+  Returns the header container (HBox or VBox depending on orientation).
+</ParamField>
+
+<ParamField path="getContentPane()" type="StackPane">
+  Returns the content pane where step content is displayed.
+</ParamField>
+
+<ParamField path="getFooterBox()" type="HBox">
+  Returns the footer box containing navigation buttons.
+</ParamField>
+
+## Inner Classes
+
+### Step
+
+<ParamField path="Step(String title, String subtitle, Node content)" type="constructor">
+  Creates a new step.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="title" type="String" required>
+      The step title
+    </ResponseField>
+    <ResponseField name="subtitle" type="String">
+      Optional subtitle
+    </ResponseField>
+    <ResponseField name="content" type="Node" required>
+      The step content
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+**Step Methods:**
+- `String getTitle()` / `void setTitle(String title)`
+- `String getSubtitle()` / `void setSubtitle(String subtitle)`
+- `Node getContent()` / `void setContent(Node content)`
+
+## Usage Example
+
+```java
+JStepper stepper = new JStepper();
+
+// Add steps
+stepper.addStep("Account", "Create your account", accountForm);
+stepper.addStep("Profile", "Set up your profile", profileForm);
+stepper.addStep("Preferences", "Configure settings", prefsForm);
+
+// Set callbacks
+stepper.setOnStepChange((oldIdx, newIdx) -> {
+    System.out.println("Step changed: " + oldIdx + " -> " + newIdx);
+});
+
+stepper.setOnFinish(() -> {
+    System.out.println("Wizard completed!");
+});
+
+// Customize buttons
+stepper.getNextButton().setText("Continue");
+stepper.getBackButton().setText("Previous");
+```
+
+## Style Classes
+
+- `.j-stepper` - Main container
+- `.j-stepper-header` - Header container (horizontal)
+- `.j-stepper-header-vertical` - Header container (vertical)
+- `.j-stepper-content` - Content pane
+- `.j-stepper-footer` - Footer with buttons
+- `.j-stepper-step-box` - Individual step container
+- `.j-stepper-icon-pane` - Step icon container
+- `.j-stepper-circle` - Step circle background
+- `.j-stepper-number` - Step number/icon
+- `.j-stepper-title` - Step title label
+- `.j-stepper-subtitle` - Step subtitle label
+- `.j-stepper-line` - Connecting line between steps
+- `.active` - Active step state
+- `.completed` - Completed step state
+- `.pending` - Pending step state

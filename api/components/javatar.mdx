@@ -1,0 +1,256 @@
+---
+title: JAvatar
+description: User identity component supporting initials, images, sizes, colors, and status badges.
+---
+
+## Overview
+
+JAvatar displays user identity with support for:
+
+- Auto-generated initials from name
+- Profile images
+- Multiple sizes (XS to XL)
+- Color variants
+- Status badges (online, away, busy, offline)
+- Avatar groups with overlap effect
+
+## Constructors
+
+<ParamField path="JAvatar()" type="constructor">
+  Creates an avatar with placeholder "?" initials.
+</ParamField>
+
+<ParamField path="JAvatar(initials)" type="constructor">
+  Creates an avatar with explicit initials.
+  
+  <Expandable title="Parameters">
+    - `initials` (String): Initials to display (e.g., "JA")
+  </Expandable>
+</ParamField>
+
+<ParamField path="JAvatar(firstName, lastName)" type="constructor">
+  Creates an avatar with auto-generated initials from first and last name.
+  
+  <Expandable title="Parameters">
+    - `firstName` (String): First name
+    - `lastName` (String): Last name
+  </Expandable>
+  
+  ```java
+  JAvatar avatar = new JAvatar("Jorge", "Arroyo"); // Shows "JA"
+  ```
+</ParamField>
+
+## Basic Usage
+
+```java
+// Initials avatar
+JAvatar avatar = new JAvatar("JA");
+avatar.setSize(JAvatar.Size.LG);
+avatar.setColor("primary");
+
+// Image avatar with status
+JAvatar userAvatar = new JAvatar("Jane", "Doe");
+userAvatar.setImage(new Image("profile.jpg"));
+userAvatar.setStatus(JAvatar.Status.ONLINE);
+```
+
+## Image
+
+<ParamField path="setImage(img)" type="JAvatar">
+  Sets a profile image. When set, the image covers the initials.
+  
+  <Expandable title="Parameters">
+    - `img` (Image): JavaFX Image object, or null to show initials
+  </Expandable>
+  
+  Returns the avatar instance for method chaining.
+  
+  ```java
+  avatar.setImage(new Image("file:///path/to/photo.jpg"));
+  
+  // Remove image and show initials again
+  avatar.setImage(null);
+  ```
+</ParamField>
+
+## Initials
+
+<ParamField path="setInitials(initials)" type="JAvatar">
+  Sets custom initials.
+  
+  <Expandable title="Parameters">
+    - `initials` (String): Initials to display (automatically converted to uppercase)
+  </Expandable>
+  
+  Returns the avatar instance for method chaining.
+</ParamField>
+
+<ParamField path="setName(firstName, lastName)" type="JAvatar">
+  Sets initials auto-generated from first and last name.
+  
+  <Expandable title="Parameters">
+    - `firstName` (String): First name
+    - `lastName` (String): Last name
+  </Expandable>
+  
+  Returns the avatar instance for method chaining.
+</ParamField>
+
+## Size
+
+<ParamField path="setSize(size)" type="JAvatar">
+  Sets the avatar size.
+  
+  <Expandable title="Parameters">
+    - `size` (JAvatar.Size): One of XS (24px), SM (32px), MD (40px), LG (48px), XL (64px)
+  </Expandable>
+  
+  Returns the avatar instance for method chaining.
+  
+  ```java
+  avatar.setSize(JAvatar.Size.XL);
+  ```
+</ParamField>
+
+<ParamField path="getSize()" type="Size">
+  Returns the current size.
+</ParamField>
+
+<ParamField path="sizeProperty()" type="ObjectProperty<Size>">
+  Returns the size property for binding.
+</ParamField>
+
+## Size Enum
+
+<ResponseField name="JAvatar.Size" type="enum">
+  Available avatar sizes:
+  
+  - `XS` - 24px diameter, 10px font, 8px badge
+  - `SM` - 32px diameter, 12px font, 10px badge
+  - `MD` - 40px diameter, 14px font, 12px badge (default)
+  - `LG` - 48px diameter, 16px font, 14px badge
+  - `XL` - 64px diameter, 20px font, 16px badge
+</ResponseField>
+
+## Color
+
+<ParamField path="setColor(color)" type="JAvatar">
+  Sets the avatar background and text color variant.
+  
+  <Expandable title="Parameters">
+    - `color` (String): Color variant - "primary", "success", "danger", "warning", "info", or "slate"
+  </Expandable>
+  
+  Returns the avatar instance for method chaining.
+  
+  ```java
+  avatar.setColor("success"); // Green background
+  avatar.setColor("danger");  // Red background
+  ```
+</ParamField>
+
+## Status Badge
+
+<ParamField path="setStatus(status)" type="JAvatar">
+  Sets the status indicator badge shown at bottom-right.
+  
+  <Expandable title="Parameters">
+    - `status` (JAvatar.Status): One of NONE, ONLINE, AWAY, BUSY, OFFLINE
+  </Expandable>
+  
+  Returns the avatar instance for method chaining.
+  
+  ```java
+  avatar.setStatus(JAvatar.Status.ONLINE); // Green badge
+  avatar.setStatus(JAvatar.Status.AWAY);   // Yellow badge
+  avatar.setStatus(JAvatar.Status.BUSY);   // Red badge
+  avatar.setStatus(JAvatar.Status.OFFLINE); // Gray badge
+  ```
+</ParamField>
+
+<ParamField path="getStatus()" type="Status">
+  Returns the current status.
+</ParamField>
+
+<ParamField path="statusProperty()" type="ObjectProperty<Status>">
+  Returns the status property for binding.
+</ParamField>
+
+## Status Enum
+
+<ResponseField name="JAvatar.Status" type="enum">
+  Available status indicators:
+  
+  - `NONE` - No badge visible
+  - `ONLINE` - Green badge (#22c55e)
+  - `AWAY` - Yellow/orange badge (#f59e0b)
+  - `BUSY` - Red badge (#ef4444)
+  - `OFFLINE` - Gray badge (#94a3b8)
+</ResponseField>
+
+## Avatar Group
+
+The `JAvatar.Group` class displays multiple avatars with an overlapping effect.
+
+### Constructor
+
+<ParamField path="JAvatar.Group(avatars...)" type="constructor">
+  Creates an avatar group with the specified avatars.
+  
+  <Expandable title="Parameters">
+    - `avatars` (JAvatar...): Variable number of avatar instances
+  </Expandable>
+</ParamField>
+
+### Methods
+
+<ParamField path="addAvatar(avatar)" type="void">
+  Adds an avatar to the group with overlap styling.
+  
+  <Expandable title="Parameters">
+    - `avatar` (JAvatar): Avatar to add
+  </Expandable>
+</ParamField>
+
+<ParamField path="setMax(max)" type="Group">
+  Sets the maximum number of visible avatars. Extra avatars are hidden and shown as "+N" overflow indicator.
+  
+  <Expandable title="Parameters">
+    - `max` (int): Maximum visible avatars
+  </Expandable>
+  
+  Returns the group instance for method chaining.
+</ParamField>
+
+### Example: Avatar Group
+
+```java
+JAvatar.Group group = new JAvatar.Group(
+    new JAvatar("John", "Doe"),
+    new JAvatar("Jane", "Smith"),
+    new JAvatar("Bob", "Johnson"),
+    new JAvatar("Alice", "Williams"),
+    new JAvatar("Charlie", "Brown")
+);
+
+group.setMax(3); // Shows 3 avatars + "+2" indicator
+
+// Or add avatars dynamically
+JAvatar.Group dynamicGroup = new JAvatar.Group();
+dynamicGroup.addAvatar(new JAvatar("User", "One"));
+dynamicGroup.addAvatar(new JAvatar("User", "Two"));
+```
+
+## Color Variants
+
+<ResponseField name="Color Variants" type="reference">
+  Available color schemes with background and text color pairs:
+  
+  - `primary` - Indigo (#e0e7ff / #4f46e5)
+  - `success` - Green (#dcfce7 / #16a34a)
+  - `danger` - Red (#fee2e2 / #dc2626)
+  - `warning` - Amber (#fef3c7 / #d97706)
+  - `info` - Blue (#dbeafe / #2563eb)
+  - `slate` - Gray (#f1f5f9 / #475569)
+</ResponseField>

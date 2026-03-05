@@ -1,0 +1,272 @@
+---
+title: JTimeline
+description: Timeline component for displaying chronological events with support for vertical and horizontal orientations, custom icons, and rich content.
+---
+
+## Overview
+
+JTimeline displays events in chronological order with:
+
+- Vertical or horizontal orientation
+- Custom icons per event
+- Color-coded indicators
+- Time labels
+- Rich custom content support
+- Automatic connector lines between events
+
+## Constructor
+
+<ParamField path="JTimeline()" type="constructor">
+  Creates a new timeline in vertical orientation by default.
+</ParamField>
+
+## Basic Usage
+
+```java
+JTimeline timeline = new JTimeline();
+timeline.addEvent("Order Placed", "Customer placed order #1234", "2 hours ago");
+timeline.addEvent("Payment Confirmed", "Payment received", "1 hour ago");
+timeline.addEvent("Shipped", "Package shipped via FedEx", "30 min ago");
+timeline.addEvent("Delivered", "Package delivered", "Just now");
+```
+
+## Orientation
+
+<ParamField path="setOrientation(orientation)" type="void">
+  Sets the timeline orientation.
+  
+  <Expandable title="Parameters">
+    - `orientation` (Orientation): VERTICAL or HORIZONTAL
+  </Expandable>
+  
+  ```java
+  timeline.setOrientation(Orientation.HORIZONTAL);
+  ```
+</ParamField>
+
+<ParamField path="getOrientation()" type="Orientation">
+  Returns the current orientation.
+</ParamField>
+
+## Adding Events
+
+<ParamField path="addEvent(title, description, time)" type="void">
+  Adds a simple text event to the timeline.
+  
+  <Expandable title="Parameters">
+    - `title` (String): Event title
+    - `description` (String): Event description
+    - `time` (String): Time label (e.g., "2 hours ago", "Jan 15, 2024")
+  </Expandable>
+</ParamField>
+
+<ParamField path="addEvent(event)" type="void">
+  Adds a fully configured Event object to the timeline.
+  
+  <Expandable title="Parameters">
+    - `event` (JTimeline.Event): Event instance with custom configuration
+  </Expandable>
+  
+  ```java
+  JTimeline.Event event = new JTimeline.Event(
+      "Deployment",
+      "Application deployed to production",
+      "10:30 AM"
+  );
+  event.setColorClass("success");
+  event.setIcon(new JIcon("check-circle").view());
+  timeline.addEvent(event);
+  ```
+</ParamField>
+
+<ParamField path="getEvents()" type="ObservableList&lt;Event&gt;">
+  Returns the observable list of events. Changes to this list automatically update the timeline.
+</ParamField>
+
+## Event Class
+
+The `JTimeline.Event` class represents a single timeline event.
+
+### Constructor
+
+<ParamField path="Event(title, description, time)" type="constructor">
+  Creates a new event.
+  
+  <Expandable title="Parameters">
+    - `title` (String): Event title
+    - `description` (String): Event description
+    - `time` (String): Time label
+  </Expandable>
+</ParamField>
+
+### Properties
+
+<ParamField path="setTitle(title)" type="void">
+  Sets the event title.
+  
+  <Expandable title="Parameters">
+    - `title` (String): Title text
+  </Expandable>
+</ParamField>
+
+<ParamField path="getTitle()" type="String">
+  Returns the event title.
+</ParamField>
+
+<ParamField path="setDescription(description)" type="void">
+  Sets the event description.
+  
+  <Expandable title="Parameters">
+    - `description` (String): Description text
+  </Expandable>
+</ParamField>
+
+<ParamField path="getDescription()" type="String">
+  Returns the event description.
+</ParamField>
+
+<ParamField path="setTime(time)" type="void">
+  Sets the time label.
+  
+  <Expandable title="Parameters">
+    - `time` (String): Time text (e.g., "2 hours ago", "Jan 15, 2024")
+  </Expandable>
+</ParamField>
+
+<ParamField path="getTime()" type="String">
+  Returns the time label.
+</ParamField>
+
+### Customization
+
+<ParamField path="setIcon(icon)" type="void">
+  Sets a custom icon for the event indicator.
+  
+  <Expandable title="Parameters">
+    - `icon` (Node): JavaFX Node (typically JIcon.view()), or null for default circle
+  </Expandable>
+  
+  ```java
+  event.setIcon(new JIcon("check-circle").view());
+  ```
+</ParamField>
+
+<ParamField path="getIcon()" type="Node">
+  Returns the custom icon, or null if using default circle.
+</ParamField>
+
+<ParamField path="setColorClass(colorClass)" type="void">
+  Sets the color variant for the indicator and connector line.
+  
+  <Expandable title="Parameters">
+    - `colorClass` (String): Color class - "primary", "success", "danger", "warning", "info", "slate"
+  </Expandable>
+  
+  ```java
+  event.setColorClass("success"); // Green indicator
+  event.setColorClass("danger");  // Red indicator
+  ```
+</ParamField>
+
+<ParamField path="getColorClass()" type="String">
+  Returns the color class.
+</ParamField>
+
+<ParamField path="setCustomContent(content)" type="void">
+  Sets custom JavaFX content to display below the description.
+  
+  <Expandable title="Parameters">
+    - `content` (Node): Custom content node
+  </Expandable>
+  
+  ```java
+  // Add a button to the event
+  JButton viewBtn = new JButton("View Details");
+  event.setCustomContent(viewBtn);
+  
+  // Add a complex layout
+  VBox details = new VBox(
+      new JLabel("Location: New York"),
+      new JLabel("Status: Completed")
+  );
+  event.setCustomContent(details);
+  ```
+</ParamField>
+
+<ParamField path="getCustomContent()" type="Node">
+  Returns the custom content node.
+</ParamField>
+
+## Advanced Example
+
+```java
+JTimeline timeline = new JTimeline();
+
+// Event 1: Started (blue)
+JTimeline.Event started = new JTimeline.Event(
+    "Project Started",
+    "Initial planning and requirements gathering",
+    "Jan 1, 2024"
+);
+started.setColorClass("primary");
+started.setIcon(new JIcon("play-circle").view());
+timeline.addEvent(started);
+
+// Event 2: Development (info)
+JTimeline.Event dev = new JTimeline.Event(
+    "Development Phase",
+    "Sprint 1-4 completed successfully",
+    "Jan 15, 2024"
+);
+dev.setColorClass("info");
+dev.setIcon(new JIcon("code").view());
+
+// Add custom content with progress
+JProgressBar progress = new JProgressBar(0.75);
+progress.setLabel("75% Complete");
+dev.setCustomContent(progress);
+timeline.addEvent(dev);
+
+// Event 3: Testing (warning)
+JTimeline.Event testing = new JTimeline.Event(
+    "Testing",
+    "QA testing in progress",
+    "Feb 1, 2024"
+);
+testing.setColorClass("warning");
+testing.setIcon(new JIcon("bug").view());
+timeline.addEvent(testing);
+
+// Event 4: Deployed (success)
+JTimeline.Event deployed = new JTimeline.Event(
+    "Deployed to Production",
+    "Successfully deployed v1.0",
+    "Feb 15, 2024"
+);
+deployed.setColorClass("success");
+deployed.setIcon(new JIcon("check-circle").view());
+timeline.addEvent(deployed);
+
+// Horizontal orientation for compact view
+timeline.setOrientation(Orientation.HORIZONTAL);
+```
+
+## Visual Behavior
+
+### Vertical Mode
+- Events stack vertically
+- Time label appears beside title
+- Connector lines run vertically between indicators
+- Content flows downward
+
+### Horizontal Mode
+- Events arranged horizontally
+- Equal width for each event
+- Time label appears below title
+- Connector lines run horizontally between indicators
+
+### Connector Lines
+- Automatically drawn between events
+- Last event has no trailing line
+- Inherits color from event's colorClass
+- Slight padding separates line from indicator

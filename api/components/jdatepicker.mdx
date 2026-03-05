@@ -1,0 +1,388 @@
+---
+title: JDatePicker
+description: A styled date picker component for JavaFX forms
+icon: calendar
+---
+
+## Overview
+
+`JDatePicker` is a customized JavaFX DatePicker with consistent styling to match other JJArroyo form components. It extends `DatePicker` and applies the `form-input` style class to ensure visual consistency across your forms.
+
+## Constructor
+
+<ParamField path="JDatePicker()" type="constructor">
+  Creates a new JDatePicker with no initial date selected.
+  
+  ```java
+  JDatePicker datePicker = new JDatePicker();
+  ```
+</ParamField>
+
+<ParamField path="JDatePicker(LocalDate localDate)" type="constructor">
+  Creates a new JDatePicker with the specified initial date.
+  
+  <Expandable title="parameters">
+    <ResponseField name="localDate" type="LocalDate">
+      The initial date to display
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  import java.time.LocalDate;
+  
+  JDatePicker datePicker = new JDatePicker(LocalDate.now());
+  ```
+</ParamField>
+
+## Style Classes
+
+<ResponseField name="j-date-picker" type="CSS class">
+  Custom style class applied to the JDatePicker component
+</ResponseField>
+
+<ResponseField name="form-input" type="CSS class">
+  Applied to the internal TextField editor for consistent styling with other form inputs
+</ResponseField>
+
+## Usage Examples
+
+### Basic Date Picker
+
+```java
+import com.jjarroyo.components.JDatePicker;
+import javafx.scene.layout.VBox;
+import javafx.scene.control.Label;
+import java.time.LocalDate;
+
+public class BasicDateExample {
+    public VBox createDateField() {
+        VBox container = new VBox(10);
+        
+        Label label = new Label("Select Date:");
+        JDatePicker datePicker = new JDatePicker();
+        
+        container.getChildren().addAll(label, datePicker);
+        return container;
+    }
+}
+```
+
+### Date Picker with Initial Value
+
+```java
+import com.jjarroyo.components.JDatePicker;
+import java.time.LocalDate;
+
+public class InitialDateExample {
+    public JDatePicker createDatePicker() {
+        // Set to current date
+        JDatePicker datePicker = new JDatePicker(LocalDate.now());
+        
+        return datePicker;
+    }
+}
+```
+
+### Date Picker with Listener
+
+```java
+import com.jjarroyo.components.JDatePicker;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+public class DateListenerExample {
+    public JDatePicker createDatePickerWithListener() {
+        JDatePicker datePicker = new JDatePicker();
+        
+        // Listen for date changes
+        datePicker.valueProperty().addListener((obs, oldDate, newDate) -> {
+            if (newDate != null) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
+                System.out.println("Selected date: " + newDate.format(formatter));
+            }
+        });
+        
+        return datePicker;
+    }
+}
+```
+
+### Birth Date Picker with Validation
+
+```java
+import com.jjarroyo.components.JDatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import java.time.LocalDate;
+import java.time.Period;
+
+public class BirthDateExample {
+    public VBox createBirthDateField() {
+        VBox container = new VBox(5);
+        
+        Label label = new Label("Date of Birth:");
+        JDatePicker birthDatePicker = new JDatePicker();
+        
+        Label ageLabel = new Label();
+        ageLabel.setTextFill(Color.GRAY);
+        
+        // Calculate age when date is selected
+        birthDatePicker.valueProperty().addListener((obs, oldDate, newDate) -> {
+            if (newDate != null) {
+                LocalDate today = LocalDate.now();
+                Period age = Period.between(newDate, today);
+                
+                if (age.getYears() >= 0) {
+                    ageLabel.setText("Age: " + age.getYears() + " years");
+                    ageLabel.setTextFill(Color.GREEN);
+                } else {
+                    ageLabel.setText("Invalid date: future date selected");
+                    ageLabel.setTextFill(Color.RED);
+                }
+            } else {
+                ageLabel.setText("");
+            }
+        });
+        
+        container.getChildren().addAll(label, birthDatePicker, ageLabel);
+        return container;
+    }
+}
+```
+
+### Date Range Picker (Start and End Dates)
+
+```java
+import com.jjarroyo.components.JDatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import java.time.LocalDate;
+
+public class DateRangeExample {
+    public VBox createDateRangePicker() {
+        VBox container = new VBox(10);
+        
+        // Start date
+        Label startLabel = new Label("Start Date:");
+        JDatePicker startDatePicker = new JDatePicker();
+        
+        // End date
+        Label endLabel = new Label("End Date:");
+        JDatePicker endDatePicker = new JDatePicker();
+        
+        // Validation label
+        Label validationLabel = new Label();
+        
+        // Validate date range
+        Runnable validateRange = () -> {
+            LocalDate startDate = startDatePicker.getValue();
+            LocalDate endDate = endDatePicker.getValue();
+            
+            if (startDate != null && endDate != null) {
+                if (endDate.isBefore(startDate)) {
+                    validationLabel.setText("Error: End date must be after start date");
+                    validationLabel.setTextFill(Color.RED);
+                } else {
+                    validationLabel.setText("Valid date range");
+                    validationLabel.setTextFill(Color.GREEN);
+                }
+            } else {
+                validationLabel.setText("");
+            }
+        };
+        
+        startDatePicker.valueProperty().addListener((obs, old, newVal) -> validateRange.run());
+        endDatePicker.valueProperty().addListener((obs, old, newVal) -> validateRange.run());
+        
+        container.getChildren().addAll(
+            startLabel, startDatePicker,
+            endLabel, endDatePicker,
+            validationLabel
+        );
+        
+        return container;
+    }
+}
+```
+
+### Appointment Date Picker with Constraints
+
+```java
+import com.jjarroyo.components.JDatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import java.time.LocalDate;
+import java.time.DayOfWeek;
+
+public class AppointmentDateExample {
+    public VBox createAppointmentDatePicker() {
+        VBox container = new VBox(10);
+        
+        Label label = new Label("Appointment Date (Weekdays only):");
+        JDatePicker appointmentPicker = new JDatePicker();
+        
+        // Disable weekends
+        appointmentPicker.setDayCellFactory(picker -> new javafx.scene.control.DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                
+                // Disable weekends
+                if (date != null && 
+                    (date.getDayOfWeek() == DayOfWeek.SATURDAY || 
+                     date.getDayOfWeek() == DayOfWeek.SUNDAY)) {
+                    setDisable(true);
+                    setStyle("-fx-background-color: #ffc0cb;");
+                }
+                
+                // Disable past dates
+                if (date != null && date.isBefore(LocalDate.now())) {
+                    setDisable(true);
+                    setStyle("-fx-background-color: #d3d3d3;");
+                }
+            }
+        });
+        
+        container.getChildren().addAll(label, appointmentPicker);
+        return container;
+    }
+}
+```
+
+### Date Picker with Custom Format
+
+```java
+import com.jjarroyo.components.JDatePicker;
+import javafx.util.StringConverter;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+public class CustomFormatExample {
+    public JDatePicker createFormattedDatePicker() {
+        JDatePicker datePicker = new JDatePicker();
+        
+        // Custom date format: "dd/MM/yyyy"
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        
+        datePicker.setConverter(new StringConverter<LocalDate>() {
+            @Override
+            public String toString(LocalDate date) {
+                return (date != null) ? formatter.format(date) : "";
+            }
+            
+            @Override
+            public LocalDate fromString(String string) {
+                return (string != null && !string.isEmpty()) 
+                    ? LocalDate.parse(string, formatter) 
+                    : null;
+            }
+        });
+        
+        return datePicker;
+    }
+}
+```
+
+## Inherited Methods
+
+Since `JDatePicker` extends `DatePicker`, all standard JavaFX DatePicker methods are available:
+
+- `getValue()` - Get the selected LocalDate
+- `setValue(LocalDate date)` - Set the selected date
+- `valueProperty()` - Access the value property for binding
+- `setDayCellFactory(Callback factory)` - Customize individual day cells
+- `setConverter(StringConverter converter)` - Set custom date formatting
+- `getEditor()` - Access the internal TextField
+- `setEditable(boolean value)` - Enable/disable manual text editing
+- `setDisable(boolean value)` - Enable/disable the date picker
+- `setPromptText(String text)` - Set placeholder text
+- And all other DatePicker methods
+
+## Working with LocalDate
+
+```java
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+// Get current date
+LocalDate today = LocalDate.now();
+
+// Create specific date
+LocalDate specificDate = LocalDate.of(2024, 12, 25);
+
+// Parse from string
+LocalDate parsed = LocalDate.parse("2024-12-25");
+
+// Format date
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
+String formatted = today.format(formatter); // "Jan 15, 2024"
+
+// Date arithmetic
+LocalDate tomorrow = today.plusDays(1);
+LocalDate nextWeek = today.plusWeeks(1);
+LocalDate nextMonth = today.plusMonths(1);
+
+// Compare dates
+boolean isBefore = date1.isBefore(date2);
+boolean isAfter = date1.isAfter(date2);
+boolean isEqual = date1.isEqual(date2);
+```
+
+## Common Patterns
+
+### Required Field Validation
+
+```java
+JDatePicker datePicker = new JDatePicker();
+Label errorLabel = new Label();
+
+datePicker.valueProperty().addListener((obs, oldVal, newVal) -> {
+    if (newVal == null) {
+        errorLabel.setText("Date is required");
+        errorLabel.setTextFill(Color.RED);
+    } else {
+        errorLabel.setText("");
+    }
+});
+```
+
+### Set Default to Today
+
+```java
+JDatePicker datePicker = new JDatePicker(LocalDate.now());
+```
+
+### Disable Past Dates
+
+```java
+JDatePicker datePicker = new JDatePicker();
+datePicker.setDayCellFactory(picker -> new javafx.scene.control.DateCell() {
+    @Override
+    public void updateItem(LocalDate date, boolean empty) {
+        super.updateItem(date, empty);
+        setDisable(empty || date.isBefore(LocalDate.now()));
+    }
+});
+```
+
+### Get Selected Date Value
+
+```java
+JDatePicker datePicker = new JDatePicker();
+LocalDate selectedDate = datePicker.getValue();
+
+if (selectedDate != null) {
+    System.out.println("Selected: " + selectedDate);
+} else {
+    System.out.println("No date selected");
+}
+```
+
+## See Also
+
+- [JInput](/api/components/jinput) - Basic text input
+- [JSelect](/api/components/jselect) - Dropdown select component
+- [JNumberInput](/api/components/jnumberinput) - Numeric input component

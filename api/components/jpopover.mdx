@@ -1,0 +1,222 @@
+---
+title: JPopover
+description: Popover component for displaying contextual information in a floating panel
+---
+
+A popover component that displays rich contextual information in a floating panel anchored to a target element, with arrow indicators and multiple positioning options.
+
+## Constructor
+
+<ParamField path="JPopover()" type="constructor">
+  Creates a new popover with default settings (light theme, top position).
+</ParamField>
+
+## Enums
+
+### Theme
+
+Defines the popover theme:
+- `LIGHT` - Light theme (default)
+- `DARK` - Dark theme
+
+### Position
+
+Defines the popover position relative to the target:
+- `TOP` - Above the target
+- `RIGHT` - Right of the target
+- `BOTTOM` - Below the target
+- `LEFT` - Left of the target
+
+## Methods
+
+### Content Configuration
+
+<ParamField path="setTitle(String title)" type="JPopover">
+  Sets the popover title.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="title" type="String" required>
+      The title text (null or empty to hide)
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setBody(String text)" type="JPopover">
+  Sets the popover body text.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="text" type="String" required>
+      The body text
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setContentNode(Node content)" type="JPopover">
+  Sets custom content, replacing the default title/body structure.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="content" type="Node" required>
+      The custom content node
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+### Appearance
+
+<ParamField path="setTheme(Theme theme)" type="JPopover">
+  Sets the popover theme.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="theme" type="Theme" required>
+      LIGHT or DARK
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setPosition(Position pos)" type="JPopover">
+  Sets the popover position.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="pos" type="Position" required>
+      TOP, RIGHT, BOTTOM, or LEFT
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+### Special Modes
+
+<ParamField path="setConfirmationMode(String yesText, String noText, Runnable onYes)" type="JPopover">
+  Configures the popover as a confirmation dialog with Yes/No buttons.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="yesText" type="String" required>
+      Text for the confirmation button
+    </ResponseField>
+    <ResponseField name="noText" type="String" required>
+      Text for the cancel button
+    </ResponseField>
+    <ResponseField name="onYes" type="Runnable" required>
+      Callback to execute when confirmed
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+### Display
+
+<ParamField path="show(Node target)" type="void">
+  Shows the popover anchored to the specified target node.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="target" type="Node" required>
+      The node to anchor the popover to
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Usage Examples
+
+### Basic Popover
+
+```java
+JPopover popover = new JPopover();
+popover.setTitle("Help")
+       .setBody("This is some helpful information about this feature.")
+       .setPosition(JPopover.Position.TOP);
+
+Button helpButton = new JButton("?");
+helpButton.setOnAction(e -> popover.show(helpButton));
+```
+
+### Dark Theme Popover
+
+```java
+JPopover popover = new JPopover();
+popover.setTitle("Notification")
+       .setBody("You have 3 new messages.")
+       .setTheme(JPopover.Theme.DARK)
+       .setPosition(JPopover.Position.BOTTOM);
+
+popover.show(iconButton);
+```
+
+### Confirmation Popover
+
+```java
+JPopover confirmPopover = new JPopover();
+confirmPopover.setBody("Delete this item?")
+              .setConfirmationMode("Yes", "No", () -> {
+                  deleteItem();
+              })
+              .setPosition(JPopover.Position.TOP);
+
+Button deleteBtn = new JButton("Delete");
+deleteBtn.setOnAction(e -> confirmPopover.show(deleteBtn));
+```
+
+### Custom Content Popover
+
+```java
+VBox customContent = new VBox(8);
+customContent.getChildren().addAll(
+    new JLabel("Custom Content").addClass("font-bold"),
+    new JLabel("Line 1"),
+    new JLabel("Line 2"),
+    new JButton("Action")
+);
+
+JPopover popover = new JPopover();
+popover.setContentNode(customContent)
+       .setPosition(JPopover.Position.RIGHT);
+
+popover.show(targetNode);
+```
+
+### Positioned Popovers
+
+```java
+// Top
+new JPopover()
+    .setBody("Above the button")
+    .setPosition(JPopover.Position.TOP)
+    .show(button);
+
+// Right
+new JPopover()
+    .setBody("To the right")
+    .setPosition(JPopover.Position.RIGHT)
+    .show(button);
+
+// Bottom
+new JPopover()
+    .setBody("Below the button")
+    .setPosition(JPopover.Position.BOTTOM)
+    .show(button);
+
+// Left
+new JPopover()
+    .setBody("To the left")
+    .setPosition(JPopover.Position.LEFT)
+    .show(button);
+```
+
+## Features
+
+- Automatic positioning relative to target
+- Arrow indicator pointing to target
+- Auto-hide on click outside (default)
+- Smooth fade and scale animation
+- Light and dark themes
+- Optional title and footer
+- Confirmation mode with buttons
+- Custom content support
+- Text wrapping for long content
+
+## Style Classes
+
+- `.j-popover` - Main container
+- `.j-popover-dark` - Dark theme modifier
+- `.j-popover-content` - Content box
+- `.j-popover-arrow` - Arrow indicator
+- `.j-popover-title` - Title label
+- `.j-popover-text` - Body text label
+- `.j-popover-footer` - Footer container (for buttons)

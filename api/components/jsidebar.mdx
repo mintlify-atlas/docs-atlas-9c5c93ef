@@ -1,0 +1,421 @@
+---
+title: JSidebar
+description: A collapsible sidebar navigation component with multiple variants and collapse modes
+---
+
+## Overview
+
+`JSidebar` is a vertical navigation component that extends JavaFX's `VBox`. It supports collapsible states, multiple visual variants, custom header/footer sections, and smooth animations.
+
+## Enumerations
+
+### CollapseMode
+
+<ResponseField name="COMPACT" type="CollapseMode">
+  Icons only - sidebar collapses to show only icons (width: 70px)
+</ResponseField>
+
+<ResponseField name="HIDDEN" type="CollapseMode">
+  Completely hidden - sidebar collapses to zero width
+</ResponseField>
+
+### SidebarVariant
+
+<ResponseField name="DEFAULT" type="SidebarVariant">
+  Dark/standard variant with default styling
+</ResponseField>
+
+<ResponseField name="LIGHT" type="SidebarVariant">
+  Light variant with white background and borders
+</ResponseField>
+
+## Constructor
+
+<ParamField path="JSidebar()" type="constructor">
+  Creates a new sidebar with default settings (expanded, COMPACT mode, DEFAULT variant).
+</ParamField>
+
+## Methods
+
+### Items Management
+
+<ParamField path="getItems()" type="ObservableList&lt;Node&gt;">
+  Returns the observable list of sidebar items.
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="ObservableList&lt;Node&gt;">
+      The list of items (typically `JSidebarItem` instances)
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+### Expand/Collapse
+
+<ParamField path="isExpanded()" type="boolean">
+  Checks if the sidebar is currently expanded.
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="boolean">
+      `true` if expanded, `false` if collapsed
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setExpanded(boolean expanded)" type="void">
+  Sets the expanded/collapsed state with animation.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="expanded" type="boolean">
+      `true` to expand, `false` to collapse
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="expandedProperty()" type="BooleanProperty">
+  Property for the expanded state.
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="BooleanProperty">
+      The expanded property for binding
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+### Collapse Mode
+
+<ParamField path="getCollapseMode()" type="CollapseMode">
+  Gets the current collapse mode.
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="CollapseMode">
+      The current collapse mode (COMPACT or HIDDEN)
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setCollapseMode(CollapseMode mode)" type="void">
+  Sets the collapse behavior.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="mode" type="CollapseMode">
+      COMPACT (icons only) or HIDDEN (zero width)
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="collapseModeProperty()" type="ObjectProperty<CollapseMode>">
+  Property for the collapse mode.
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="ObjectProperty<CollapseMode>">
+      The collapse mode property for binding
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+### Variant
+
+<ParamField path="setVariant(SidebarVariant variant)" type="void">
+  Sets the visual variant of the sidebar.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="variant" type="SidebarVariant">
+      DEFAULT (dark) or LIGHT (white background)
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+### Header and Footer
+
+<ParamField path="setHeader(Node header)" type="void">
+  Sets a custom header node. When set, the toggle button is hidden.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="header" type="Node">
+      The header node to display, or `null` to remove
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setFooter(Node footer)" type="void">
+  Sets a custom footer node at the bottom of the sidebar.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="footer" type="Node">
+      The footer node to display, or `null` to remove
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Related Components
+
+- [JSidebarItem](/api/components/jsidebaritem) - Individual navigation items for the sidebar
+
+## Style Classes
+
+<ResponseField name="j-sidebar" type="String">
+  Base style class applied to the sidebar container
+</ResponseField>
+
+<ResponseField name="sidebar-default" type="String">
+  Applied when using DEFAULT variant
+</ResponseField>
+
+<ResponseField name="sidebar-light" type="String">
+  Applied when using LIGHT variant
+</ResponseField>
+
+<ResponseField name="j-sidebar-header-content" type="String">
+  Applied to the custom header content wrapper
+</ResponseField>
+
+<ResponseField name="j-sidebar-header" type="String">
+  Applied to the top bar containing the toggle button
+</ResponseField>
+
+<ResponseField name="j-sidebar-toggle" type="String">
+  Applied to the hamburger menu toggle button
+</ResponseField>
+
+<ResponseField name="j-sidebar-items" type="String">
+  Applied to the items container
+</ResponseField>
+
+<ResponseField name="j-sidebar-scroll" type="String">
+  Applied to the scroll pane wrapping the items
+</ResponseField>
+
+<ResponseField name="j-sidebar-footer" type="String">
+  Applied to the footer container
+</ResponseField>
+
+<ResponseField name="collapsed" type="String">
+  Applied when the sidebar is collapsed
+</ResponseField>
+
+<ResponseField name="compact" type="String">
+  Applied when using COMPACT collapse mode
+</ResponseField>
+
+<ResponseField name="hidden" type="String">
+  Applied when using HIDDEN collapse mode
+</ResponseField>
+
+## Example Usage
+
+```java
+// Create sidebar
+JSidebar sidebar = new JSidebar();
+
+// Add navigation items
+sidebar.getItems().addAll(
+    new JSidebarItem("Home", JIcon.HOME.view()),
+    new JSidebarItem("Profile", JIcon.USER.view()),
+    new JSidebarItem("Settings", JIcon.SETTINGS.view())
+);
+
+// Set first item as active
+if (sidebar.getItems().get(0) instanceof JSidebarItem) {
+    ((JSidebarItem) sidebar.getItems().get(0)).setActive(true);
+}
+
+// Configure variant
+sidebar.setVariant(JSidebar.SidebarVariant.LIGHT);
+
+// Set custom header (hides toggle button)
+JLabel logo = new JLabel("MyApp");
+logo.setStyle("-fx-font-size: 20px; -fx-padding: 20px;");
+sidebar.setHeader(logo);
+
+// Set footer
+JButton logoutBtn = new JButton("Logout");
+sidebar.setFooter(logoutBtn);
+
+// Configure collapse mode
+sidebar.setCollapseMode(JSidebar.CollapseMode.COMPACT);
+
+// Toggle programmatically
+sidebar.setExpanded(false);
+
+// Bind to property
+sidebar.expandedProperty().addListener((obs, old, expanded) -> {
+    System.out.println("Sidebar " + (expanded ? "expanded" : "collapsed"));
+});
+```
+
+## Behavior Notes
+
+- Collapse mode is automatically set based on item icons:
+  - If any `JSidebarItem` has an icon, mode defaults to COMPACT
+  - If no items have icons, mode defaults to HIDDEN
+- Animations run for 300ms when expanding/collapsing
+- Default widths:
+  - Expanded: 250px
+  - Compact: 70px
+  - Hidden: 0px
+- The toggle button uses a hamburger menu icon from `JIcon.MENU`
+- When a custom header is set, the default toggle button is hidden
+- Items are scrollable if they exceed the available height
+
+## Dependencies
+
+- [JSidebarItem](/api/components/jsidebaritem) - Individual sidebar items
+- [JIcon](/api/components/jicon) - Icons for toggle button and items
+
+## Source
+
+`com.jjarroyo.components.JSidebar` in JSidebar.java:23
+
+## JSidebarItem
+
+### Overview
+
+`JSidebarItem` is a navigation item component for use within `JSidebar`. It extends JavaFX's `HBox` and displays an icon, label, and supports an active state.
+
+### Constructor
+
+<ParamField path="JSidebarItem(String text)" type="constructor">
+  Creates a sidebar item with text only.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="text" type="String">
+      The label text
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="JSidebarItem(String text, Node icon)" type="constructor">
+  Creates a sidebar item with text and icon.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="text" type="String">
+      The label text
+    </ResponseField>
+    <ResponseField name="icon" type="Node">
+      The icon node to display
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+### Methods
+
+<ParamField path="setAction(Runnable action)" type="void">
+  Sets the action to execute when the item is clicked.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="action" type="Runnable">
+      The action to run on click
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setActive(boolean isActive)" type="void">
+  Sets the active state of the item.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="isActive" type="boolean">
+      `true` to mark as active, `false` otherwise
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="isActive()" type="boolean">
+  Checks if the item is currently active.
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="boolean">
+      `true` if active, `false` otherwise
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="activeProperty()" type="BooleanProperty">
+  Property for the active state.
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="BooleanProperty">
+      The active property for binding
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setIcon(Node icon)" type="void">
+  Sets or updates the item icon.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="icon" type="Node">
+      The icon node, or `null` to remove
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="getIcon()" type="Node">
+  Gets the current icon.
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="Node">
+      The icon node, or `null` if none
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="getText()" type="String">
+  Gets the item text.
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="String">
+      The label text
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+### Style Classes
+
+<ResponseField name="j-sidebar-item" type="String">
+  Base style class applied to the item container
+</ResponseField>
+
+<ResponseField name="j-sidebar-item-label" type="String">
+  Applied to the text label
+</ResponseField>
+
+<ResponseField name="active" type="String">
+  Applied when the item is in active state
+</ResponseField>
+
+### Example Usage
+
+```java
+// Create items with icons
+JSidebarItem homeItem = new JSidebarItem("Home", JIcon.HOME.view());
+homeItem.setAction(() -> navigateHome());
+homeItem.setActive(true);
+
+JSidebarItem profileItem = new JSidebarItem("Profile", JIcon.USER.view());
+profileItem.setAction(() -> navigateProfile());
+
+// Create item without icon
+JSidebarItem settingsItem = new JSidebarItem("Settings");
+settingsItem.setAction(() -> navigateSettings());
+
+// Update icon later
+settingsItem.setIcon(JIcon.SETTINGS.view());
+
+// Bind to active state
+profileItem.activeProperty().addListener((obs, old, active) -> {
+    if (active) {
+        System.out.println("Profile item activated");
+    }
+});
+```
+
+### Behavior Notes
+
+- Items are clickable and trigger the action on mouse click
+- Active state adds the "active" CSS class for visual highlighting
+- Icons and labels are horizontally aligned with 12px spacing
+- A spacer region is added for future badge support on the right side
+
+### Source
+
+`com.jjarroyo.components.JSidebarItem` in JSidebarItem.java:11

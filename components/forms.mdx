@@ -1,0 +1,520 @@
+---
+title: Form Controls
+description: Collect user input with JCheckBox, JRadioButton, JSwitch, and JSelect
+icon: edit
+---
+
+## JCheckBox
+
+Styleable checkbox component with color variants and sizes.
+
+### Basic Usage
+
+```java
+JCheckBox checkbox = new JCheckBox("Accept terms and conditions");
+checkbox.setSelected(true);
+```
+
+### Color Variants
+
+```java
+JCheckBox primary = new JCheckBox("Primary");
+primary.setColorStyle(JCheckBox.CheckBoxStyle.PRIMARY);
+
+JCheckBox success = new JCheckBox("Success");
+success.setColorStyle(JCheckBox.CheckBoxStyle.SUCCESS);
+
+JCheckBox danger = new JCheckBox("Danger");
+danger.setColorStyle(JCheckBox.CheckBoxStyle.DANGER);
+
+JCheckBox warning = new JCheckBox("Warning");
+warning.setColorStyle(JCheckBox.CheckBoxStyle.WARNING);
+
+JCheckBox info = new JCheckBox("Info");
+info.setColorStyle(JCheckBox.CheckBoxStyle.INFO);
+```
+
+### Sizes
+
+```java
+JCheckBox small = new JCheckBox("Small");
+small.setSize(JCheckBox.CheckBoxSize.SMALL);
+
+JCheckBox medium = new JCheckBox("Medium (default)");
+medium.setSize(JCheckBox.CheckBoxSize.DEFAULT);
+
+JCheckBox large = new JCheckBox("Large");
+large.setSize(JCheckBox.CheckBoxSize.LARGE);
+```
+
+### With Event Handling
+
+```java
+JCheckBox newsletter = new JCheckBox("Subscribe to newsletter");
+newsletter.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+    if (isSelected) {
+        System.out.println("User subscribed to newsletter");
+    } else {
+        System.out.println("User unsubscribed from newsletter");
+    }
+});
+```
+
+### Indeterminate State
+
+```java
+JCheckBox selectAll = new JCheckBox("Select All");
+selectAll.setAllowIndeterminate(true);
+selectAll.setIndeterminate(true); // Partially selected state
+```
+
+### Form Example
+
+```java
+VBox form = new VBox(12);
+form.setPadding(new Insets(20));
+
+Label title = new Label("Preferences");
+title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+JCheckBox notifications = new JCheckBox("Enable notifications");
+notifications.setColorStyle(JCheckBox.CheckBoxStyle.PRIMARY);
+notifications.setSelected(true);
+
+JCheckBox emails = new JCheckBox("Receive email updates");
+emails.setColorStyle(JCheckBox.CheckBoxStyle.INFO);
+
+JCheckBox marketing = new JCheckBox("Marketing communications");
+marketing.setColorStyle(JCheckBox.CheckBoxStyle.SUCCESS);
+
+form.getChildren().addAll(title, notifications, emails, marketing);
+```
+
+### API Reference
+
+<ParamField path="setColorStyle(CheckBoxStyle)" type="void">
+  Set color variant: PRIMARY, SUCCESS, DANGER, WARNING, INFO, DARK, SECONDARY
+</ParamField>
+
+<ParamField path="setSize(CheckBoxSize)" type="void">
+  Set size: SMALL, DEFAULT, LARGE
+</ParamField>
+
+<ParamField path="setSelected(boolean)" type="void">
+  Set checked state
+</ParamField>
+
+<ParamField path="setIndeterminate(boolean)" type="void">
+  Set indeterminate (partial) state
+</ParamField>
+
+---
+
+## JRadioButton
+
+Styleable radio button for single-choice selections.
+
+### Basic Usage
+
+```java
+ToggleGroup group = new ToggleGroup();
+
+JRadioButton option1 = new JRadioButton("Option 1");
+option1.setToggleGroup(group);
+option1.setSelected(true);
+
+JRadioButton option2 = new JRadioButton("Option 2");
+option2.setToggleGroup(group);
+
+JRadioButton option3 = new JRadioButton("Option 3");
+option3.setToggleGroup(group);
+```
+
+### Color Variants
+
+```java
+ToggleGroup colorGroup = new ToggleGroup();
+
+JRadioButton primary = new JRadioButton("Primary");
+primary.setColorStyle(JRadioButton.RadioStyle.PRIMARY);
+primary.setToggleGroup(colorGroup);
+
+JRadioButton success = new JRadioButton("Success");
+success.setColorStyle(JRadioButton.RadioStyle.SUCCESS);
+success.setToggleGroup(colorGroup);
+
+JRadioButton danger = new JRadioButton("Danger");
+danger.setColorStyle(JRadioButton.RadioStyle.DANGER);
+danger.setToggleGroup(colorGroup);
+```
+
+### Sizes
+
+```java
+ToggleGroup sizeGroup = new ToggleGroup();
+
+JRadioButton small = new JRadioButton("Small");
+small.setSize(JRadioButton.RadioSize.SMALL);
+small.setToggleGroup(sizeGroup);
+
+JRadioButton medium = new JRadioButton("Medium");
+medium.setSize(JRadioButton.RadioSize.DEFAULT);
+medium.setToggleGroup(sizeGroup);
+
+JRadioButton large = new JRadioButton("Large");
+large.setSize(JRadioButton.RadioSize.LARGE);
+large.setToggleGroup(sizeGroup);
+```
+
+### Selection Handling
+
+```java
+ToggleGroup paymentGroup = new ToggleGroup();
+
+JRadioButton creditCard = new JRadioButton("Credit Card");
+JRadioButton paypal = new JRadioButton("PayPal");
+JRadioButton crypto = new JRadioButton("Cryptocurrency");
+
+creditCard.setToggleGroup(paymentGroup);
+paypal.setToggleGroup(paymentGroup);
+crypto.setToggleGroup(paymentGroup);
+
+paymentGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+    if (newToggle != null) {
+        JRadioButton selected = (JRadioButton) newToggle;
+        System.out.println("Selected: " + selected.getText());
+        updatePaymentForm(selected.getText());
+    }
+});
+```
+
+### Form Example
+
+```java
+VBox form = new VBox(15);
+form.setPadding(new Insets(20));
+
+Label question = new Label("Select your subscription plan:");
+question.setStyle("-fx-font-weight: bold;");
+
+ToggleGroup planGroup = new ToggleGroup();
+
+JRadioButton basic = new JRadioButton("Basic - $9/month");
+basic.setColorStyle(JRadioButton.RadioStyle.INFO);
+basic.setToggleGroup(planGroup);
+
+JRadioButton pro = new JRadioButton("Pro - $29/month (Most Popular)");
+pro.setColorStyle(JRadioButton.RadioStyle.PRIMARY);
+pro.setToggleGroup(planGroup);
+pro.setSelected(true);
+
+JRadioButton enterprise = new JRadioButton("Enterprise - Contact us");
+enterprise.setColorStyle(JRadioButton.RadioStyle.SUCCESS);
+enterprise.setToggleGroup(planGroup);
+
+form.getChildren().addAll(question, basic, pro, enterprise);
+```
+
+### API Reference
+
+<ParamField path="setColorStyle(RadioStyle)" type="void">
+  Set color variant: PRIMARY, SUCCESS, DANGER, WARNING, INFO, DARK, SECONDARY
+</ParamField>
+
+<ParamField path="setSize(RadioSize)" type="void">
+  Set size: SMALL, DEFAULT, LARGE
+</ParamField>
+
+<ParamField path="setToggleGroup(ToggleGroup)" type="void">
+  Group radio buttons for single selection
+</ParamField>
+
+<ParamField path="setSelected(boolean)" type="void">
+  Set selected state
+</ParamField>
+
+---
+
+## JSwitch
+
+Toggle switch component (extends JCheckBox with switch styling).
+
+### Basic Usage
+
+```java
+JSwitch toggle = new JSwitch("Enable notifications");
+toggle.setSelected(true);
+```
+
+### With Labels
+
+```java
+HBox row = new HBox(10);
+row.setAlignment(Pos.CENTER_LEFT);
+
+Label label = new Label("Dark Mode");
+JSwitch darkMode = new JSwitch();
+darkMode.setSelected(false);
+
+row.getChildren().addAll(label, darkMode);
+```
+
+### Color Variants
+
+```java
+JSwitch primary = new JSwitch("Primary");
+primary.setColorStyle(JCheckBox.CheckBoxStyle.PRIMARY);
+
+JSwitch success = new JSwitch("Success");
+success.setColorStyle(JCheckBox.CheckBoxStyle.SUCCESS);
+```
+
+### Settings Panel Example
+
+```java
+VBox settings = new VBox(20);
+settings.setPadding(new Insets(20));
+
+Label title = new Label("Application Settings");
+title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+// Notification Setting
+HBox notifRow = new HBox(10);
+notifRow.setAlignment(Pos.CENTER_LEFT);
+Region spacer1 = new Region();
+HBox.setHgrow(spacer1, Priority.ALWAYS);
+
+VBox notifInfo = new VBox(4);
+Label notifLabel = new Label("Push Notifications");
+notifLabel.setStyle("-fx-font-weight: bold;");
+Label notifDesc = new Label("Receive notifications for important updates");
+notifDesc.setStyle("-fx-text-fill: -color-text-muted; -fx-font-size: 12px;");
+notifInfo.getChildren().addAll(notifLabel, notifDesc);
+
+JSwitch notifSwitch = new JSwitch();
+notifSwitch.setSelected(true);
+notifSwitch.setColorStyle(JCheckBox.CheckBoxStyle.PRIMARY);
+
+notifRow.getChildren().addAll(notifInfo, spacer1, notifSwitch);
+
+// Dark Mode Setting
+HBox darkRow = new HBox(10);
+darkRow.setAlignment(Pos.CENTER_LEFT);
+Region spacer2 = new Region();
+HBox.setHgrow(spacer2, Priority.ALWAYS);
+
+VBox darkInfo = new VBox(4);
+Label darkLabel = new Label("Dark Mode");
+darkLabel.setStyle("-fx-font-weight: bold;");
+Label darkDesc = new Label("Switch to dark theme");
+darkDesc.setStyle("-fx-text-fill: -color-text-muted; -fx-font-size: 12px;");
+darkInfo.getChildren().addAll(darkLabel, darkDesc);
+
+JSwitch darkSwitch = new JSwitch();
+darkSwitch.selectedProperty().addListener((obs, old, isDark) -> {
+    if (isDark) {
+        scene.getRoot().getStyleClass().add("dark");
+    } else {
+        scene.getRoot().getStyleClass().remove("dark");
+    }
+});
+
+darkRow.getChildren().addAll(darkInfo, spacer2, darkSwitch);
+
+settings.getChildren().addAll(title, notifRow, darkRow);
+```
+
+### API Reference
+
+Inherits all methods from JCheckBox, with switch-specific styling.
+
+---
+
+## JSelect
+
+Dropdown select component with search, multi-select, and custom rendering.
+
+### Basic Usage
+
+```java
+JSelect<String> select = new JSelect<>();
+select.setPlaceholder("Choose an option");
+select.getItems().addAll("Option 1", "Option 2", "Option 3");
+
+select.selectedItemProperty().addListener((obs, old, selected) -> {
+    System.out.println("Selected: " + selected);
+});
+```
+
+### Searchable Select
+
+```java
+JSelect<String> countrySelect = new JSelect<>();
+countrySelect.setPlaceholder("Select a country");
+countrySelect.setSearchable(true);
+countrySelect.getItems().addAll(
+    "United States", "Canada", "United Kingdom",
+    "Germany", "France", "Spain", "Italy"
+);
+```
+
+### Multi-Select
+
+```java
+JSelect<String> skillsSelect = new JSelect<>();
+skillsSelect.setPlaceholder("Select your skills");
+skillsSelect.setMultiple(true);
+skillsSelect.setSearchable(true);
+skillsSelect.getItems().addAll(
+    "Java", "Python", "JavaScript", "TypeScript",
+    "React", "Angular", "Vue", "Node.js"
+);
+
+skillsSelect.getSelectedItems().addListener(
+    (ListChangeListener<String>) c -> {
+        System.out.println("Selected skills: " + 
+            String.join(", ", skillsSelect.getSelectedItems()));
+    }
+);
+```
+
+### Custom Objects
+
+```java
+public class User {
+    private String name;
+    private String email;
+    // constructor, getters, setters...
+}
+
+JSelect<User> userSelect = new JSelect<>();
+userSelect.setPlaceholder("Select a user");
+userSelect.setConverter(user -> user.getName() + " (" + user.getEmail() + ")");
+
+ObservableList<User> users = FXCollections.observableArrayList(
+    new User("John Doe", "john@example.com"),
+    new User("Jane Smith", "jane@example.com")
+);
+
+userSelect.getItems().addAll(users);
+
+userSelect.selectedItemProperty().addListener((obs, old, user) -> {
+    if (user != null) {
+        System.out.println("Selected: " + user.getName());
+    }
+});
+```
+
+### Custom Cell Rendering
+
+```java
+JSelect<User> select = new JSelect<>();
+select.setConverter(User::getName);
+
+select.setCellFactory(param -> new ListCell<User>() {
+    @Override
+    protected void updateItem(User user, boolean empty) {
+        super.updateItem(user, empty);
+        if (empty || user == null) {
+            setGraphic(null);
+        } else {
+            HBox cell = new HBox(10);
+            cell.setAlignment(Pos.CENTER_LEFT);
+            
+            JAvatar avatar = new JAvatar(user.getFirstName(), user.getLastName());
+            avatar.setSize(JAvatar.Size.SM);
+            
+            VBox info = new VBox(2);
+            Label name = new Label(user.getName());
+            name.setStyle("-fx-font-weight: bold;");
+            Label email = new Label(user.getEmail());
+            email.setStyle("-fx-font-size: 11px; -fx-text-fill: -color-text-muted;");
+            info.getChildren().addAll(name, email);
+            
+            cell.getChildren().addAll(avatar, info);
+            setGraphic(cell);
+        }
+    }
+});
+
+select.getItems().addAll(users);
+```
+
+### Form Example
+
+```java
+VBox form = new VBox(15);
+form.setPadding(new Insets(20));
+form.setMaxWidth(400);
+
+Label title = new Label("User Profile");
+title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+// Country Select
+Label countryLabel = new Label("Country");
+JSelect<String> countrySelect = new JSelect<>();
+countrySelect.setPlaceholder("Select your country");
+countrySelect.setSearchable(true);
+countrySelect.getItems().addAll("USA", "Canada", "UK", "Germany", "France");
+
+// Role Select
+Label roleLabel = new Label("Role");
+JSelect<String> roleSelect = new JSelect<>();
+roleSelect.setPlaceholder("Select your role");
+roleSelect.getItems().addAll("Developer", "Designer", "Manager", "Analyst");
+
+// Skills Multi-Select
+Label skillsLabel = new Label("Skills");
+JSelect<String> skillsSelect = new JSelect<>();
+skillsSelect.setPlaceholder("Select your skills");
+skillsSelect.setMultiple(true);
+skillsSelect.setSearchable(true);
+skillsSelect.getItems().addAll(
+    "Java", "Python", "JavaScript", "React", "Angular"
+);
+
+JButton submitBtn = new JButton("Save Profile")
+    .setVariant(JButton.ButtonVariant.PRIMARY);
+
+form.getChildren().addAll(
+    title,
+    countryLabel, countrySelect,
+    roleLabel, roleSelect,
+    skillsLabel, skillsSelect,
+    submitBtn
+);
+```
+
+### API Reference
+
+<ParamField path="getItems()" type="ObservableList<T>">
+  List of selectable items
+</ParamField>
+
+<ParamField path="setPlaceholder(String)" type="void">
+  Set placeholder text
+</ParamField>
+
+<ParamField path="setSearchable(boolean)" type="void">
+  Enable search functionality
+</ParamField>
+
+<ParamField path="setMultiple(boolean)" type="void">
+  Enable multi-select mode
+</ParamField>
+
+<ParamField path="setConverter(Function<T, String>)" type="void">
+  Set function to convert items to display strings
+</ParamField>
+
+<ParamField path="setCellFactory(Callback)" type="void">
+  Set custom cell renderer
+</ParamField>
+
+<ParamField path="selectedItemProperty()" type="ObjectProperty<T>">
+  Selected item in single-select mode
+</ParamField>
+
+<ParamField path="getSelectedItems()" type="ObservableList<T>">
+  Selected items in multi-select mode
+</ParamField>

@@ -1,0 +1,733 @@
+---
+title: 'Custom Components'
+description: 'Build custom draggable components and extend the library'
+icon: 'puzzle-piece'
+---
+
+## Overview
+
+The JJArroyo library provides building blocks for creating custom draggable components. This guide covers:
+
+- Using `JDraggableField` for sidebar items
+- Creating custom draggable components
+- Implementing drag-and-drop interactions
+- Building component hierarchies
+
+## JDraggableField Component
+
+`JDraggableField` is a pre-built draggable sidebar item that extends `JSidebarItem` with drag-and-drop capabilities.
+
+### Basic Usage
+
+```java
+import com.jjarroyo.components.JDraggableField;
+import com.jjarroyo.components.JIcon;
+
+// Create a draggable field
+JDraggableField field = new JDraggableField(
+    "product_name",    // Field ID (transferred during drag)
+    "Product Name",    // Display name
+    JIcon.TAG          // Icon
+);
+
+// Add to sidebar or container
+VBox sidebar = new VBox(10);
+sidebar.getChildren().add(field);
+```
+
+### Constructor Parameters
+
+<ParamField path="fieldId" type="String" required>
+  Unique identifier for the field. This value is transferred during drag operations.
+</ParamField>
+
+<ParamField path="fieldName" type="String" required>
+  Display name shown in the UI. Human-readable label for the field.
+</ParamField>
+
+<ParamField path="icon" type="JIcon">
+  Optional icon displayed alongside the field name. Pass `null` for no icon.
+</ParamField>
+
+### Properties
+
+```java
+// Get field properties
+String id = field.getFieldId();     // "product_name"
+String name = field.getFieldName(); // "Product Name"
+
+// Properties are read-only after construction
+```
+
+## Drag and Drop Implementation
+
+Understanding how `JDraggableField` implements drag-and-drop:
+
+<CodeGroup>
+
+```java Source Code (JDraggableField.java:22-38)
+private void initDraggable() {
+    getStyleClass().add("j-draggable-field");
+    
+    // Drag and Drop Logic
+    setOnDragDetected(event -> {
+        Dragboard db = startDragAndDrop(TransferMode.COPY);
+        ClipboardContent content = new ClipboardContent();
+        content.putString(fieldId);
+        db.setContent(content);
+        
+        db.setDragView(this.snapshot(null, null));
+        
+        event.consume();
+    });
+}
+```
+
+```java Key Concepts
+// 1. Transfer Mode: COPY (not MOVE)
+//    - Sidebar items remain in place
+//    - Canvas receives a copy of the data
+
+// 2. Clipboard Content: fieldId as String
+//    - Simple string transfer
+//    - Easy to parse on drop target
+
+// 3. Drag View: Snapshot of component
+//    - Visual feedback during drag
+//    - Shows exact component being dragged
+```
+
+</CodeGroup>
+
+### Drag Process Flow
+
+<Steps>
+  <Step title="Drag Detected">
+    User clicks and drags the `JDraggableField`
+    
+    ```java
+    setOnDragDetected(event -> {
+        Dragboard db = startDragAndDrop(TransferMode.COPY);
+        // ...
+    });
+    ```
+  </Step>
+  
+  <Step title="Data Transfer Setup">
+    Field ID is added to clipboard content
+    
+    ```java
+    ClipboardContent content = new ClipboardContent();
+    content.putString(fieldId);  // "product_name"
+    db.setContent(content);
+    ```
+  </Step>
+  
+  <Step title="Visual Feedback">
+    Snapshot of component becomes drag image
+    
+    ```java
+    db.setDragView(this.snapshot(null, null));
+    ```
+  </Step>
+  
+  <Step title="Drop Target Receives">
+    Target (e.g., `JDesignCanvas`) receives the field ID
+    
+    ```java
+    String fieldId = event.getDragboard().getString();
+    // Use fieldId to update UI
+    ```
+  </Step>
+</Steps>
+
+## Creating Custom Draggable Components
+
+Build your own draggable components following this pattern:
+
+<CodeGroup>
+
+```java Custom Draggable
+import javafx.scene.input.*;
+import javafx.scene.layout.HBox;
+import com.jjarroyo.components.JIcon;
+import com.jjarroyo.components.JLabel;
+
+public class CustomDraggableItem extends HBox {
+    private final String itemId;
+    private final String itemData;
+    
+    public CustomDraggableItem(String itemId, String label) {
+        this.itemId = itemId;
+        this.itemData = "custom_data";
+        
+        // Setup UI
+        setSpacing(8);
+        setPadding(new javafx.geometry.Insets(8));
+        getStyleClass().add("custom-draggable");
+        
+        JLabel labelNode = new JLabel(label);
+        getChildren().addAll(
+            JIcon.GRIP_VERTICAL.view(),
+            labelNode
+        );
+        
+        // Enable drag and drop
+        initDragAndDrop();
+    }
+    
+    private void initDragAndDrop() {
+        setOnDragDetected(event -> {
+            Dragboard db = startDragAndDrop(TransferMode.COPY);
+            
+            ClipboardContent content = new ClipboardContent();
+            // Transfer custom data structure
+            content.putString(itemId + ":" + itemData);
+            db.setContent(content);
+            
+            // Custom drag view (optional)
+            db.setDragView(this.snapshot(null, null));
+            
+            event.consume();
+        });
+        
+        // Optional: Add drag feedback
+        setOnDragDone(event -> {
+            if (event.getTransferMode() == TransferMode.COPY) {
+                System.out.println("Item copied: " + itemId);
+            }
+            event.consume();
+        });
+    }
+    
+    public String getItemId() {
+        return itemId;
+    }
+}
+```
+
+```java Usage
+// Create and use custom draggable
+CustomDraggableItem item = new CustomDraggableItem(
+    "custom_1",
+    "Custom Item"
+);
+
+VBox sidebar = new VBox(10);
+sidebar.getChildren().add(item);
+```
+
+</CodeGroup>
+
+## Advanced Drag Features
+
+### Custom Data Formats
+
+Transfer complex data using custom formats:
+
+```java
+import javafx.scene.input.DataFormat;
+import java.io.Serializable;
+
+public class FieldData implements Serializable {
+    public String id;
+    public String type;
+    public Map<String, Object> properties;
+}
+
+// Register custom data format
+DataFormat FIELD_FORMAT = new DataFormat("application/x-field-data");
+
+// In drag source:
+setOnDragDetected(event -> {
+    Dragboard db = startDragAndDrop(TransferMode.COPY);
+    
+    FieldData data = new FieldData();
+    data.id = "field_1";
+    data.type = "text";
+    data.properties = Map.of("fontSize", 14);
+    
+    ClipboardContent content = new ClipboardContent();
+    content.put(FIELD_FORMAT, data);
+    db.setContent(content);
+    
+    event.consume();
+});
+
+// In drop target:
+setOnDragDropped(event -> {
+    Dragboard db = event.getDragboard();
+    if (db.hasContent(FIELD_FORMAT)) {
+        FieldData data = (FieldData) db.getContent(FIELD_FORMAT);
+        // Use data...
+    }
+});
+```
+
+### Visual Drag Feedback
+
+Customize the drag image:
+
+```java
+import javafx.scene.SnapshotParameters;
+import javafx.scene.paint.Color;
+
+setOnDragDetected(event -> {
+    Dragboard db = startDragAndDrop(TransferMode.COPY);
+    
+    // Custom snapshot with transparency
+    SnapshotParameters params = new SnapshotParameters();
+    params.setFill(Color.TRANSPARENT);
+    
+    WritableImage snapshot = this.snapshot(params, null);
+    db.setDragView(snapshot);
+    
+    // Offset drag view from cursor
+    db.setDragViewOffsetX(20);
+    db.setDragViewOffsetY(20);
+    
+    // ... set content
+    event.consume();
+});
+```
+
+### Source Visual Feedback
+
+Show visual changes during drag:
+
+```java
+setOnDragDetected(event -> {
+    // Reduce opacity during drag
+    setOpacity(0.5);
+    // ... start drag
+});
+
+setOnDragDone(event -> {
+    // Restore opacity when done
+    setOpacity(1.0);
+    event.consume();
+});
+```
+
+## Drop Target Implementation
+
+Create custom drop targets that accept draggable items:
+
+```java
+import javafx.scene.layout.StackPane;
+
+public class CustomDropTarget extends StackPane {
+    
+    public CustomDropTarget() {
+        getStyleClass().add("custom-drop-target");
+        setupDropHandling();
+    }
+    
+    private void setupDropHandling() {
+        // Accept drag over
+        setOnDragOver(event -> {
+            if (event.getGestureSource() != this && 
+                event.getDragboard().hasString()) {
+                event.acceptTransferModes(TransferMode.COPY);
+            }
+            event.consume();
+        });
+        
+        // Visual feedback on drag enter
+        setOnDragEntered(event -> {
+            if (event.getGestureSource() != this && 
+                event.getDragboard().hasString()) {
+                setStyle("-fx-border-color: -color-primary; " +
+                        "-fx-background-color: rgba(59, 130, 246, 0.05);");
+            }
+            event.consume();
+        });
+        
+        // Remove feedback on drag exit
+        setOnDragExited(event -> {
+            setStyle("");
+            event.consume();
+        });
+        
+        // Handle drop
+        setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            
+            if (db.hasString()) {
+                String data = db.getString();
+                handleDrop(data);
+                success = true;
+            }
+            
+            event.setDropCompleted(success);
+            event.consume();
+        });
+    }
+    
+    private void handleDrop(String data) {
+        // Update UI based on dropped data
+        JLabel label = new JLabel(data.toUpperCase());
+        getChildren().clear();
+        getChildren().add(label);
+    }
+}
+```
+
+## Component Hierarchies
+
+Build complex components by extending base classes:
+
+```java
+import com.jjarroyo.components.JSidebarItem;
+
+// Extend JSidebarItem for consistent styling
+public class EnhancedDraggableField extends JSidebarItem {
+    private final String fieldId;
+    private boolean selected = false;
+    
+    public EnhancedDraggableField(String fieldId, String name, JIcon icon) {
+        super(name, icon != null ? icon.view() : null);
+        this.fieldId = fieldId;
+        
+        getStyleClass().add("enhanced-field");
+        
+        // Add selection behavior
+        setOnMouseClicked(e -> toggleSelection());
+        
+        // Enable drag only when not selected
+        setOnDragDetected(e -> {
+            if (!selected) {
+                startDrag(e);
+            }
+        });
+    }
+    
+    private void toggleSelection() {
+        selected = !selected;
+        if (selected) {
+            getStyleClass().add("selected");
+        } else {
+            getStyleClass().remove("selected");
+        }
+    }
+    
+    private void startDrag(javafx.scene.input.MouseEvent event) {
+        Dragboard db = startDragAndDrop(TransferMode.COPY);
+        ClipboardContent content = new ClipboardContent();
+        content.putString(fieldId);
+        db.setContent(content);
+        db.setDragView(this.snapshot(null, null));
+        event.consume();
+    }
+    
+    public String getFieldId() { return fieldId; }
+    public boolean isSelected() { return selected; }
+}
+```
+
+## Complete Example: Custom Designer System
+
+<CodeGroup>
+
+```java Custom Field Type
+import com.jjarroyo.components.JIcon;
+import javafx.scene.input.*;
+import javafx.scene.layout.HBox;
+
+public class DesignerField extends HBox {
+    public enum FieldType {
+        TEXT, NUMBER, DATE, BARCODE, IMAGE
+    }
+    
+    private final String fieldId;
+    private final String displayName;
+    private final FieldType fieldType;
+    
+    public DesignerField(String id, String name, FieldType type) {
+        this.fieldId = id;
+        this.displayName = name;
+        this.fieldType = type;
+        
+        setupUI();
+        setupDragDrop();
+    }
+    
+    private void setupUI() {
+        setSpacing(10);
+        setPadding(new javafx.geometry.Insets(10));
+        getStyleClass().add("designer-field");
+        
+        // Icon based on type
+        JIcon icon = switch (fieldType) {
+            case TEXT -> JIcon.TEXT;
+            case NUMBER -> JIcon.HASHTAG;
+            case DATE -> JIcon.CALENDAR;
+            case BARCODE -> JIcon.BARCODE;
+            case IMAGE -> JIcon.IMAGE;
+        };
+        
+        JLabel iconLabel = new JLabel();
+        iconLabel.setGraphic(icon.view());
+        
+        JLabel nameLabel = new JLabel(displayName);
+        nameLabel.addClass("font-medium");
+        
+        JLabel typeLabel = new JLabel(fieldType.name());
+        typeLabel.addClass("text-xs", "text-slate-400");
+        
+        VBox textBox = new VBox(2, nameLabel, typeLabel);
+        getChildren().addAll(iconLabel, textBox);
+    }
+    
+    private void setupDragDrop() {
+        setOnDragDetected(event -> {
+            Dragboard db = startDragAndDrop(TransferMode.COPY);
+            
+            // Transfer field data as JSON-like string
+            String data = String.format(
+                "{id:%s,type:%s}",
+                fieldId,
+                fieldType.name()
+            );
+            
+            ClipboardContent content = new ClipboardContent();
+            content.putString(data);
+            db.setContent(content);
+            
+            db.setDragView(this.snapshot(null, null));
+            event.consume();
+        });
+    }
+    
+    public String getFieldId() { return fieldId; }
+    public FieldType getFieldType() { return fieldType; }
+}
+```
+
+```java Custom Canvas
+import javafx.scene.layout.*;
+import java.util.*;
+
+public class CustomDesignCanvas extends StackPane {
+    private final VBox slotsContainer;
+    private final List<Slot> slots = new ArrayList<>();
+    
+    public CustomDesignCanvas() {
+        slotsContainer = new VBox(10);
+        slotsContainer.setPadding(new javafx.geometry.Insets(20));
+        getChildren().add(slotsContainer);
+        
+        setupDropHandling();
+    }
+    
+    public void addSlot() {
+        Slot slot = new Slot();
+        slots.add(slot);
+        slotsContainer.getChildren().add(slot);
+    }
+    
+    private void setupDropHandling() {
+        setOnDragOver(event -> {
+            if (event.getDragboard().hasString()) {
+                event.acceptTransferModes(TransferMode.COPY);
+            }
+            event.consume();
+        });
+        
+        setOnDragDropped(event -> {
+            if (event.getDragboard().hasString()) {
+                String data = event.getDragboard().getString();
+                handleFieldDrop(data, event.getSceneX(), event.getSceneY());
+                event.setDropCompleted(true);
+            }
+            event.consume();
+        });
+    }
+    
+    private void handleFieldDrop(String data, double x, double y) {
+        // Parse field data
+        // Format: "{id:field_name,type:TEXT}"
+        
+        // Find which slot was targeted
+        for (Slot slot : slots) {
+            if (slot.containsPoint(x, y)) {
+                slot.setFieldData(data);
+                break;
+            }
+        }
+    }
+    
+    static class Slot extends StackPane {
+        private String fieldData;
+        
+        public Slot() {
+            setPrefHeight(80);
+            setStyle("-fx-border-color: #cbd5e1; " +
+                    "-fx-border-style: dashed; " +
+                    "-fx-border-width: 2;");
+        }
+        
+        public void setFieldData(String data) {
+            this.fieldData = data;
+            // Update visual...
+        }
+        
+        public boolean containsPoint(double x, double y) {
+            var bounds = localToScene(getBoundsInLocal());
+            return bounds.contains(x, y);
+        }
+    }
+}
+```
+
+```java Application
+public class CustomDesignerApp extends Application {
+    @Override
+    public void start(Stage stage) {
+        BorderPane root = new BorderPane();
+        
+        // Create sidebar with custom fields
+        VBox sidebar = new VBox(10);
+        sidebar.setPadding(new Insets(10));
+        sidebar.setPrefWidth(250);
+        
+        sidebar.getChildren().addAll(
+            new DesignerField(
+                "product_name",
+                "Product Name",
+                DesignerField.FieldType.TEXT
+            ),
+            new DesignerField(
+                "sku",
+                "SKU",
+                DesignerField.FieldType.TEXT
+            ),
+            new DesignerField(
+                "price",
+                "Price",
+                DesignerField.FieldType.NUMBER
+            ),
+            new DesignerField(
+                "barcode",
+                "Barcode",
+                DesignerField.FieldType.BARCODE
+            )
+        );
+        
+        // Create custom canvas
+        CustomDesignCanvas canvas = new CustomDesignCanvas();
+        canvas.addSlot();
+        canvas.addSlot();
+        canvas.addSlot();
+        
+        root.setLeft(sidebar);
+        root.setCenter(canvas);
+        
+        Scene scene = new Scene(root, 1000, 700);
+        stage.setTitle("Custom Designer");
+        stage.setScene(scene);
+        stage.show();
+    }
+}
+```
+
+</CodeGroup>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Use appropriate transfer modes">
+    - `COPY`: Source remains, target gets copy (sidebar → canvas)
+    - `MOVE`: Source removed, target receives (reordering within canvas)
+    - `LINK`: Reference to source (rarely used)
+  </Accordion>
+  
+  <Accordion title="Provide visual feedback">
+    - Change opacity during drag
+    - Highlight valid drop targets
+    - Show hover states
+    - Update cursor styles
+  </Accordion>
+  
+  <Accordion title="Handle edge cases">
+    - Invalid drop targets
+    - Multiple simultaneous drags
+    - Drag cancellation (ESC key)
+    - Source and target validation
+  </Accordion>
+  
+  <Accordion title="Optimize performance">
+    - Use simple data formats when possible
+    - Cache snapshots if reusing
+    - Avoid heavy computation in drag handlers
+    - Debounce drag over events if needed
+  </Accordion>
+</AccordionGroup>
+
+## API Reference
+
+### JDraggableField
+
+```java
+public JDraggableField(
+    String fieldId,
+    String fieldName,
+    JIcon icon
+)
+```
+
+**Methods:**
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `getFieldId()` | `String` | Get the field identifier |
+| `getFieldName()` | `String` | Get the display name |
+
+### JavaFX Drag Events
+
+| Event | Description |
+|-------|-------------|
+| `setOnDragDetected` | Fired when drag gesture starts |
+| `setOnDragOver` | Fired continuously during drag |
+| `setOnDragEntered` | Fired when entering drop target |
+| `setOnDragExited` | Fired when leaving drop target |
+| `setOnDragDropped` | Fired when drop occurs |
+| `setOnDragDone` | Fired at drag source when complete |
+
+### TransferMode Enum
+
+- `COPY` - Copy data to target
+- `MOVE` - Move data to target  
+- `LINK` - Link to data
+- `ANY` - Accept any mode
+
+## Styling
+
+CSS classes for custom components:
+
+```css
+.j-draggable-field {
+    -fx-cursor: hand;
+}
+
+.j-draggable-field:hover {
+    -fx-background-color: -color-bg-hover;
+}
+
+.custom-draggable {
+    -fx-background-color: white;
+    -fx-border-color: -color-border-default;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.drag-over {
+    -fx-border-color: -color-primary;
+    -fx-background-color: rgba(59, 130, 246, 0.05);
+}
+```
+
+<Info>
+For more examples of drag-and-drop implementation, see the [Design Canvas](/advanced/design-canvas) documentation.
+</Info>

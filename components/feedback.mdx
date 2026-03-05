@@ -1,0 +1,523 @@
+---
+title: Feedback Components
+description: Provide user feedback with JToast, JPopover, and JProgressBar
+icon: bell
+---
+
+## JToast
+
+Temporary notification popups with auto-dismiss and multiple positions.
+
+### Basic Usage
+
+```java
+// Quick static method
+JToast.show(
+    stage,
+    "Operation successful!",
+    JToast.Type.SUCCESS,
+    JToast.Position.TOP_RIGHT,
+    3000 // 3 seconds
+);
+```
+
+### Toast Types
+
+```java
+// Success
+JToast.show(stage, "Changes saved", JToast.Type.SUCCESS, 
+           JToast.Position.TOP_RIGHT, 3000);
+
+// Error
+JToast.show(stage, "Failed to save", JToast.Type.DANGER, 
+           JToast.Position.TOP_RIGHT, 4000);
+
+// Warning
+JToast.show(stage, "Please review your input", JToast.Type.WARNING, 
+           JToast.Position.TOP_RIGHT, 3000);
+
+// Info
+JToast.show(stage, "New update available", JToast.Type.INFO, 
+           JToast.Position.TOP_RIGHT, 5000);
+
+// Default
+JToast.show(stage, "Action completed", JToast.Type.DEFAULT, 
+           JToast.Position.TOP_RIGHT, 3000);
+```
+
+### Toast Positions
+
+```java
+// Top positions
+JToast.show(stage, "Top Right", JToast.Type.INFO, 
+           JToast.Position.TOP_RIGHT, 3000);
+JToast.show(stage, "Top Left", JToast.Type.INFO, 
+           JToast.Position.TOP_LEFT, 3000);
+JToast.show(stage, "Top Center", JToast.Type.INFO, 
+           JToast.Position.TOP_CENTER, 3000);
+
+// Bottom positions
+JToast.show(stage, "Bottom Right", JToast.Type.INFO, 
+           JToast.Position.BOTTOM_RIGHT, 3000);
+JToast.show(stage, "Bottom Left", JToast.Type.INFO, 
+           JToast.Position.BOTTOM_LEFT, 3000);
+JToast.show(stage, "Bottom Center", JToast.Type.INFO, 
+           JToast.Position.BOTTOM_CENTER, 3000);
+```
+
+### With Title
+
+```java
+JToast.show(
+    stage,
+    "Success!",              // Title
+    "Your profile has been updated successfully.", // Message
+    JToast.Type.SUCCESS,
+    JToast.Position.TOP_RIGHT,
+    4000
+);
+```
+
+### Manual Control
+
+```java
+JToast toast = new JToast();
+toast.show(
+    stage,
+    "Processing",
+    "Your request is being processed...",
+    JToast.Type.INFO,
+    JToast.Position.BOTTOM_CENTER,
+    null // null = no auto-dismiss
+);
+
+// Later, manually hide
+toast.hide();
+```
+
+### Action Examples
+
+```java
+// Save action
+JButton saveBtn = new JButton("Save");
+saveBtn.setOnAction(e -> {
+    try {
+        saveData();
+        JToast.show(stage, "Data saved successfully!", 
+                   JToast.Type.SUCCESS, JToast.Position.TOP_RIGHT, 3000);
+    } catch (Exception ex) {
+        JToast.show(stage, "Error", "Failed to save: " + ex.getMessage(), 
+                   JToast.Type.DANGER, JToast.Position.TOP_RIGHT, 5000);
+    }
+});
+
+// Delete action
+JButton deleteBtn = new JButton("Delete");
+deleteBtn.setOnAction(e -> {
+    deleteItem();
+    JToast.show(stage, "Item deleted", JToast.Type.WARNING, 
+               JToast.Position.BOTTOM_RIGHT, 3000);
+});
+
+// Copy action
+JButton copyBtn = new JButton("Copy");
+copyBtn.setOnAction(e -> {
+    copyToClipboard();
+    JToast.show(stage, "Copied to clipboard", JToast.Type.INFO, 
+               JToast.Position.BOTTOM_CENTER, 2000);
+});
+```
+
+### API Reference
+
+<ParamField path="show(Window, String, Type, Position, int)" type="static void">
+  Show toast with message only
+</ParamField>
+
+<ParamField path="show(Window, String, String, Type, Position, int)" type="static void">
+  Show toast with title and message
+</ParamField>
+
+<ParamField path="hide()" type="void">
+  Manually hide the toast
+</ParamField>
+
+---
+
+## JPopover
+
+Contextual popup with arrow pointing to target element.
+
+### Basic Usage
+
+```java
+JButton button = new JButton("Show Info");
+
+button.setOnAction(e -> {
+    JPopover popover = new JPopover();
+    popover.setTitle("Information");
+    popover.setBody("This is additional information about the feature.");
+    popover.show(button);
+});
+```
+
+### Positions
+
+```java
+JPopover popover = new JPopover();
+popover.setBody("Helpful tip!");
+
+// Position relative to target
+popover.setPosition(JPopover.Position.TOP);
+popover.setPosition(JPopover.Position.BOTTOM);
+popover.setPosition(JPopover.Position.LEFT);
+popover.setPosition(JPopover.Position.RIGHT);
+
+popover.show(targetNode);
+```
+
+### Themes
+
+```java
+JPopover lightPopover = new JPopover();
+lightPopover.setTheme(JPopover.Theme.LIGHT);
+lightPopover.setBody("Light theme");
+lightPopover.show(button);
+
+JPopover darkPopover = new JPopover();
+darkPopover.setTheme(JPopover.Theme.DARK);
+darkPopover.setBody("Dark theme");
+darkPopover.show(button);
+```
+
+### Custom Content
+
+```java
+JButton helpBtn = new JButton("?");
+helpBtn.setOnAction(e -> {
+    VBox content = new VBox(10);
+    content.setPadding(new Insets(10));
+    
+    Label title = new Label("Quick Help");
+    title.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+    
+    Label info = new Label("Click here to get started with the feature.");
+    info.setWrapText(true);
+    info.setMaxWidth(250);
+    
+    JButton learnMoreBtn = new JButton("Learn More")
+        .setSize(JButton.ButtonSize.SM)
+        .setVariant(JButton.ButtonVariant.PRIMARY);
+    
+    content.getChildren().addAll(title, info, learnMoreBtn);
+    
+    JPopover popover = new JPopover();
+    popover.setContentNode(content);
+    popover.setPosition(JPopover.Position.BOTTOM);
+    popover.show(helpBtn);
+});
+```
+
+### Confirmation Popover
+
+```java
+JButton deleteBtn = new JButton("Delete");
+deleteBtn.setVariant(JButton.ButtonVariant.DANGER);
+
+deleteBtn.setOnAction(e -> {
+    JPopover confirm = new JPopover();
+    confirm.setTitle("Confirm Delete");
+    confirm.setBody("Are you sure you want to delete this item?");
+    confirm.setConfirmationMode(
+        "Yes, Delete",
+        "Cancel",
+        () -> {
+            // Handle deletion
+            deleteItem();
+            JToast.show(stage, "Item deleted", JToast.Type.SUCCESS, 
+                       JToast.Position.TOP_RIGHT, 3000);
+        }
+    );
+    confirm.setPosition(JPopover.Position.TOP);
+    confirm.show(deleteBtn);
+});
+```
+
+### Help Tooltips
+
+```java
+JInput emailInput = new JInput();
+emailInput.setPlaceholder("Enter email");
+
+JButton infoIcon = new JButton("ℹ");
+infoIcon.setStyle("-fx-background-color: transparent;");
+
+infoIcon.setOnAction(e -> {
+    JPopover help = new JPopover();
+    help.setBody("Use your company email address for registration.");
+    help.setPosition(JPopover.Position.RIGHT);
+    help.show(infoIcon);
+});
+
+HBox row = new HBox(5);
+row.getChildren().addAll(emailInput, infoIcon);
+```
+
+### User Profile Popover
+
+```java
+JAvatar avatar = new JAvatar("John", "Doe");
+avatar.setSize(JAvatar.Size.MD);
+
+avatar.setOnMouseClicked(e -> {
+    VBox profileCard = new VBox(10);
+    profileCard.setPadding(new Insets(15));
+    profileCard.setMinWidth(200);
+    
+    HBox header = new HBox(10);
+    header.setAlignment(Pos.CENTER_LEFT);
+    
+    JAvatar largeAvatar = new JAvatar("John", "Doe");
+    largeAvatar.setSize(JAvatar.Size.LG);
+    
+    VBox info = new VBox(4);
+    Label name = new Label("John Doe");
+    name.setStyle("-fx-font-weight: bold;");
+    Label role = new Label("Administrator");
+    role.setStyle("-fx-font-size: 11px; -fx-text-fill: -color-text-muted;");
+    info.getChildren().addAll(name, role);
+    
+    header.getChildren().addAll(largeAvatar, info);
+    
+    JButton profileBtn = new JButton("View Profile")
+        .setVariant(JButton.ButtonVariant.LIGHT_PRIMARY)
+        .setSize(JButton.ButtonSize.SM);
+    
+    JButton logoutBtn = new JButton("Logout")
+        .setVariant(JButton.ButtonVariant.LIGHT_DANGER)
+        .setSize(JButton.ButtonSize.SM);
+    
+    profileCard.getChildren().addAll(header, profileBtn, logoutBtn);
+    
+    JPopover popover = new JPopover();
+    popover.setContentNode(profileCard);
+    popover.setPosition(JPopover.Position.BOTTOM);
+    popover.show(avatar);
+});
+```
+
+### API Reference
+
+<ParamField path="setTitle(String)" type="JPopover">
+  Set popover title
+</ParamField>
+
+<ParamField path="setBody(String)" type="JPopover">
+  Set popover body text
+</ParamField>
+
+<ParamField path="setContentNode(Node)" type="JPopover">
+  Set custom content (replaces title/body)
+</ParamField>
+
+<ParamField path="setPosition(Position)" type="JPopover">
+  Set arrow position: TOP, BOTTOM, LEFT, RIGHT
+</ParamField>
+
+<ParamField path="setTheme(Theme)" type="JPopover">
+  Set theme: LIGHT or DARK
+</ParamField>
+
+<ParamField path="setConfirmationMode(String, String, Runnable)" type="JPopover">
+  Enable confirmation mode with yes/no buttons
+</ParamField>
+
+<ParamField path="show(Node)" type="void">
+  Show popover relative to target node
+</ParamField>
+
+<ParamField path="hide()" type="void">
+  Hide the popover
+</ParamField>
+
+---
+
+## JProgressBar
+
+Progress indicator with color variants and sizes.
+
+### Basic Usage
+
+```java
+JProgressBar progress = new JProgressBar();
+progress.setProgress(0.65); // 65%
+```
+
+### Color Variants
+
+```java
+JProgressBar primary = new JProgressBar(0.5);
+primary.setProgressStyle(JProgressBar.ProgressStyle.PRIMARY);
+
+JProgressBar success = new JProgressBar(0.75);
+success.setProgressStyle(JProgressBar.ProgressStyle.SUCCESS);
+
+JProgressBar danger = new JProgressBar(0.25);
+danger.setProgressStyle(JProgressBar.ProgressStyle.DANGER);
+
+JProgressBar warning = new JProgressBar(0.6);
+warning.setProgressStyle(JProgressBar.ProgressStyle.WARNING);
+
+JProgressBar info = new JProgressBar(0.9);
+info.setProgressStyle(JProgressBar.ProgressStyle.INFO);
+```
+
+### Sizes
+
+```java
+JProgressBar small = new JProgressBar();
+small.setSize(JProgressBar.ProgressSize.SM);
+small.setProgress(0.4);
+
+JProgressBar medium = new JProgressBar();
+medium.setSize(JProgressBar.ProgressSize.MD); // Default
+medium.setProgress(0.6);
+
+JProgressBar large = new JProgressBar();
+large.setSize(JProgressBar.ProgressSize.LG);
+large.setProgress(0.8);
+```
+
+### Indeterminate Progress
+
+```java
+JProgressBar loading = new JProgressBar();
+loading.setProgress(-1); // Indeterminate/loading state
+```
+
+### Upload Progress Example
+
+```java
+VBox uploadPanel = new VBox(10);
+uploadPanel.setPadding(new Insets(20));
+uploadPanel.setMaxWidth(400);
+
+Label title = new Label("Uploading file...");
+title.setStyle("-fx-font-weight: bold;");
+
+JProgressBar uploadProgress = new JProgressBar();
+uploadProgress.setProgressStyle(JProgressBar.ProgressStyle.PRIMARY);
+uploadProgress.setProgress(0);
+
+Label percentLabel = new Label("0%");
+
+uploadPanel.getChildren().addAll(title, uploadProgress, percentLabel);
+
+// Simulate upload
+Timeline timeline = new Timeline(
+    new KeyFrame(Duration.millis(100), e -> {
+        double current = uploadProgress.getProgress();
+        if (current < 1.0) {
+            double newProgress = current + 0.01;
+            uploadProgress.setProgress(newProgress);
+            percentLabel.setText(String.format("%.0f%%", newProgress * 100));
+        } else {
+            uploadProgress.setProgressStyle(JProgressBar.ProgressStyle.SUCCESS);
+            title.setText("Upload complete!");
+        }
+    })
+);
+timeline.setCycleCount(100);
+timeline.play();
+```
+
+### Task Progress Dashboard
+
+```java
+VBox dashboard = new VBox(20);
+dashboard.setPadding(new Insets(20));
+
+// Task 1
+VBox task1 = new VBox(8);
+Label task1Label = new Label("Database Migration");
+JProgressBar task1Progress = new JProgressBar(0.85);
+task1Progress.setProgressStyle(JProgressBar.ProgressStyle.SUCCESS);
+task1.getChildren().addAll(task1Label, task1Progress);
+
+// Task 2
+VBox task2 = new VBox(8);
+Label task2Label = new Label("API Integration");
+JProgressBar task2Progress = new JProgressBar(0.45);
+task2Progress.setProgressStyle(JProgressBar.ProgressStyle.PRIMARY);
+task2.getChildren().addAll(task2Label, task2Progress);
+
+// Task 3
+VBox task3 = new VBox(8);
+Label task3Label = new Label("Testing Phase");
+JProgressBar task3Progress = new JProgressBar(0.15);
+task3Progress.setProgressStyle(JProgressBar.ProgressStyle.WARNING);
+task3.getChildren().addAll(task3Label, task3Progress);
+
+dashboard.getChildren().addAll(task1, task2, task3);
+```
+
+### With Label Overlay
+
+```java
+StackPane progressContainer = new StackPane();
+
+JProgressBar progress = new JProgressBar(0.72);
+progress.setProgressStyle(JProgressBar.ProgressStyle.PRIMARY);
+progress.setMaxWidth(Double.MAX_VALUE);
+
+Label label = new Label("72% Complete");
+label.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+
+progressContainer.getChildren().addAll(progress, label);
+```
+
+### Dynamic Color Based on Progress
+
+```java
+JProgressBar dynamicProgress = new JProgressBar();
+
+// Update color based on percentage
+dynamicProgress.progressProperty().addListener((obs, oldVal, newVal) -> {
+    double percent = newVal.doubleValue();
+    if (percent < 0.3) {
+        dynamicProgress.setProgressStyle(JProgressBar.ProgressStyle.DANGER);
+    } else if (percent < 0.7) {
+        dynamicProgress.setProgressStyle(JProgressBar.ProgressStyle.WARNING);
+    } else {
+        dynamicProgress.setProgressStyle(JProgressBar.ProgressStyle.SUCCESS);
+    }
+});
+
+dynamicProgress.setProgress(0.5);
+```
+
+### API Reference
+
+<ParamField path="new JProgressBar()" type="constructor">
+  Create progress bar at 0%
+</ParamField>
+
+<ParamField path="new JProgressBar(double)" type="constructor">
+  Create progress bar with initial progress (0.0 to 1.0)
+</ParamField>
+
+<ParamField path="setProgress(double)" type="void">
+  Set progress (0.0 to 1.0, or -1 for indeterminate)
+</ParamField>
+
+<ParamField path="setProgressStyle(ProgressStyle)" type="void">
+  Set color: PRIMARY, SUCCESS, DANGER, WARNING, INFO, DARK, SECONDARY
+</ParamField>
+
+<ParamField path="setSize(ProgressSize)" type="void">
+  Set size: SM, MD, LG
+</ParamField>
+
+<ParamField path="progressProperty()" type="DoubleProperty">
+  Observable progress property
+</ParamField>

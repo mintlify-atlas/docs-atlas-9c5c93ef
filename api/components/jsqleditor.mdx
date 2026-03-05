@@ -1,0 +1,315 @@
+---
+title: JSqlEditor
+description: Advanced SQL code editor with syntax highlighting, autocomplete, and real-time validation
+icon: code
+---
+
+## Overview
+
+JSqlEditor is a professional SQL editor component built on RichTextFX with intelligent features including syntax highlighting, autocomplete, real-time validation, and code formatting.
+
+## Constructor
+
+```java
+JSqlEditor editor = new JSqlEditor();
+```
+
+Creates a new SQL editor with default configuration.
+
+## Properties
+
+<ParamField path="readOnly" type="BooleanProperty">
+  Controls whether the editor is read-only
+  
+  - Default: `false`
+  - Editable when `false`, read-only when `true`
+</ParamField>
+
+<ParamField path="darkMode" type="BooleanProperty">
+  Controls the editor theme
+  
+  - Default: `false` (light mode)
+  - Automatically switches stylesheets and colors
+</ParamField>
+
+<ParamField path="errors" type="ObservableList&lt;SqlError&gt;">
+  List of SQL validation errors
+  
+  - Updated automatically after 400ms debounce
+  - Each error contains line, column, and message
+</ParamField>
+
+## Core Methods
+
+### Text Management
+
+<ResponseField name="getSql" type="String">
+  Returns the current SQL text
+  
+  ```java
+  String sql = editor.getSql();
+  ```
+</ResponseField>
+
+<ResponseField name="setSql" type="void">
+  Sets the SQL text
+  
+  ```java
+  editor.setSql("SELECT * FROM users WHERE active = true");
+  ```
+  
+  <ParamField path="sql" type="String">
+    SQL text to set in the editor
+  </ParamField>
+</ResponseField>
+
+<ResponseField name="getText" type="String">
+  Alias for `getSql()`
+</ResponseField>
+
+<ResponseField name="setText" type="void">
+  Alias for `setSql(String)`
+</ResponseField>
+
+<ResponseField name="clear" type="void">
+  Clears all text from the editor
+  
+  ```java
+  editor.clear();
+  ```
+</ResponseField>
+
+### Formatting & Validation
+
+<ResponseField name="formatSql" type="void">
+  Formats the SQL text using SqlFormatter
+  
+  ```java
+  editor.formatSql();
+  ```
+  
+  - Applies standard SQL formatting
+  - Uppercase keywords
+  - 4-space indentation
+  - 80-character max column length
+  - Keyboard shortcut: `Ctrl+Shift+F`
+</ResponseField>
+
+<ResponseField name="getSqlErrors" type="ObservableList&lt;SqlError&gt;">
+  Returns observable list of validation errors
+  
+  ```java
+  ObservableList&lt;SqlError&gt; errors = editor.getSqlErrors();
+  errors.addListener((ListChangeListener.Change<? extends SqlError> c) -> {
+      System.out.println("Errors: " + c.getList().size());
+  });
+  ```
+</ResponseField>
+
+### Focus & Navigation
+
+<ResponseField name="focusEditor" type="void">
+  Requests focus on the code editor
+  
+  ```java
+  editor.focusEditor();
+  ```
+</ResponseField>
+
+<ResponseField name="selectAll" type="void">
+  Selects all text in the editor
+  
+  ```java
+  editor.selectAll();
+  ```
+</ResponseField>
+
+<ResponseField name="scrollToTop" type="void">
+  Scrolls the editor to the top-left position
+  
+  ```java
+  editor.scrollToTop();
+  ```
+</ResponseField>
+
+### Theme
+
+<ResponseField name="toggleDarkMode" type="void">
+  Toggles between light and dark theme
+  
+  ```java
+  editor.toggleDarkMode();
+  ```
+  
+  - Switches color scheme instantly
+  - Updates status bar indicator
+</ResponseField>
+
+<ResponseField name="setDarkMode" type="void">
+  Sets the dark mode state
+  
+  ```java
+  editor.setDarkMode(true);
+  ```
+  
+  <ParamField path="dark" type="boolean">
+    `true` for dark mode, `false` for light mode
+  </ParamField>
+</ResponseField>
+
+<ResponseField name="isDarkMode" type="boolean">
+  Returns current dark mode state
+  
+  ```java
+  boolean isDark = editor.isDarkMode();
+  ```
+</ResponseField>
+
+### Clipboard
+
+<ResponseField name="copyToClipboard" type="void">
+  Copies the entire SQL text to system clipboard
+  
+  ```java
+  editor.copyToClipboard();
+  ```
+</ResponseField>
+
+### Advanced Access
+
+<ResponseField name="getCodeArea" type="CodeArea">
+  Returns the underlying RichTextFX CodeArea for advanced operations
+  
+  ```java
+  CodeArea codeArea = editor.getCodeArea();
+  codeArea.setStyle("-fx-font-size: 14px;");
+  ```
+</ResponseField>
+
+<ResponseField name="dispose" type="void">
+  Cleans up subscriptions and resources
+  
+  ```java
+  editor.dispose();
+  ```
+  
+  - Call when removing the editor from the scene
+  - Unsubscribes from reactive streams
+</ResponseField>
+
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Tab` | Insert 4 spaces or accept autocomplete |
+| `Backspace` | Smart delete 4 spaces if preceded by indent |
+| `Enter` | Smart indent based on previous line |
+| `Ctrl+Space` | Trigger autocomplete |
+| `Ctrl+/` | Toggle line comment |
+| `Ctrl+D` | Duplicate current line |
+| `Ctrl+Shift+K` | Delete current line |
+| `Ctrl+Shift+F` | Format SQL |
+
+## Auto-Complete
+
+- Triggers automatically after typing 2+ characters
+- Includes SQL keywords, data types, and functions
+- Navigate with arrow keys, accept with `Enter` or `Tab`
+- Force trigger with `Ctrl+Space`
+
+## Syntax Highlighting
+
+Supported token types:
+- **Keywords**: SELECT, FROM, WHERE, JOIN, etc.
+- **Data Types**: VARCHAR, INTEGER, TIMESTAMP, etc.
+- **Functions**: COUNT, SUM, AVG, COALESCE, etc.
+- **Strings**: Single-quoted literals
+- **Comments**: Line (`--`) and block (`/* */`)
+- **Numbers**: Integers, decimals, scientific notation
+- **Operators**: `=`, `<>`, `+`, `-`, etc.
+
+## Real-Time Validation
+
+- Validates SQL syntax using JSqlParser
+- 400ms debounce to avoid performance impact
+- Highlights error lines in red
+- Shows error count in status bar
+- Click error indicator to navigate to first error
+
+## SqlError Record
+
+```java
+public record SqlError(int line, int startCol, int endCol, String message) {}
+```
+
+<ParamField path="line" type="int">
+  Line number (1-based)
+</ParamField>
+
+<ParamField path="startCol" type="int">
+  Starting column (0-based)
+</ParamField>
+
+<ParamField path="endCol" type="int">
+  Ending column (0-based)
+</ParamField>
+
+<ParamField path="message" type="String">
+  Error description in Spanish
+</ParamField>
+
+## Example Usage
+
+```java
+JSqlEditor editor = new JSqlEditor();
+editor.setPrefSize(800, 600);
+
+// Set initial SQL
+editor.setSql("""
+    SELECT u.id, u.name, COUNT(o.id) as order_count
+    FROM users u
+    LEFT JOIN orders o ON o.user_id = u.id
+    WHERE u.active = true
+    GROUP BY u.id, u.name
+    ORDER BY order_count DESC
+    """);
+
+// Listen for errors
+editor.getSqlErrors().addListener((Change<? extends SqlError> c) -> {
+    if (editor.getSqlErrors().isEmpty()) {
+        System.out.println("SQL is valid!");
+    } else {
+        editor.getSqlErrors().forEach(err -> 
+            System.out.println("Error at line " + err.line() + ": " + err.message())
+        );
+    }
+});
+
+// Format on button click
+JButton formatBtn = new JButton("Format", JIcon.CODE);
+formatBtn.setOnAction(e -> editor.formatSql());
+
+// Enable dark mode
+editor.setDarkMode(true);
+```
+
+## Styling
+
+The component uses separate stylesheets for light and dark themes:
+- `/css/sql-editor-light.css`
+- `/css/sql-editor-dark.css`
+
+Style classes:
+- `.j-sql-editor` - Main container
+- `.j-sql-code-area` - Code editing area
+- `.j-sql-status-bar` - Bottom status bar
+- `.sql-keyword`, `.sql-type`, `.sql-function` - Syntax tokens
+- `.sql-error-line` - Error highlighted lines
+
+## Notes
+
+- Built on RichTextFX for high-performance text rendering
+- Uses JSqlParser for SQL validation
+- Supports PostgreSQL, MySQL, Oracle, SQL Server dialects
+- Line numbers are always visible
+- Status bar shows cursor position and error count

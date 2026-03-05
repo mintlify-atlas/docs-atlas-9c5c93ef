@@ -1,0 +1,261 @@
+---
+title: JHeader
+description: A navigation header component with branding, menu, and user profile sections
+---
+
+## Overview
+
+`JHeader` is a horizontal navigation header component that extends JavaFX's `HBox`. It provides three main sections: left (branding), center (menu items), and right (toolbar and user profile).
+
+## Constructor
+
+<ParamField path="JHeader()" type="constructor">
+  Creates a new header with empty sections.
+</ParamField>
+
+## Methods
+
+### Branding
+
+<ParamField path="setBrand(Node logo, String title)" type="JHeader">
+  Sets the brand logo and title in the left section.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="logo" type="Node">
+      The logo node (typically an image or icon), or `null` to omit
+    </ResponseField>
+    <ResponseField name="title" type="String">
+      The brand title text, or `null` to omit
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="JHeader">
+      The header instance for method chaining
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+### Menu Items
+
+<ParamField path="addMenuItem(String text, Runnable action)" type="JHeader">
+  Adds a clickable menu item to the center section.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="text" type="String">
+      The menu item text
+    </ResponseField>
+    <ResponseField name="action" type="Runnable">
+      The action to execute when clicked, or `null` for no action
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="JHeader">
+      The header instance for method chaining
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="addMenuDropdown(String text, Map&lt;String, Runnable&gt; items)" type="JHeader">
+  Adds a dropdown menu item to the center section.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="text" type="String">
+      The dropdown label text
+    </ResponseField>
+    <ResponseField name="items" type="Map&lt;String, Runnable&gt;">
+      Map of dropdown item text to actions
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="JHeader">
+      The header instance for method chaining
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+### Toolbar
+
+<ParamField path="addToolbarItem(Node node)" type="JHeader">
+  Adds a custom node to the right toolbar section (appears before the user profile).
+  
+  <Expandable title="Parameters">
+    <ResponseField name="node" type="Node">
+      The node to add (typically buttons, icons, or badges)
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="JHeader">
+      The header instance for method chaining
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+### User Profile
+
+<ParamField path="setUserProfile(String name, String email, String initials)" type="JHeader">
+  Sets the user profile information in the right section.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="name" type="String">
+      The user's display name
+    </ResponseField>
+    <ResponseField name="email" type="String">
+      The user's email address
+    </ResponseField>
+    <ResponseField name="initials" type="String">
+      The user's initials to display in the avatar
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="JHeader">
+      The header instance for method chaining
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setUserProfile(String name, String email, String initials, Runnable onLogout)" type="JHeader">
+  Sets the user profile with a logout action.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="name" type="String">
+      The user's display name
+    </ResponseField>
+    <ResponseField name="email" type="String">
+      The user's email address
+    </ResponseField>
+    <ResponseField name="initials" type="String">
+      The user's initials to display in the avatar
+    </ResponseField>
+    <ResponseField name="onLogout" type="Runnable">
+      The action to execute when logout is clicked, or `null` for default behavior
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="JHeader">
+      The header instance for method chaining
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Style Classes
+
+<ResponseField name="j-header" type="String">
+  Base style class applied to the header container
+</ResponseField>
+
+<ResponseField name="j-header-brand" type="String">
+  Applied to the left branding section
+</ResponseField>
+
+<ResponseField name="j-header-logo-text" type="String">
+  Applied to the brand title label
+</ResponseField>
+
+<ResponseField name="j-header-menu" type="String">
+  Applied to the center menu section
+</ResponseField>
+
+<ResponseField name="j-header-menu-item" type="String">
+  Applied to individual menu items
+</ResponseField>
+
+<ResponseField name="j-header-toolbar" type="String">
+  Applied to the right toolbar section
+</ResponseField>
+
+<ResponseField name="j-header-user-profile" type="String">
+  Applied to the user profile container
+</ResponseField>
+
+<ResponseField name="j-header-user-info" type="String">
+  Applied to the user info text container
+</ResponseField>
+
+<ResponseField name="j-header-user-name" type="String">
+  Applied to the user name label
+</ResponseField>
+
+<ResponseField name="j-header-user-email" type="String">
+  Applied to the user email label
+</ResponseField>
+
+<ResponseField name="j-header-avatar" type="String">
+  Applied to the avatar container
+</ResponseField>
+
+<ResponseField name="j-header-avatar-text" type="String">
+  Applied to the avatar initials text
+</ResponseField>
+
+<ResponseField name="j-popover-header" type="String">
+  Applied to the popover header section (in profile dropdown)
+</ResponseField>
+
+<ResponseField name="j-popover-title" type="String">
+  Applied to popover title labels
+</ResponseField>
+
+<ResponseField name="j-popover-subtitle" type="String">
+  Applied to popover subtitle labels
+</ResponseField>
+
+<ResponseField name="j-popover-item" type="String">
+  Applied to popover menu items
+</ResponseField>
+
+## Example Usage
+
+```java
+// Create header
+JHeader header = new JHeader();
+
+// Set branding
+header.setBrand(
+    new ImageView(new Image("logo.png")),
+    "MyApp"
+);
+
+// Add menu items
+header.addMenuItem("Home", () -> navigateHome())
+      .addMenuItem("Dashboard", () -> navigateDashboard())
+      .addMenuDropdown("Products", Map.of(
+          "Electronics", () -> showElectronics(),
+          "Clothing", () -> showClothing(),
+          "Books", () -> showBooks()
+      ));
+
+// Add toolbar items
+header.addToolbarItem(new JBadge("5"));
+header.addToolbarItem(JIcon.BELL.view());
+
+// Set user profile
+header.setUserProfile(
+    "John Doe",
+    "john@example.com",
+    "JD",
+    () -> performLogout()
+);
+```
+
+## Behavior Notes
+
+- The profile dropdown displays when clicking the user avatar
+- The dropdown includes a "Cerrar Sesión" (Logout) option that triggers the `onLogout` action
+- Menu dropdowns use `JPopover` for positioning
+- Toolbar items are inserted before the user profile
+- All methods return the header instance for fluent method chaining
+
+## Dependencies
+
+- [JPopover](/api/components/jpopover) - Used for dropdown menus and profile menu
+- [JIcon](/api/components/jicon) - Can be used for menu icons and toolbar items
+
+## Source
+
+`com.jjarroyo.components.JHeader` in JHeader.java:12

@@ -1,0 +1,529 @@
+---
+title: 'SQL Editor'
+description: 'Professional SQL editor with syntax highlighting, autocomplete, and validation'
+icon: 'code'
+---
+
+## Overview
+
+The `JSqlEditor` component is a full-featured SQL editor built on RichTextFX that provides:
+
+- Real-time syntax highlighting for SQL keywords, functions, types, and literals
+- Intelligent autocomplete with 100+ SQL keywords, types, and functions
+- Live SQL validation using JSqlParser
+- Smart editing features (auto-indent, auto-closing pairs, line operations)
+- Dark/light theme support
+- Line numbers and status bar with error indicators
+
+<Note>
+The SQL editor uses RichTextFX's `CodeArea` for advanced text editing capabilities and includes debounced validation to maintain performance.
+</Note>
+
+## Basic Usage
+
+```java
+import com.jjarroyo.components.JSqlEditor;
+
+public class SqlEditorDemo extends Application {
+    @Override
+    public void start(Stage stage) {
+        JSqlEditor editor = new JSqlEditor();
+        
+        // Set initial SQL
+        editor.setSql("""
+            SELECT id, name, email
+            FROM users
+            WHERE created_at > '2024-01-01'
+            ORDER BY name
+            """);
+        
+        Scene scene = new Scene(editor, 800, 600);
+        stage.setScene(scene);
+        stage.show();
+    }
+}
+```
+
+## Syntax Highlighting
+
+The editor automatically highlights SQL tokens with distinct styles:
+
+<CodeGroup>
+
+```java Keywords
+// SQL keywords are highlighted in bold blue
+SELECT, FROM, WHERE, JOIN, GROUP BY, ORDER BY
+INSERT, UPDATE, DELETE, CREATE, ALTER, DROP
+```
+
+```java Types
+// Data types are highlighted in teal
+VARCHAR, INTEGER, BIGINT, DECIMAL, BOOLEAN
+DATE, TIMESTAMP, JSON, JSONB, ARRAY
+```
+
+```java Functions
+// SQL functions are highlighted in purple
+COUNT, SUM, AVG, MIN, MAX, COALESCE
+CONCAT, SUBSTRING, DATE_TRUNC, CAST
+```
+
+</CodeGroup>
+
+### Token Pattern
+
+The editor recognizes these token types (JSqlEditor.java:80-91):
+
+- **Block comments**: `/* ... */`
+- **Line comments**: `-- comment`
+- **String literals**: `'text'`
+- **Quoted identifiers**: `"column_name"`
+- **Numbers**: `123`, `45.67`, `1.2e-3`
+- **Keywords/identifiers**: SQL keywords and table/column names
+- **Operators**: `=`, `<>`, `+`, `-`, `*`, `/`
+- **Punctuation**: `()`, `[]`, `{}`, `;`, `,`, `.`
+
+## Autocomplete
+
+Trigger autocomplete in multiple ways:
+
+<Steps>
+  <Step title="Type-as-you-go">
+    Start typing any SQL keyword - autocomplete appears after 2 characters
+    
+    ```java
+    // Type "SEL" → shows SELECT
+    // Type "CRE" → shows CREATE
+    ```
+  </Step>
+  
+  <Step title="Manual trigger">
+    Press `Ctrl+Space` to manually trigger autocomplete
+    
+    ```java
+    editor.focusEditor();
+    // User presses Ctrl+Space to see all available keywords
+    ```
+  </Step>
+  
+  <Step title="Navigate and select">
+    Use arrow keys to navigate, `Enter` or `Tab` to accept
+  </Step>
+</Steps>
+
+### Autocomplete Sources
+
+The editor provides suggestions from (JSqlEditor.java:32-78):
+
+- **46 SQL keywords**: SELECT, FROM, WHERE, JOIN, etc.
+- **60+ data types**: VARCHAR, INTEGER, JSON, TIMESTAMP, etc.
+- **78 SQL functions**: COUNT, SUM, CONCAT, DATE_TRUNC, etc.
+
+## SQL Validation
+
+Live validation with visual error indicators:
+
+```java
+import javafx.collections.ListChangeListener;
+
+// Listen for validation errors
+editor.getSqlErrors().addListener((ListChangeListener<JSqlEditor.SqlError>) c -> {
+    while (c.next()) {
+        for (JSqlEditor.SqlError error : c.getAddedSubList()) {
+            System.out.printf("Line %d, Col %d-%d: %s%n",
+                error.line(), error.startCol(), error.endCol(), error.message());
+        }
+    }
+});
+
+// Check if SQL is valid
+if (editor.getSqlErrors().isEmpty()) {
+    String sql = editor.getSql();
+    // Execute query...
+}
+```
+
+<Warning>
+Validation is debounced by 400ms to avoid excessive parsing. Syntax highlighting updates in real-time (30ms debounce).
+</Warning>
+
+### Error Display
+
+Errors are shown in multiple places (JSqlEditor.java:601-627):
+
+1. **Error lines**: Highlighted with red background
+2. **Status bar**: Shows error count (`✕ 2 errors`)
+3. **Click to navigate**: Click error count to jump to first error
+
+## Smart Editing Features
+
+### Keyboard Shortcuts
+
+| Shortcut | Action | Description |
+|----------|--------|-------------|
+| `Ctrl+Space` | Trigger autocomplete | Show all available completions |
+| `Ctrl+Shift+F` | Format SQL | Auto-format with proper indentation |
+| `Ctrl+/` | Toggle comment | Comment/uncomment current line |
+| `Ctrl+D` | Duplicate line | Duplicate the current line |
+| `Ctrl+Shift+K` | Delete line | Delete the current line |
+| `Tab` | Indent | Insert 4 spaces (or accept autocomplete) |
+| `Backspace` | Smart unindent | Delete 4 spaces if preceded by 4 spaces |
+
+### Auto-closing Pairs
+
+The editor automatically closes pairs (JSqlEditor.java:331-336):
+
+```java
+// Type "(" → automatically inserts "()"
+// Type "[" → automatically inserts "[]"
+// Type "'" → automatically inserts "''"
+```
+
+### Smart Enter
+
+Press Enter to maintain indentation (JSqlEditor.java:353-370):
+
+```java
+SELECT *
+FROM users
+WHERE (
+    |  // Cursor auto-indents here
+```
+
+### Auto-uppercase Keywords
+
+Keywords are automatically uppercased when you type space or semicolon (JSqlEditor.java:420-434):
+
+```java
+// Type: "select * from users;"
+// Result: "SELECT * FROM users;"
+```
+
+## SQL Formatting
+
+Format SQL with proper indentation and style:
+
+```java
+editor.formatSql();
+// Or press Ctrl+Shift+F
+```
+
+### Format Configuration
+
+The formatter uses these settings (JSqlEditor.java:476-491):
+
+- **Indent**: 4 spaces
+- **Uppercase**: All keywords
+- **Max column length**: 80 characters
+- **Lines between queries**: 1 blank line
+- **Dialect**: Standard SQL
+
+<Accordion title="Before and After Formatting">
+
+**Before:**
+```sql
+select u.id,u.name,u.email from users u where u.created_at>'2024-01-01'order by u.name
+```
+
+**After:**
+```sql
+SELECT
+    u.id,
+    u.name,
+    u.email
+FROM
+    users u
+WHERE
+    u.created_at > '2024-01-01'
+ORDER BY
+    u.name
+```
+
+</Accordion>
+
+## Dark Mode
+
+Toggle between light and dark themes:
+
+```java
+// Toggle theme
+editor.toggleDarkMode();
+
+// Set specific theme
+editor.setDarkMode(true);  // Dark theme
+editor.setDarkMode(false); // Light theme
+
+// Bind to property
+CheckBox darkModeToggle = new CheckBox("Dark Mode");
+darkModeToggle.selectedProperty().bindBidirectional(editor.darkModeProperty());
+```
+
+<CardGroup cols={2}>
+  <Card title="Light Theme" icon="sun">
+    Clean white background with soft shadows and subtle borders
+  </Card>
+  <Card title="Dark Theme" icon="moon">
+    Dark slate background (`#0f172a`) with adjusted syntax colors
+  </Card>
+</CardGroup>
+
+## Properties and Methods
+
+### Text Content
+
+```java
+// Get/set SQL text
+String sql = editor.getSql();
+editor.setSql("SELECT * FROM users");
+
+// Alternative methods
+String text = editor.getText();
+editor.setText("SELECT 1");
+
+// Clear editor
+editor.clear();
+```
+
+### Read-only Mode
+
+```java
+// Make editor read-only
+editor.setReadOnly(true);
+
+// Check if read-only
+if (editor.isReadOnly()) {
+    System.out.println("Editor is read-only");
+}
+
+// Bind to property
+ToggleButton lockButton = new ToggleButton("Lock");
+lockButton.selectedProperty().bindBidirectional(editor.readOnlyProperty());
+```
+
+### Editor Control
+
+```java
+// Focus the editor
+editor.focusEditor();
+
+// Select all text
+editor.selectAll();
+
+// Scroll to top
+editor.scrollToTop();
+
+// Copy to clipboard
+editor.copyToClipboard();
+```
+
+### Advanced Access
+
+Access the underlying RichTextFX CodeArea for advanced features:
+
+```java
+import org.fxmisc.richtext.CodeArea;
+
+CodeArea codeArea = editor.getCodeArea();
+
+// Advanced operations
+codeArea.getCaretPosition();
+codeArea.getCurrentParagraph();
+codeArea.selectRange(0, 10);
+```
+
+## Complete Example
+
+<CodeGroup>
+
+```java Application
+import com.jjarroyo.components.JSqlEditor;
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
+
+public class SqlEditorApp extends Application {
+    @Override
+    public void start(Stage stage) {
+        JSqlEditor editor = new JSqlEditor();
+        
+        // Initial SQL
+        editor.setSql("""
+            SELECT
+                u.id,
+                u.name,
+                u.email,
+                COUNT(o.id) as order_count
+            FROM users u
+            LEFT JOIN orders o ON o.user_id = u.id
+            WHERE u.created_at > CURRENT_DATE - INTERVAL '30 days'
+            GROUP BY u.id, u.name, u.email
+            HAVING COUNT(o.id) > 0
+            ORDER BY order_count DESC
+            LIMIT 100;
+            """);
+        
+        // Toolbar
+        ToolBar toolbar = new ToolBar();
+        
+        Button executeBtn = new Button("Execute");
+        executeBtn.setOnAction(e -> {
+            if (editor.getSqlErrors().isEmpty()) {
+                System.out.println("Executing SQL: " + editor.getSql());
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("SQL Error");
+                alert.setHeaderText("Fix validation errors first");
+                alert.showAndWait();
+            }
+        });
+        
+        Button formatBtn = new Button("Format");
+        formatBtn.setOnAction(e -> editor.formatSql());
+        
+        CheckBox readOnlyCheck = new CheckBox("Read-only");
+        readOnlyCheck.selectedProperty().bindBidirectional(
+            editor.readOnlyProperty());
+        
+        toolbar.getItems().addAll(
+            executeBtn,
+            formatBtn,
+            new Separator(),
+            readOnlyCheck
+        );
+        
+        // Layout
+        BorderPane root = new BorderPane();
+        root.setTop(toolbar);
+        root.setCenter(editor);
+        root.setPadding(new Insets(10));
+        
+        Scene scene = new Scene(root, 900, 700);
+        stage.setTitle("SQL Editor Demo");
+        stage.setScene(scene);
+        stage.show();
+        
+        editor.focusEditor();
+    }
+    
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+```
+
+```java Error Handling
+import javafx.collections.ListChangeListener;
+
+// Monitor validation errors
+editor.getSqlErrors().addListener(
+    (ListChangeListener<JSqlEditor.SqlError>) change -> {
+        while (change.next()) {
+            if (change.wasAdded()) {
+                for (JSqlEditor.SqlError error : change.getAddedSubList()) {
+                    System.err.printf(
+                        "[Line %d, Col %d-%d] %s%n",
+                        error.line(),
+                        error.startCol(),
+                        error.endCol(),
+                        error.message()
+                    );
+                }
+            }
+        }
+    }
+);
+```
+
+</CodeGroup>
+
+## Cleanup
+
+Dispose of subscriptions when done:
+
+```java
+// When closing the editor window or removing from scene
+editor.dispose();
+```
+
+<Note>
+The editor uses reactive subscriptions for syntax highlighting and validation. Call `dispose()` to clean up resources and prevent memory leaks.
+</Note>
+
+## API Reference
+
+### Constructor
+
+```java
+public JSqlEditor()
+```
+
+Creates a new SQL editor with default configuration.
+
+### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `getSql()` | `String` | Get the SQL text |
+| `setSql(String)` | `void` | Set the SQL text |
+| `getText()` | `String` | Get the text content |
+| `setText(String)` | `void` | Set the text content |
+| `clear()` | `void` | Clear all text |
+| `focusEditor()` | `void` | Focus the editor |
+| `selectAll()` | `void` | Select all text |
+| `scrollToTop()` | `void` | Scroll to top |
+| `formatSql()` | `void` | Format the SQL |
+| `toggleDarkMode()` | `void` | Toggle dark/light theme |
+| `copyToClipboard()` | `void` | Copy text to clipboard |
+| `dispose()` | `void` | Clean up resources |
+| `getCodeArea()` | `CodeArea` | Get underlying CodeArea |
+
+### Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `readOnlyProperty()` | `BooleanProperty` | Read-only mode |
+| `darkModeProperty()` | `BooleanProperty` | Dark theme enabled |
+| `getSqlErrors()` | `ObservableList<SqlError>` | Validation errors |
+
+### SqlError Record
+
+```java
+public record SqlError(
+    int line,      // 1-based line number
+    int startCol,  // 0-based start column
+    int endCol,    // 0-based end column
+    String message // Error message
+) {}
+```
+
+## Styling
+
+The editor uses these CSS classes:
+
+- `.j-sql-editor` - Main container
+- `.j-sql-code-area` - Code area
+- `.j-sql-scroll` - Scroll pane
+- `.j-sql-status-bar` - Status bar
+- `.j-sql-status-label` - Status labels
+- `.j-sql-status-ok` - Success state
+- `.j-sql-status-error` - Error state
+- `.j-sql-autocomplete-list` - Autocomplete popup
+
+### Syntax Highlighting CSS
+
+- `.sql-keyword` - SQL keywords
+- `.sql-type` - Data types
+- `.sql-function` - Functions
+- `.sql-string` - String literals
+- `.sql-number` - Numeric literals
+- `.sql-comment` - Comments
+- `.sql-operator` - Operators
+- `.sql-punctuation` - Punctuation
+- `.sql-error-line` - Lines with errors
+
+<Info>
+The editor includes built-in stylesheets for light and dark themes at `/css/sql-editor-light.css` and `/css/sql-editor-dark.css`.
+</Info>

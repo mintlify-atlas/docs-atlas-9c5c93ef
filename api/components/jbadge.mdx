@@ -1,0 +1,330 @@
+---
+title: "JBadge"
+description: "Compact badge component for labels, counts, and status indicators"
+icon: "tag"
+---
+
+## Overview
+
+The `JBadge` class extends JavaFX's `Label` control to provide styled badges for displaying labels, counts, and status indicators. Badges support multiple colors, sizes, and can include icons.
+
+## Package
+
+```java
+com.jjarroyo.components.JBadge
+```
+
+## Constructors
+
+### JBadge()
+
+Creates an empty badge with default primary styling.
+
+```java
+public JBadge()
+```
+
+#### Example
+
+```java
+JBadge badge = new JBadge();
+badge.setText("New");
+```
+
+### JBadge(String text)
+
+Creates a badge with the specified text and default primary styling.
+
+<ParamField path="text" type="String" required>
+  The badge text
+</ParamField>
+
+```java
+public JBadge(String text)
+```
+
+#### Example
+
+```java
+JBadge badge = new JBadge("Premium");
+```
+
+### JBadge(String text, JIcon icon)
+
+Creates a badge with text and an icon.
+
+<ParamField path="text" type="String" required>
+  The badge text
+</ParamField>
+
+<ParamField path="icon" type="JIcon" required>
+  The icon to display in the badge
+</ParamField>
+
+```java
+public JBadge(String text, JIcon icon)
+```
+
+#### Example
+
+```java
+JBadge badge = new JBadge("Active", JIcon.CHECK);
+```
+
+### JBadge(String text, String... styleClasses)
+
+Creates a badge with text and custom style classes.
+
+<ParamField path="text" type="String" required>
+  The badge text
+</ParamField>
+
+<ParamField path="styleClasses" type="String..." required>
+  CSS class names to apply
+</ParamField>
+
+```java
+public JBadge(String text, String... styleClasses)
+```
+
+#### Example
+
+```java
+JBadge badge = new JBadge("Error", "badge-danger", "badge-lg");
+```
+
+## Methods
+
+### addClass
+
+Adds one or more CSS style classes to the badge. Automatically handles variant replacement logic.
+
+<ParamField path="styleClasses" type="String..." required>
+  One or more CSS class names to add
+</ParamField>
+
+<ResponseField name="return" type="JBadge">
+  Returns this badge instance for method chaining
+</ResponseField>
+
+```java
+public JBadge addClass(String... styleClasses)
+```
+
+#### Example
+
+```java
+// Single class
+JBadge badge = new JBadge("Success");
+badge.addClass("badge-success");
+
+// Multiple classes
+JBadge badge = new JBadge("Large Badge");
+badge.addClass("badge-warning", "badge-lg");
+
+// Method chaining
+JBadge badge = new JBadge("VIP")
+    .addClass("badge-dark", "badge-lg");
+```
+
+### setIcon
+
+Sets or removes an icon on the badge.
+
+<ParamField path="icon" type="JIcon">
+  The icon to display, or null to remove the icon
+</ParamField>
+
+```java
+public void setIcon(JIcon icon)
+```
+
+#### Example
+
+```java
+JBadge badge = new JBadge("Verified");
+badge.setIcon(JIcon.CHECK);
+badge.addClass("badge-success");
+
+// Remove icon
+badge.setIcon(null);
+```
+
+## Style Variants
+
+### Solid Colors (Default)
+
+Badges with solid background colors:
+
+- `badge-primary` (default) - Blue
+- `badge-success` - Green
+- `badge-danger` - Red
+- `badge-warning` - Orange/Yellow
+- `badge-info` - Cyan
+- `badge-secondary` - Gray
+- `badge-dark` - Dark gray/black
+
+```java
+JBadge primary = new JBadge("Primary");
+JBadge success = new JBadge("Success", "badge-success");
+JBadge danger = new JBadge("Danger", "badge-danger");
+JBadge warning = new JBadge("Warning", "badge-warning");
+JBadge info = new JBadge("Info", "badge-info");
+JBadge secondary = new JBadge("Secondary", "badge-secondary");
+JBadge dark = new JBadge("Dark", "badge-dark");
+```
+
+### Light Style
+
+Badges with light, subtle background colors:
+
+- `badge-light-primary`
+- `badge-light-success`
+- `badge-light-danger`
+- `badge-light-warning`
+- `badge-light-info`
+- `badge-light-dark`
+
+```java
+JBadge lightPrimary = new JBadge("Primary Light", "badge-light-primary");
+JBadge lightSuccess = new JBadge("Success Light", "badge-light-success");
+JBadge lightDanger = new JBadge("Danger Light", "badge-light-danger");
+JBadge lightWarning = new JBadge("Warning Light", "badge-light-warning");
+JBadge lightInfo = new JBadge("Info Light", "badge-light-info");
+JBadge lightDark = new JBadge("Dark Light", "badge-light-dark");
+```
+
+## Sizes
+
+Three size variants are available:
+
+- `badge-sm` - Small
+- Default - Medium (no class needed)
+- `badge-lg` - Large
+
+```java
+JBadge small = new JBadge("Small Badge", "badge-sm");
+JBadge medium = new JBadge("Default Badge");
+JBadge large = new JBadge("Large Badge", "badge-lg");
+```
+
+## Shapes
+
+Badges can be circular for displaying single characters or numbers:
+
+- `badge-circle` - Circular badge
+
+```java
+JBadge circleBadge = new JBadge("5")
+    .addClass("badge-danger", "badge-circle");
+```
+
+## Icon Badges
+
+Badges can display icons to convey status or meaning:
+
+```java
+JBadge verified = new JBadge("Verified", JIcon.CHECK)
+    .addClass("badge-success");
+
+JBadge error = new JBadge("Error", JIcon.ERROR)
+    .addClass("badge-danger");
+
+JBadge info = new JBadge("Info", JIcon.INFO)
+    .addClass("badge-info");
+
+JBadge alert = new JBadge("Alert", JIcon.WARNING)
+    .addClass("badge-warning");
+```
+
+## Use Cases
+
+### Status Indicators
+
+```java
+JBadge active = new JBadge("Active", "badge-success");
+JBadge inactive = new JBadge("Inactive", "badge-secondary");
+JBadge pending = new JBadge("Pending", "badge-warning");
+```
+
+### Notification Counts
+
+```java
+JBadge notificationCount = new JBadge("3")
+    .addClass("badge-danger", "badge-circle");
+```
+
+### Category Tags
+
+```java
+JBadge category = new JBadge("Technology", "badge-info");
+JBadge type = new JBadge("Premium", "badge-dark");
+```
+
+## Complete Example
+
+```java
+import com.jjarroyo.components.JBadge;
+import com.jjarroyo.components.JIcon;
+import javafx.geometry.Insets;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+
+public class BadgeExample {
+    public void createBadges() {
+        VBox container = new VBox(15);
+        container.setPadding(new Insets(20));
+        
+        // Status badges
+        HBox statusRow = new HBox(10);
+        statusRow.getChildren().addAll(
+            new JBadge("Active", "badge-success"),
+            new JBadge("Pending", "badge-warning"),
+            new JBadge("Error", "badge-danger")
+        );
+        
+        // Light style badges
+        HBox lightRow = new HBox(10);
+        lightRow.getChildren().addAll(
+            new JBadge("Primary Light", "badge-light-primary"),
+            new JBadge("Success Light", "badge-light-success"),
+            new JBadge("Danger Light", "badge-light-danger")
+        );
+        
+        // Size variations
+        HBox sizeRow = new HBox(10);
+        sizeRow.getChildren().addAll(
+            new JBadge("Small", "badge-sm"),
+            new JBadge("Default"),
+            new JBadge("Large", "badge-lg")
+        );
+        
+        // Icon badges
+        HBox iconRow = new HBox(10);
+        iconRow.getChildren().addAll(
+            new JBadge("Verified", JIcon.CHECK)
+                .addClass("badge-success"),
+            new JBadge("Error", JIcon.ERROR)
+                .addClass("badge-danger"),
+            new JBadge("Info", JIcon.INFO)
+                .addClass("badge-info")
+        );
+        
+        // Notification count
+        JBadge count = new JBadge("5")
+            .addClass("badge-danger", "badge-circle");
+        
+        container.getChildren().addAll(
+            statusRow, lightRow, sizeRow, iconRow, count
+        );
+    }
+}
+```
+
+## Notes
+
+- The default style is `badge-primary` (blue)
+- Adding a new color variant automatically removes the previous one
+- Size and shape modifiers can be combined with any color variant
+- Icons are automatically styled to match the badge's text color
+- The badge extends JavaFX's standard `Label`, so all standard Label methods are available

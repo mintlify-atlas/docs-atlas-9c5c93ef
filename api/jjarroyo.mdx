@@ -1,0 +1,146 @@
+---
+title: "JJArroyo"
+description: "Core initialization class for the JJArroyo JavaFX Theme library"
+icon: "palette"
+---
+
+## Overview
+
+The `JJArroyo` class is the main entry point for the JJArroyo Theme library. Use this class to initialize the theme and configure global settings for your JavaFX application.
+
+## Package
+
+```java
+com.jjarroyo.JJArroyo
+```
+
+## Methods
+
+### init
+
+Initializes the JJArroyo theme for a JavaFX Scene. This method loads the main stylesheet (`jjarroyo-theme.css`) and applies it to your scene.
+
+<ParamField path="scene" type="Scene" required>
+  The JavaFX Scene to apply the theme to. Cannot be null.
+</ParamField>
+
+<ResponseField name="throws" type="IllegalArgumentException">
+  If the scene parameter is null
+</ResponseField>
+
+```java
+public static void init(Scene scene)
+```
+
+#### Example
+
+```java
+import com.jjarroyo.JJArroyo;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class MyApp extends Application {
+    @Override
+    public void start(Stage stage) {
+        VBox root = new VBox();
+        Scene scene = new Scene(root, 800, 600);
+        
+        // Initialize the JJArroyo theme
+        JJArroyo.init(scene);
+        
+        stage.setScene(scene);
+        stage.show();
+    }
+}
+```
+
+### setModalContainer
+
+Sets the container where modal dialogs will be displayed. This is required if you plan to use the `JModal` component.
+
+<ParamField path="container" type="StackPane" required>
+  The StackPane to use as the modal root container
+</ParamField>
+
+```java
+public static void setModalContainer(javafx.scene.layout.StackPane container)
+```
+
+#### Example
+
+```java
+import com.jjarroyo.JJArroyo;
+import javafx.scene.layout.StackPane;
+
+StackPane modalContainer = new StackPane();
+JJArroyo.setModalContainer(modalContainer);
+```
+
+### getModalContainer
+
+Retrieves the currently registered modal container.
+
+<ResponseField name="return" type="StackPane">
+  The modal container StackPane, or null if not set
+</ResponseField>
+
+```java
+public static javafx.scene.layout.StackPane getModalContainer()
+```
+
+#### Example
+
+```java
+StackPane container = JJArroyo.getModalContainer();
+if (container != null) {
+    // Modal container is configured
+}
+```
+
+## Complete Setup Example
+
+```java
+import com.jjarroyo.JJArroyo;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
+public class MyApplication extends Application {
+    @Override
+    public void start(Stage stage) {
+        // Create the root layout
+        BorderPane root = new BorderPane();
+        
+        // Create a StackPane for modals
+        StackPane modalContainer = new StackPane();
+        modalContainer.getChildren().add(root);
+        
+        // Create the scene
+        Scene scene = new Scene(modalContainer, 1024, 768);
+        
+        // Initialize JJArroyo theme
+        JJArroyo.init(scene);
+        
+        // Set modal container
+        JJArroyo.setModalContainer(modalContainer);
+        
+        stage.setTitle("My JJArroyo App");
+        stage.setScene(scene);
+        stage.show();
+    }
+    
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+```
+
+## Notes
+
+- Always call `JJArroyo.init()` before displaying your scene to ensure styles are properly applied
+- The theme stylesheet is only added once, even if you call `init()` multiple times on the same scene
+- Set the modal container early in your application lifecycle if you plan to use modal dialogs

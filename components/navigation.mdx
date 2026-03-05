@@ -1,0 +1,448 @@
+---
+title: Navigation
+description: Navigate your app with JBreadcrumb, JPagination, JTabs, and JSidebar
+icon: compass
+---
+
+## JBreadcrumb
+
+Breadcrumb navigation component for showing the current page location.
+
+### Basic Usage
+
+```java
+JBreadcrumb breadcrumb = new JBreadcrumb();
+breadcrumb.addItem("Home", () -> navigate("/home"));
+breadcrumb.addItem("Products", () -> navigate("/products"));
+breadcrumb.addItem("Laptops"); // Current page (no action)
+```
+
+### With Icons
+
+```java
+JBreadcrumb breadcrumb = new JBreadcrumb();
+breadcrumb.addItem("Dashboard", JIcon.HOME.view(), () -> navigate("/"));
+breadcrumb.addItem("Settings", JIcon.SETTINGS.view(), () -> navigate("/settings"));
+breadcrumb.addItem("Profile"); // Active item
+```
+
+### Custom Separator
+
+```java
+JBreadcrumb breadcrumb = new JBreadcrumb();
+breadcrumb.setSeparator(">");
+// or
+breadcrumb.setSeparator("•");
+
+breadcrumb.addItem("Docs", () -> navigate("/docs"));
+breadcrumb.addItem("Components", () -> navigate("/docs/components"));
+breadcrumb.addItem("Breadcrumb");
+```
+
+### Active Color
+
+```java
+JBreadcrumb breadcrumb = new JBreadcrumb();
+breadcrumb.setActiveColor("primary"); // primary, success, danger, warning, info
+
+breadcrumb.addItem("Home", () -> navigate("/"));
+breadcrumb.addItem("Current Page");
+```
+
+### Dynamic Path
+
+```java
+JBreadcrumb breadcrumb = new JBreadcrumb();
+breadcrumb.setPath("Home", "Products", "Electronics", "Laptops");
+
+// Update dynamically
+breadcrumb.clear();
+breadcrumb.setPath("Home", "Services", "Consulting");
+```
+
+### API Reference
+
+<ParamField path="addItem(String, Runnable)" type="JBreadcrumb">
+  Add a clickable breadcrumb item
+</ParamField>
+
+<ParamField path="addItem(String)" type="JBreadcrumb">
+  Add the active/current item (non-clickable)
+</ParamField>
+
+<ParamField path="addItem(String, Node, Runnable)" type="JBreadcrumb">
+  Add item with icon and action
+</ParamField>
+
+<ParamField path="setSeparator(String)" type="JBreadcrumb">
+  Set separator character (default: "/")
+</ParamField>
+
+<ParamField path="setActiveColor(String)" type="JBreadcrumb">
+  Set color variant for active item
+</ParamField>
+
+<ParamField path="clear()" type="JBreadcrumb">
+  Remove all items
+</ParamField>
+
+<ParamField path="setPath(String...)" type="JBreadcrumb">
+  Set all breadcrumb items at once
+</ParamField>
+
+---
+
+## JPagination
+
+Pagination control for navigating through pages.
+
+### Basic Usage
+
+```java
+JPagination pagination = new JPagination();
+pagination.totalPagesProperty().set(10);
+pagination.currentPageProperty().set(1);
+
+pagination.setOnPageChange(() -> {
+    int currentPage = pagination.currentPageProperty().get();
+    System.out.println("Page: " + currentPage);
+    loadPage(currentPage);
+});
+```
+
+### With Table
+
+```java
+JTable<Item> table = new JTable<>();
+JPagination pagination = table.getPagination();
+
+// Pagination is automatically managed by JTable
+table.setItemsPerPage(25);
+table.setItems(data);
+```
+
+### Custom Page Range
+
+```java
+JPagination pagination = new JPagination();
+
+// Automatically shows ellipsis for large page counts
+pagination.totalPagesProperty().set(100);
+pagination.currentPageProperty().set(50);
+
+// Shows: < 1 ... 49 50 51 ... 100 >
+```
+
+### API Reference
+
+<ParamField path="currentPageProperty()" type="IntegerProperty">
+  Current page number (1-indexed)
+</ParamField>
+
+<ParamField path="totalPagesProperty()" type="IntegerProperty">
+  Total number of pages
+</ParamField>
+
+<ParamField path="setOnPageChange(Runnable)" type="void">
+  Callback when page changes
+</ParamField>
+
+---
+
+## JTabs
+
+Tabbed navigation with multiple styles and positions.
+
+### Basic Usage
+
+```java
+JTabs tabs = new JTabs();
+
+JTab tab1 = new JTab("Profile", new VBox(new Label("Profile Content")));
+JTab tab2 = new JTab("Settings", new VBox(new Label("Settings Content")));
+JTab tab3 = new JTab("Notifications", new VBox(new Label("Notifications")));
+
+tabs.getTabs().addAll(tab1, tab2, tab3);
+```
+
+### Tab Styles
+
+```java
+JTabs tabs = new JTabs();
+
+// Line style (default)
+tabs.setTabStyle(JTabs.TabStyle.LINE);
+
+// Pills style
+tabs.setTabStyle(JTabs.TabStyle.PILLS);
+
+tabs.getTabs().addAll(tab1, tab2, tab3);
+```
+
+### Tab Positions
+
+```java
+JTabs tabs = new JTabs();
+
+// Position tabs
+tabs.setSide(Side.TOP);    // Default
+tabs.setSide(Side.BOTTOM);
+tabs.setSide(Side.LEFT);
+tabs.setSide(Side.RIGHT);
+
+tabs.getTabs().addAll(tab1, tab2, tab3);
+```
+
+### Tabs with Descriptions
+
+```java
+JTab tab1 = new JTab();
+tab1.setTitle("Overview");
+tab1.setDescription("General information");
+tab1.setContent(overviewContent);
+
+JTab tab2 = new JTab();
+tab2.setTitle("Analytics");
+tab2.setDescription("Performance metrics");
+tab2.setContent(analyticsContent);
+
+JTabs tabs = new JTabs();
+tabs.getTabs().addAll(tab1, tab2);
+```
+
+### Tabs with Icons
+
+```java
+JTab tab1 = new JTab("Home", homeContent);
+tab1.setGraphic(JIcon.HOME.view());
+
+JTab tab2 = new JTab("Profile", profileContent);
+tab2.setGraphic(JIcon.USER.view());
+
+JTab tab3 = new JTab("Settings", settingsContent);
+tab3.setGraphic(JIcon.SETTINGS.view());
+
+JTabs tabs = new JTabs();
+tabs.getTabs().addAll(tab1, tab2, tab3);
+```
+
+### Programmatic Selection
+
+```java
+JTabs tabs = new JTabs();
+JTab profileTab = new JTab("Profile", profileContent);
+JTab settingsTab = new JTab("Settings", settingsContent);
+
+tabs.getTabs().addAll(profileTab, settingsTab);
+
+// Select a specific tab
+tabs.selectTab(settingsTab);
+```
+
+### Disabled Tabs
+
+```java
+JTab tab1 = new JTab("Active", content1);
+
+JTab tab2 = new JTab("Disabled", content2);
+tab2.setDisable(true);
+
+tabs.getTabs().addAll(tab1, tab2);
+```
+
+### API Reference - JTabs
+
+<ParamField path="getTabs()" type="ObservableList<JTab>">
+  List of tab items
+</ParamField>
+
+<ParamField path="setTabStyle(TabStyle)" type="void">
+  Set tab style: LINE or PILLS
+</ParamField>
+
+<ParamField path="setSide(Side)" type="void">
+  Set tab position: TOP, BOTTOM, LEFT, RIGHT
+</ParamField>
+
+<ParamField path="selectTab(JTab)" type="void">
+  Programmatically select a tab
+</ParamField>
+
+### API Reference - JTab
+
+<ParamField path="setTitle(String)" type="void">
+  Set tab title
+</ParamField>
+
+<ParamField path="setDescription(String)" type="void">
+  Set tab description (subtitle)
+</ParamField>
+
+<ParamField path="setContent(Node)" type="void">
+  Set tab content panel
+</ParamField>
+
+<ParamField path="setGraphic(Node)" type="void">
+  Set tab icon
+</ParamField>
+
+<ParamField path="setDisable(Boolean)" type="void">
+  Enable or disable the tab
+</ParamField>
+
+---
+
+## JSidebar
+
+Collapsible sidebar navigation with header, items, and footer.
+
+### Basic Usage
+
+```java
+JSidebar sidebar = new JSidebar();
+
+JSidebarItem home = new JSidebarItem("Home", JIcon.HOME.view());
+home.setAction(() -> navigate("/home"));
+
+JSidebarItem projects = new JSidebarItem("Projects", JIcon.FOLDER.view());
+projects.setAction(() -> navigate("/projects"));
+
+JSidebarItem settings = new JSidebarItem("Settings", JIcon.SETTINGS.view());
+settings.setAction(() -> navigate("/settings"));
+
+sidebar.getItems().addAll(home, projects, settings);
+```
+
+### Active State
+
+```java
+JSidebarItem home = new JSidebarItem("Home", JIcon.HOME.view());
+JSidebarItem profile = new JSidebarItem("Profile", JIcon.USER.view());
+
+home.setActive(true); // Highlight as active
+
+sidebar.getItems().addAll(home, profile);
+```
+
+### With Header
+
+```java
+JSidebar sidebar = new JSidebar();
+
+// Custom header
+VBox header = new VBox(10);
+header.setAlignment(Pos.CENTER);
+header.setPadding(new Insets(20));
+
+Label logo = new Label("MyApp");
+logo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+header.getChildren().add(logo);
+
+sidebar.setHeader(header);
+sidebar.getItems().addAll(item1, item2, item3);
+```
+
+### With Footer
+
+```java
+JSidebar sidebar = new JSidebar();
+
+// Footer with user profile
+HBox footer = new HBox(10);
+footer.setAlignment(Pos.CENTER_LEFT);
+footer.setPadding(new Insets(15));
+
+JAvatar avatar = new JAvatar("JD");
+Label userName = new Label("John Doe");
+footer.getChildren().addAll(avatar, userName);
+
+sidebar.setFooter(footer);
+```
+
+### Collapse Modes
+
+```java
+JSidebar sidebar = new JSidebar();
+
+// Compact mode: Shows only icons when collapsed
+sidebar.setCollapseMode(JSidebar.CollapseMode.COMPACT);
+
+// Hidden mode: Completely hides sidebar when collapsed
+sidebar.setCollapseMode(JSidebar.CollapseMode.HIDDEN);
+
+// Toggle collapsed state
+sidebar.setExpanded(false);
+```
+
+### Variants
+
+```java
+JSidebar sidebar = new JSidebar();
+
+// Dark variant (default)
+sidebar.setVariant(JSidebar.SidebarVariant.DEFAULT);
+
+// Light variant
+sidebar.setVariant(JSidebar.SidebarVariant.LIGHT);
+```
+
+### Programmatic Control
+
+```java
+JSidebar sidebar = new JSidebar();
+
+// Expand/collapse
+sidebar.setExpanded(false);
+
+// Bind to property
+CheckBox toggle = new CheckBox("Expand Sidebar");
+toggle.selectedProperty().bindBidirectional(sidebar.expandedProperty());
+```
+
+### API Reference - JSidebar
+
+<ParamField path="getItems()" type="ObservableList<Node>">
+  List of sidebar items
+</ParamField>
+
+<ParamField path="setHeader(Node)" type="void">
+  Set custom header content
+</ParamField>
+
+<ParamField path="setFooter(Node)" type="void">
+  Set custom footer content
+</ParamField>
+
+<ParamField path="setExpanded(boolean)" type="void">
+  Expand or collapse sidebar
+</ParamField>
+
+<ParamField path="setCollapseMode(CollapseMode)" type="void">
+  Set collapse behavior: COMPACT or HIDDEN
+</ParamField>
+
+<ParamField path="setVariant(SidebarVariant)" type="void">
+  Set color theme: DEFAULT or LIGHT
+</ParamField>
+
+<ParamField path="expandedProperty()" type="BooleanProperty">
+  Sidebar expanded state property
+</ParamField>
+
+### API Reference - JSidebarItem
+
+<ParamField path="setAction(Runnable)" type="void">
+  Set click action handler
+</ParamField>
+
+<ParamField path="setActive(boolean)" type="void">
+  Set active/selected state
+</ParamField>
+
+<ParamField path="setIcon(Node)" type="void">
+  Set item icon
+</ParamField>
+
+<ParamField path="activeProperty()" type="BooleanProperty">
+  Active state property
+</ParamField>

@@ -1,0 +1,410 @@
+---
+title: JNumberInput
+description: A numeric input component with increment and decrement buttons
+icon: hashtag
+---
+
+## Overview
+
+`JNumberInput` is a numeric input component with integrated increment (+) and decrement (−) buttons. It extends `HBox` and provides number validation, min/max constraints, step control, and integer-only mode.
+
+## Constructor
+
+<ParamField path="JNumberInput()" type="constructor">
+  Creates a new JNumberInput with default value of 0.
+  
+  ```java
+  JNumberInput numberInput = new JNumberInput();
+  ```
+</ParamField>
+
+## Methods
+
+### Value Management
+
+<ParamField path="getValue()" type="double">
+  Gets the current numeric value.
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="double">
+      The current numeric value
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  double currentValue = numberInput.getValue();
+  ```
+</ParamField>
+
+<ParamField path="setValue(double value)" type="JNumberInput">
+  Sets the numeric value. The value is automatically clamped between min and max.
+  
+  <Expandable title="parameters">
+    <ResponseField name="value" type="double">
+      The new value to set
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="JNumberInput">
+      Returns this instance for method chaining
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  numberInput.setValue(42);
+  ```
+</ParamField>
+
+### Constraints
+
+<ParamField path="setMin(double min)" type="JNumberInput">
+  Sets the minimum allowed value. If the current value is less than min, it will be set to min.
+  
+  <Expandable title="parameters">
+    <ResponseField name="min" type="double">
+      The minimum value (default: Double.NEGATIVE_INFINITY)
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="JNumberInput">
+      Returns this instance for method chaining
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  numberInput.setMin(0); // No negative values
+  ```
+</ParamField>
+
+<ParamField path="setMax(double max)" type="JNumberInput">
+  Sets the maximum allowed value. If the current value exceeds max, it will be set to max.
+  
+  <Expandable title="parameters">
+    <ResponseField name="max" type="double">
+      The maximum value (default: Double.POSITIVE_INFINITY)
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="JNumberInput">
+      Returns this instance for method chaining
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  numberInput.setMax(100); // Cap at 100
+  ```
+</ParamField>
+
+<ParamField path="setStep(double step)" type="JNumberInput">
+  Sets the increment/decrement step size.
+  
+  <Expandable title="parameters">
+    <ResponseField name="step" type="double">
+      The amount to add/subtract when using buttons (default: 1)
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="JNumberInput">
+      Returns this instance for method chaining
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  numberInput.setStep(0.5); // Increment by 0.5
+  ```
+</ParamField>
+
+### Formatting
+
+<ParamField path="setIntegerOnly(boolean integerOnly)" type="JNumberInput">
+  Sets whether to display and accept only integer values.
+  
+  <Expandable title="parameters">
+    <ResponseField name="integerOnly" type="boolean">
+      True for integer mode, false for decimal mode (default: true)
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="JNumberInput">
+      Returns this instance for method chaining
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  numberInput.setIntegerOnly(false); // Allow decimals
+  ```
+</ParamField>
+
+### Event Handling
+
+<ParamField path="setOnValueChanged(Consumer&lt;Double&gt; callback)" type="JNumberInput">
+  Sets a callback to be invoked whenever the value changes (via buttons or manual input).
+  
+  <Expandable title="parameters">
+    <ResponseField name="callback" type="Consumer&lt;Double&gt;">
+      The callback function that receives the new value
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="JNumberInput">
+      Returns this instance for method chaining
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  numberInput.setOnValueChanged(value -> {
+      System.out.println("Value changed to: " + value);
+  });
+  ```
+</ParamField>
+
+### Additional Configuration
+
+<ParamField path="setPlaceholder(String placeholder)" type="JNumberInput">
+  Sets the placeholder text for the input field.
+  
+  <Expandable title="parameters">
+    <ResponseField name="placeholder" type="String">
+      The placeholder text to display when empty
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="JNumberInput">
+      Returns this instance for method chaining
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  numberInput.setPlaceholder("Enter quantity");
+  ```
+</ParamField>
+
+<ParamField path="setNumberDisabled(boolean disabled)" type="JNumberInput">
+  Enables or disables the entire input component.
+  
+  <Expandable title="parameters">
+    <ResponseField name="disabled" type="boolean">
+      True to disable, false to enable
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="JNumberInput">
+      Returns this instance for method chaining
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  numberInput.setNumberDisabled(true);
+  ```
+</ParamField>
+
+<ParamField path="getTextField()" type="TextField">
+  Gets the internal TextField for advanced customization.
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="TextField">
+      The internal TextField component
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  TextField field = numberInput.getTextField();
+  field.setPrefWidth(150);
+  ```
+</ParamField>
+
+## Style Classes
+
+<ResponseField name="j-number-input" type="CSS class">
+  Applied to the root HBox container
+</ResponseField>
+
+<ResponseField name="j-number-btn" type="CSS class">
+  Applied to both increment and decrement buttons
+</ResponseField>
+
+<ResponseField name="j-number-btn-left" type="CSS class">
+  Applied to the decrement button (−)
+</ResponseField>
+
+<ResponseField name="j-number-btn-right" type="CSS class">
+  Applied to the increment button (+)
+</ResponseField>
+
+<ResponseField name="j-number-field" type="CSS class">
+  Applied to the internal TextField
+</ResponseField>
+
+## Input Validation
+
+The component automatically validates input:
+
+- Only numeric characters, decimal points, and minus signs are allowed
+- Non-numeric characters are automatically filtered out
+- On focus lost or Enter press, the value is clamped to min/max range
+- Invalid input reverts to the last valid value
+
+## Usage Examples
+
+### Basic Quantity Input
+
+```java
+import com.jjarroyo.components.JNumberInput;
+
+public class QuantityExample {
+    public JNumberInput createQuantityInput() {
+        JNumberInput quantityInput = new JNumberInput();
+        quantityInput.setValue(1)
+                     .setMin(1)
+                     .setMax(100)
+                     .setStep(1)
+                     .setPlaceholder("Qty")
+                     .setOnValueChanged(value -> {
+                         updateTotal((int) value.doubleValue());
+                     });
+        
+        return quantityInput;
+    }
+    
+    private void updateTotal(int quantity) {
+        System.out.println("Quantity: " + quantity);
+    }
+}
+```
+
+### Price Input with Decimals
+
+```java
+import com.jjarroyo.components.JNumberInput;
+
+public class PriceExample {
+    public JNumberInput createPriceInput() {
+        JNumberInput priceInput = new JNumberInput();
+        priceInput.setValue(0.00)
+                  .setMin(0)
+                  .setMax(9999.99)
+                  .setStep(0.01)
+                  .setIntegerOnly(false)
+                  .setPlaceholder("0.00")
+                  .setOnValueChanged(price -> {
+                      System.out.printf("Price: $%.2f%n", price);
+                  });
+        
+        return priceInput;
+    }
+}
+```
+
+### Age Input
+
+```java
+import com.jjarroyo.components.JNumberInput;
+import javafx.scene.layout.HBox;
+import javafx.scene.control.Label;
+
+public class AgeExample {
+    public HBox createAgeInput() {
+        HBox container = new HBox(10);
+        
+        Label label = new Label("Age:");
+        
+        JNumberInput ageInput = new JNumberInput();
+        ageInput.setValue(18)
+                .setMin(0)
+                .setMax(120)
+                .setStep(1)
+                .setOnValueChanged(age -> {
+                    validateAge(age.intValue());
+                });
+        
+        container.getChildren().addAll(label, ageInput);
+        return container;
+    }
+    
+    private void validateAge(int age) {
+        if (age < 18) {
+            System.out.println("User is a minor");
+        } else {
+            System.out.println("User is an adult");
+        }
+    }
+}
+```
+
+### Temperature Input
+
+```java
+import com.jjarroyo.components.JNumberInput;
+
+public class TemperatureExample {
+    public JNumberInput createTemperatureInput() {
+        JNumberInput tempInput = new JNumberInput();
+        tempInput.setValue(20)
+                 .setMin(-50)
+                 .setMax(50)
+                 .setStep(0.5)
+                 .setIntegerOnly(false)
+                 .setPlaceholder("°C")
+                 .setOnValueChanged(temp -> {
+                     System.out.println("Temperature: " + temp + "°C");
+                 });
+        
+        return tempInput;
+    }
+}
+```
+
+### Disabled State
+
+```java
+JNumberInput numberInput = new JNumberInput();
+numberInput.setValue(50)
+           .setMin(0)
+           .setMax(100)
+           .setNumberDisabled(true); // Disabled state
+```
+
+## Behavior Details
+
+### Increment Button
+
+- Adds the `step` value to the current value
+- Respects the `max` constraint
+- Fires the `onValueChanged` callback if the value changes
+
+### Decrement Button
+
+- Subtracts the `step` value from the current value
+- Respects the `min` constraint
+- Fires the `onValueChanged` callback if the value changes
+
+### Manual Input
+
+- Users can type directly into the text field
+- Non-numeric characters are automatically filtered
+- Value is validated and clamped on Enter or focus loss
+- Invalid input reverts to the previous valid value
+
+### Value Clamping
+
+All values are automatically clamped to the min/max range:
+
+```java
+numberInput.setMin(0).setMax(10);
+numberInput.setValue(15);  // Automatically becomes 10
+numberInput.setValue(-5);  // Automatically becomes 0
+```
+
+## See Also
+
+- [JInput](/api/components/jinput) - Basic text input
+- [JSearchInput](/api/components/jsearchinput) - Search input with autocomplete
+- [JSelect](/api/components/jselect) - Dropdown select component

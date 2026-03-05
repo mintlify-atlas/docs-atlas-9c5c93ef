@@ -1,0 +1,212 @@
+---
+title: JToast
+description: Toast notification component for displaying temporary messages
+---
+
+A toast notification component that displays temporary messages in a popup overlay, automatically disappearing after a set duration.
+
+## Constructor
+
+<ParamField path="JToast()" type="constructor">
+  Creates a new toast notification.
+</ParamField>
+
+## Enums
+
+### Type
+
+Defines the toast notification type:
+- `DEFAULT` - Default toast style
+- `SUCCESS` - Success message (green)
+- `DANGER` - Error message (red)
+- `WARNING` - Warning message (yellow/orange)
+- `INFO` - Information message (blue)
+
+### Position
+
+Defines where the toast appears:
+- `TOP_RIGHT` - Top right corner
+- `TOP_LEFT` - Top left corner
+- `BOTTOM_RIGHT` - Bottom right corner
+- `BOTTOM_LEFT` - Bottom left corner
+- `TOP_CENTER` - Top center
+- `BOTTOM_CENTER` - Bottom center
+
+## Methods
+
+<ParamField path="show(Window owner, String title, String message, Type type, Position position, Duration duration)" type="void">
+  Displays the toast notification.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="owner" type="Window" required>
+      The parent window for positioning
+    </ResponseField>
+    <ResponseField name="title" type="String">
+      Optional title text (can be null)
+    </ResponseField>
+    <ResponseField name="message" type="String" required>
+      The message text to display
+    </ResponseField>
+    <ResponseField name="type" type="Type" required>
+      The toast type (DEFAULT, SUCCESS, DANGER, WARNING, INFO)
+    </ResponseField>
+    <ResponseField name="position" type="Position" required>
+      Where to display the toast
+    </ResponseField>
+    <ResponseField name="duration" type="Duration" required>
+      How long to display the toast (null for persistent)
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="show(Window owner)" type="void">
+  Shows a toast with previously configured pending values.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="owner" type="Window" required>
+      The parent window for positioning
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Static Helper Methods
+
+<ParamField path="JToast.show(Window owner, String message, Type type, Position pos, int durationMillis)" type="void" static>
+  Quick static method to show a toast without title.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="owner" type="Window" required>
+      The parent window
+    </ResponseField>
+    <ResponseField name="message" type="String" required>
+      The message text
+    </ResponseField>
+    <ResponseField name="type" type="Type" required>
+      The toast type
+    </ResponseField>
+    <ResponseField name="pos" type="Position" required>
+      The position
+    </ResponseField>
+    <ResponseField name="durationMillis" type="int" required>
+      Duration in milliseconds
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="JToast.show(Window owner, String title, String message, Type type, Position pos, int durationMillis)" type="void" static>
+  Quick static method to show a toast with title.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="owner" type="Window" required>
+      The parent window
+    </ResponseField>
+    <ResponseField name="title" type="String" required>
+      The title text
+    </ResponseField>
+    <ResponseField name="message" type="String" required>
+      The message text
+    </ResponseField>
+    <ResponseField name="type" type="Type" required>
+      The toast type
+    </ResponseField>
+    <ResponseField name="pos" type="Position" required>
+      The position
+    </ResponseField>
+    <ResponseField name="durationMillis" type="int" required>
+      Duration in milliseconds
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="JToast.make(String title, String message, Type type, int durationMillis)" type="JToast" static>
+  Factory method for creating a toast with chaining support.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="title" type="String">
+      The title text
+    </ResponseField>
+    <ResponseField name="message" type="String" required>
+      The message text
+    </ResponseField>
+    <ResponseField name="type" type="Type" required>
+      The toast type
+    </ResponseField>
+    <ResponseField name="durationMillis" type="int" required>
+      Duration in milliseconds
+    </ResponseField>
+  </Expandable>
+  
+  <ResponseField name="returns" type="JToast">
+    A configured JToast instance ready to show
+  </ResponseField>
+</ParamField>
+
+## Usage Examples
+
+### Static Quick Usage
+
+```java
+// Simple toast
+JToast.show(window, "Changes saved!", 
+    JToast.Type.SUCCESS, 
+    JToast.Position.BOTTOM_RIGHT, 
+    3000);
+
+// Toast with title
+JToast.show(window, "Error", "Failed to save changes", 
+    JToast.Type.DANGER, 
+    JToast.Position.TOP_CENTER, 
+    5000);
+```
+
+### Instance Usage
+
+```java
+JToast toast = new JToast();
+toast.show(window, 
+    "Success", 
+    "Your profile has been updated", 
+    JToast.Type.SUCCESS, 
+    JToast.Position.BOTTOM_RIGHT, 
+    Duration.millis(3000));
+```
+
+### Factory Method with Chaining
+
+```java
+JToast.make("Info", "New messages available", 
+    JToast.Type.INFO, 4000)
+    .show(window);
+```
+
+### Persistent Toast
+
+```java
+// Pass null duration for a toast that doesn't auto-close
+JToast toast = new JToast();
+toast.show(window, null, "Click X to close", 
+    JToast.Type.DEFAULT, 
+    JToast.Position.TOP_RIGHT, 
+    null);
+```
+
+## Features
+
+- Auto-close with configurable duration
+- Manual close button (X)
+- Multiple position options
+- Type-based styling (success, danger, warning, info)
+- Optional title
+- Smooth fade-in animation
+- Non-blocking overlay
+
+## Style Classes
+
+- `.j-toast` - Main container
+- `.j-toast-success` - Success variant
+- `.j-toast-danger` - Danger variant
+- `.j-toast-warning` - Warning variant
+- `.j-toast-info` - Info variant
+- `.j-toast-title` - Title label
+- `.j-toast-message` - Message label
+- `.j-toast-close` - Close button

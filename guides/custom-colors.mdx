@@ -1,0 +1,429 @@
+---
+title: Custom Colors
+description: Customize the JJArroyo color palette to match your brand
+icon: palette
+---
+
+## Overview
+
+JJArroyo's color system is built on CSS variables, making it easy to customize the entire color palette to match your brand. You can override individual colors or entire color scales.
+
+## Understanding the Color System
+
+The color system has three layers:
+
+<Steps>
+  <Step title="Base Palette">
+    Raw color values organized by hue (blue, slate, emerald, red, amber, violet)
+  </Step>
+  
+  <Step title="Semantic Tokens">
+    Purpose-based tokens like `-color-text-primary` and `-color-bg-surface`
+  </Step>
+  
+  <Step title="Component Styles">
+    Component-specific styles that use semantic tokens
+  </Step>
+</Steps>
+
+<Info>
+  By customizing the base palette, semantic tokens and components automatically inherit your brand colors.
+</Info>
+
+## Default Color Palette
+
+JJArroyo uses the following color scales:
+
+<AccordionGroup>
+  <Accordion title="Primary (Blue) - #2563eb">
+    ```css
+    -color-primary-50: #eff6ff
+    -color-primary-100: #dbeafe
+    -color-primary-200: #bfdbfe
+    -color-primary-300: #60a5fa
+    -color-primary-500: #3b82f6
+    -color-primary-600: #2563eb  /* Main brand color */
+    -color-primary-700: #1d4ed8
+    -color-primary: -color-primary-600  /* Alias */
+    ```
+  </Accordion>
+  
+  <Accordion title="Success (Emerald) - #059669">
+    ```css
+    -color-success-50: #ecfdf5
+    -color-success-100: #d1fae5
+    -color-success-200: #a7f3d0
+    -color-success-500: #10b981
+    -color-success-600: #059669
+    -color-success-700: #047857
+    ```
+  </Accordion>
+  
+  <Accordion title="Danger (Red) - #dc2626">
+    ```css
+    -color-danger-50: #fef2f2
+    -color-danger-100: #fee2e2
+    -color-danger-200: #fecaca
+    -color-danger-500: #ef4444
+    -color-danger-600: #dc2626
+    -color-danger-700: #b91c1c
+    ```
+  </Accordion>
+  
+  <Accordion title="Warning (Amber) - #d97706">
+    ```css
+    -color-warning-50: #fffbeb
+    -color-warning-200: #fde68a
+    -color-warning-500: #f59e0b
+    -color-warning-600: #d97706
+    -color-warning-700: #b45309
+    ```
+  </Accordion>
+  
+  <Accordion title="Info (Violet) - #7c3aed">
+    ```css
+    -color-info-50: #f5f3ff
+    -color-info-100: #ede9fe
+    -color-info-200: #ddd6fe
+    -color-info-500: #8b5cf6
+    -color-info-600: #7c3aed
+    -color-info-700: #6d28d9
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Customizing Colors
+
+There are three ways to customize colors:
+
+### 1. Override CSS Variables
+
+Create a custom stylesheet that overrides the default color variables:
+
+```css custom-colors.css
+.root {
+    /* Override primary color to use your brand color */
+    -color-primary-50: #f0f9ff;
+    -color-primary-100: #e0f2fe;
+    -color-primary-200: #bae6fd;
+    -color-primary-300: #7dd3fc;
+    -color-primary-500: #0ea5e9;
+    -color-primary-600: #0284c7;  /* Your brand color */
+    -color-primary-700: #0369a1;
+    -color-primary: -color-primary-600;
+    
+    /* Override success color */
+    -color-success-500: #22c55e;
+    -color-success-600: #16a34a;
+    -color-success-700: #15803d;
+}
+```
+
+Then load it after initializing the theme:
+
+```java
+import javafx.scene.Scene;
+import com.jjarroyo.JJArroyo;
+
+Scene scene = new Scene(root, 800, 600);
+JJArroyo.init(scene);
+
+// Load custom colors
+scene.getStylesheets().add(
+    getClass().getResource("/styles/custom-colors.css").toExternalForm()
+);
+```
+
+<Warning>
+  Make sure to load your custom stylesheet **after** calling `JJArroyo.init()` so your styles override the defaults.
+</Warning>
+
+### 2. Inline Styles on Root
+
+For quick testing or simple apps, you can set colors directly on the root node:
+
+```java
+import javafx.scene.layout.StackPane;
+
+StackPane root = new StackPane();
+root.setStyle(
+    "-color-primary-600: #0284c7; " +
+    "-color-primary: -color-primary-600; " +
+    "-color-success-600: #16a34a;"
+);
+```
+
+### 3. Complete Palette Replacement
+
+For a full brand transformation, replace entire color scales:
+
+```css brand-theme.css
+.root {
+    /* Brand Purple as Primary */
+    -color-primary-50: #faf5ff;
+    -color-primary-100: #f3e8ff;
+    -color-primary-200: #e9d5ff;
+    -color-primary-300: #d8b4fe;
+    -color-primary-500: #a855f7;
+    -color-primary-600: #9333ea;  /* Main brand color */
+    -color-primary-700: #7e22ce;
+    -color-primary: -color-primary-600;
+    
+    /* Brand Teal as Success */
+    -color-success-50: #f0fdfa;
+    -color-success-100: #ccfbf1;
+    -color-success-200: #99f6e4;
+    -color-success-500: #14b8a6;
+    -color-success-600: #0d9488;
+    -color-success-700: #0f766e;
+    
+    /* Brand Orange as Warning */
+    -color-warning-50: #fff7ed;
+    -color-warning-200: #fed7aa;
+    -color-warning-500: #f97316;
+    -color-warning-600: #ea580c;
+    -color-warning-700: #c2410c;
+}
+```
+
+## Customizing Semantic Tokens
+
+You can also customize semantic tokens to change how colors are applied throughout the UI:
+
+```css
+.root {
+    /* Make surfaces slightly tinted */
+    -color-bg-surface: #fefbff;  /* Light purple tint */
+    
+    /* Increase text contrast */
+    -color-text-primary: #1a1a1a;
+    -color-text-secondary: #4a4a4a;
+    
+    /* Colorful borders */
+    -color-border-highlight: -color-primary-400;
+}
+```
+
+## Dark Mode Considerations
+
+When customizing colors, remember to provide dark mode variants:
+
+```css
+.root {
+    /* Light mode */
+    -color-primary-600: #9333ea;
+}
+
+.root.dark {
+    /* Dark mode - use lighter shade for better contrast */
+    -color-primary-600: #a855f7;
+    -color-border-highlight: -color-primary-400;
+}
+```
+
+<Tip>
+  In dark mode, you may need to use lighter shades of your brand color for better visibility.
+</Tip>
+
+## Color Scale Generation
+
+To create a complete color scale (50-900) from a single brand color, you can use tools like:
+
+- [Tailwind Color Shades Generator](https://uicolors.app/create)
+- [Coolors Palette Generator](https://coolors.co/)
+- [Adobe Color](https://color.adobe.com/)
+
+<Steps>
+  <Step title="Choose Your Brand Color">
+    Start with your primary brand color (typically 500 or 600 shade)
+  </Step>
+  
+  <Step title="Generate Scale">
+    Use a tool to generate lighter and darker shades
+  </Step>
+  
+  <Step title="Test Contrast">
+    Ensure text has sufficient contrast on colored backgrounds
+  </Step>
+  
+  <Step title="Apply to Theme">
+    Update your CSS variables with the new scale
+  </Step>
+</Steps>
+
+## Component-Specific Colors
+
+Some components use specific color variables:
+
+### Buttons
+
+```css
+/* Primary button uses -color-primary-600 */
+.button.primary {
+    -fx-background-color: -color-primary-600;
+}
+
+.button.primary:hover {
+    -fx-background-color: -color-primary-700;
+}
+```
+
+To customize button colors:
+
+```css
+.root {
+    -color-primary-600: #9333ea;  /* Changes all primary buttons */
+}
+```
+
+### Alerts & Toasts
+
+```css
+/* Success alert uses success color scale */
+.alert.success {
+    -fx-background-color: -color-success-50;
+    -fx-border-color: -color-success-200;
+    -fx-text-fill: -color-success-700;
+}
+```
+
+### Badges
+
+```css
+/* Badge variants use their respective color scales */
+.badge.primary {
+    -fx-background-color: -color-primary-100;
+    -fx-text-fill: -color-primary-700;
+}
+```
+
+## Example: Complete Brand Theme
+
+Here's a complete example of customizing JJArroyo for a brand:
+
+<CodeGroup>
+```css acme-theme.css
+/* ACME Corp Brand Theme */
+.root {
+    /* Brand Purple */
+    -color-primary-50: #faf5ff;
+    -color-primary-100: #f3e8ff;
+    -color-primary-200: #e9d5ff;
+    -color-primary-300: #d8b4fe;
+    -color-primary-500: #a855f7;
+    -color-primary-600: #9333ea;
+    -color-primary-700: #7e22ce;
+    -color-primary: -color-primary-600;
+    
+    /* Custom semantic overrides */
+    -color-bg-body: #fafafa;
+    -color-bg-surface: #ffffff;
+    -color-text-primary: #1a1a1a;
+    
+    /* Custom font */
+    -fx-font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+.root.dark {
+    -color-primary-600: #a855f7;  /* Lighter in dark mode */
+    -color-bg-body: #0a0a0a;
+    -color-bg-surface: #1a1a1a;
+}
+```
+
+```java Application.java
+import com.jjarroyo.JJArroyo;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
+public class AcmeApp extends Application {
+    @Override
+    public void start(Stage primaryStage) {
+        StackPane root = new StackPane();
+        Scene scene = new Scene(root, 800, 600);
+        
+        // Initialize JJArroyo theme
+        JJArroyo.init(scene);
+        
+        // Apply ACME brand colors
+        scene.getStylesheets().add(
+            getClass().getResource("/styles/acme-theme.css")
+                .toExternalForm()
+        );
+        
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("ACME Corp");
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+```
+</CodeGroup>
+
+## Color Accessibility
+
+When customizing colors, ensure your theme meets accessibility standards:
+
+<AccordionGroup>
+  <Accordion title="WCAG 2.1 Contrast Requirements">
+    - **Normal text**: Minimum 4.5:1 contrast ratio
+    - **Large text** (18pt+): Minimum 3:1 contrast ratio
+    - **UI components**: Minimum 3:1 contrast ratio
+  </Accordion>
+  
+  <Accordion title="Testing Tools">
+    - [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)
+    - [Coolors Contrast Checker](https://coolors.co/contrast-checker)
+    - Chrome DevTools Color Picker
+  </Accordion>
+</AccordionGroup>
+
+<Warning>
+  Always test your custom colors for sufficient contrast, especially for text and interactive elements.
+</Warning>
+
+## Best Practices
+
+<Steps>
+  <Step title="Start with Base Colors">
+    Override base palette variables rather than semantic tokens
+  </Step>
+  
+  <Step title="Maintain Scale Consistency">
+    Ensure your custom color scales have consistent lightness progression
+  </Step>
+  
+  <Step title="Test Both Modes">
+    Verify your colors work in both light and dark modes
+  </Step>
+  
+  <Step title="Check Accessibility">
+    Ensure sufficient contrast for text and UI elements
+  </Step>
+  
+  <Step title="Document Your Palette">
+    Keep a reference of your brand colors and their usage
+  </Step>
+</Steps>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Styling Guide" icon="brush" href="/guides/styling">
+    Learn more styling techniques
+  </Card>
+  <Card title="Dark Mode" icon="moon" href="/guides/dark-mode">
+    Master dark mode implementation
+  </Card>
+  <Card title="Components" icon="grid" href="/components/buttons">
+    See how colors are used in button components
+  </Card>
+  <Card title="API Reference" icon="code" href="/api/jjarroyo">
+    Explore the complete API documentation
+  </Card>
+</CardGroup>

@@ -1,0 +1,359 @@
+---
+title: JSearchInput
+description: A search input component with autocomplete and suggestions popup
+icon: magnifying-glass
+---
+
+## Overview
+
+`JSearchInput` is a sophisticated search input component with autocomplete/suggestions functionality. It extends `HBox` and provides a search icon, text field, clear button, and a popup for displaying suggestions.
+
+## Constructor
+
+<ParamField path="JSearchInput()" type="constructor">
+  Creates a new JSearchInput with default configuration.
+  
+  ```java
+  JSearchInput searchInput = new JSearchInput();
+  ```
+</ParamField>
+
+## Methods
+
+### Configuration Methods
+
+<ParamField path="setPromptText(String text)" type="JSearchInput">
+  Sets the placeholder text for the search input.
+  
+  <Expandable title="parameters">
+    <ResponseField name="text" type="String">
+      The placeholder text to display
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="JSearchInput">
+      Returns this instance for method chaining
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  searchInput.setPromptText("Search for products...");
+  ```
+</ParamField>
+
+<ParamField path="setText(String text)" type="JSearchInput">
+  Sets the current text value of the search input.
+  
+  <Expandable title="parameters">
+    <ResponseField name="text" type="String">
+      The text to set
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="JSearchInput">
+      Returns this instance for method chaining
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  searchInput.setText("initial query");
+  ```
+</ParamField>
+
+<ParamField path="getText()" type="String">
+  Gets the current text value of the search input.
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="String">
+      The current text in the search field
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  String query = searchInput.getText();
+  ```
+</ParamField>
+
+<ParamField path="setClearable(boolean clearable)" type="JSearchInput">
+  Sets whether the clear button should be shown when text is present.
+  
+  <Expandable title="parameters">
+    <ResponseField name="clearable" type="boolean">
+      True to show clear button, false to hide it (default: true)
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="JSearchInput">
+      Returns this instance for method chaining
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  searchInput.setClearable(false);
+  ```
+</ParamField>
+
+### Suggestion Methods
+
+<ParamField path="setSuggestionProvider(provider)" type="JSearchInput">
+  Sets a dynamic suggestion provider that generates suggestions based on the current input text.
+  
+  <Expandable title="parameters">
+    <ResponseField name="provider" type="Function&lt;String, List&lt;String&gt;&gt;">
+      A function that takes the current query string and returns a list of suggestions
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="JSearchInput">
+      Returns this instance for method chaining
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  searchInput.setSuggestionProvider(query -> {
+      // Fetch suggestions from API or database
+      return productService.searchProducts(query);
+  });
+  ```
+</ParamField>
+
+<ParamField path="setSuggestions(List&lt;String&gt; staticSuggestions)" type="JSearchInput">
+  Sets a static list of suggestions that will be filtered based on the current input text.
+  
+  <Expandable title="parameters">
+    <ResponseField name="staticSuggestions" type="List&lt;String&gt;">
+      A fixed list of suggestions to filter from
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="JSearchInput">
+      Returns this instance for method chaining
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  List&lt;String&gt; countries = Arrays.asList("United States", "Canada", "Mexico", "Brazil");
+  searchInput.setSuggestions(countries);
+  ```
+</ParamField>
+
+<ParamField path="setOnSearch(Consumer&lt;String&gt; callback)" type="JSearchInput">
+  Sets a callback to be invoked when a search is committed (Enter pressed or suggestion selected).
+  
+  <Expandable title="parameters">
+    <ResponseField name="callback" type="Consumer&lt;String&gt;">
+      The callback function that receives the search query
+    </ResponseField>
+  </Expandable>
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="JSearchInput">
+      Returns this instance for method chaining
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  searchInput.setOnSearch(query -> {
+      System.out.println("Searching for: " + query);
+      performSearch(query);
+  });
+  ```
+</ParamField>
+
+<ParamField path="getTextField()" type="TextField">
+  Gets the internal TextField for advanced customization.
+  
+  <Expandable title="returns">
+    <ResponseField name="return" type="TextField">
+      The internal TextField component
+    </ResponseField>
+  </Expandable>
+  
+  ```java
+  TextField field = searchInput.getTextField();
+  field.setMaxWidth(400);
+  ```
+</ParamField>
+
+## Keyboard Navigation
+
+The component supports comprehensive keyboard navigation:
+
+<ResponseField name="Enter" type="Key">
+  Commits the current search query and invokes the `onSearch` callback
+</ResponseField>
+
+<ResponseField name="Escape" type="Key">
+  Closes the suggestions popup
+</ResponseField>
+
+<ResponseField name="Down Arrow" type="Key">
+  Moves focus to the first suggestion in the popup, or opens the popup if closed
+</ResponseField>
+
+<ResponseField name="Up/Down Arrows" type="Key" context="in popup">
+  Navigate between suggestions in the popup
+</ResponseField>
+
+<ResponseField name="Up Arrow" type="Key" context="on first item">
+  Returns focus to the text field
+</ResponseField>
+
+## Style Classes
+
+<ResponseField name="j-search-input" type="CSS class">
+  Applied to the root HBox container
+</ResponseField>
+
+<ResponseField name="j-search-icon" type="CSS class">
+  Applied to the search icon (magnifying glass)
+</ResponseField>
+
+<ResponseField name="j-search-field" type="CSS class">
+  Applied to the internal TextField
+</ResponseField>
+
+<ResponseField name="j-search-clear" type="CSS class">
+  Applied to the clear button (X icon)
+</ResponseField>
+
+<ResponseField name="j-search-popup-box" type="CSS class">
+  Applied to the VBox containing suggestions
+</ResponseField>
+
+<ResponseField name="j-search-popup-scroll" type="CSS class">
+  Applied to the ScrollPane wrapping the suggestions
+</ResponseField>
+
+<ResponseField name="j-search-popup-item" type="CSS class">
+  Applied to individual suggestion items
+</ResponseField>
+
+## Usage Example
+
+### Basic Search Input
+
+```java
+import com.jjarroyo.components.JSearchInput;
+import javafx.scene.layout.VBox;
+
+public class SearchExample {
+    public VBox createSearchBar() {
+        VBox container = new VBox(10);
+        
+        JSearchInput searchInput = new JSearchInput();
+        searchInput.setPromptText("Search products...")
+                   .setOnSearch(query -> performSearch(query));
+        
+        container.getChildren().add(searchInput);
+        return container;
+    }
+    
+    private void performSearch(String query) {
+        System.out.println("Searching for: " + query);
+        // Implement search logic
+    }
+}
+```
+
+### With Static Suggestions
+
+```java
+import com.jjarroyo.components.JSearchInput;
+import java.util.Arrays;
+import java.util.List;
+
+public class CountrySearch {
+    public JSearchInput createCountrySearch() {
+        List&lt;String&gt; countries = Arrays.asList(
+            "United States", "Canada", "Mexico", "Brazil", 
+            "Argentina", "United Kingdom", "France", "Germany"
+        );
+        
+        JSearchInput searchInput = new JSearchInput();
+        searchInput.setPromptText("Search countries...")
+                   .setSuggestions(countries)
+                   .setOnSearch(country -> {
+                       System.out.println("Selected country: " + country);
+                   });
+        
+        return searchInput;
+    }
+}
+```
+
+### With Dynamic Suggestions
+
+```java
+import com.jjarroyo.components.JSearchInput;
+import java.util.List;
+
+public class ProductSearch {
+    private ProductService productService;
+    
+    public JSearchInput createProductSearch() {
+        JSearchInput searchInput = new JSearchInput();
+        
+        searchInput.setPromptText("Search products...")
+                   .setSuggestionProvider(query -> {
+                       // Fetch dynamic suggestions from API/database
+                       if (query == null || query.isBlank()) {
+                           return List.of();
+                       }
+                       return productService.searchProducts(query);
+                   })
+                   .setOnSearch(productName -> {
+                       // Handle product selection
+                       Product product = productService.findByName(productName);
+                       showProductDetails(product);
+                   });
+        
+        return searchInput;
+    }
+    
+    private void showProductDetails(Product product) {
+        // Display product details
+    }
+}
+```
+
+### Without Clear Button
+
+```java
+JSearchInput searchInput = new JSearchInput();
+searchInput.setPromptText("Search...")
+           .setClearable(false)
+           .setOnSearch(query -> performSearch(query));
+```
+
+## Behavior Details
+
+### Suggestions Popup
+
+- **Auto-hide**: The popup automatically closes when focus is lost
+- **Width**: The popup matches the width of the search input
+- **Max Height**: Limited to 250px with vertical scrolling
+- **Position**: Appears 4px below the search input
+- **Trigger**: Opens when suggestions are available and text changes
+
+### Clear Button
+
+- **Visibility**: Shown only when text is present and `clearable` is true
+- **Action**: Clears the text, closes popup, and returns focus to the input
+
+### Text Changes
+
+- Text changes automatically trigger the suggestion provider
+- Empty or null suggestion lists hide the popup
+- Suggestions are filtered case-insensitively when using `setSuggestions()`
+
+## See Also
+
+- [JInput](/api/components/jinput) - Basic text input
+- [JNumberInput](/api/components/jnumberinput) - Numeric input with controls
+- [JSelect](/api/components/jselect) - Dropdown select component

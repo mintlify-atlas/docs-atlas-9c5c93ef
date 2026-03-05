@@ -1,0 +1,434 @@
+---
+title: Modals
+description: Dialog and modal overlay components for JavaFX applications
+icon: 'square'
+---
+
+## JModal
+
+A modal dialog component with backdrop overlay, smooth animations, and flexible sizing options. Perfect for confirmations, forms, and detailed content that requires user attention.
+
+### Basic Usage
+
+```java
+import com.jjarroyo.components.JModal;
+import com.jjarroyo.components.JModal.Size;
+import javafx.scene.control.Label;
+
+// Simple modal with content
+Label content = new Label("This is modal content");
+JModal modal = new JModal(content);
+
+// Show the modal
+modal.show();
+
+// Close the modal
+modal.close();
+```
+
+<Warning>
+  **Important:** Before using modals, you must initialize the modal container in your application setup:
+  
+  ```java
+  JJArroyo.setModalContainer(rootStackPane);
+  ```
+  
+  See the [Getting Started](/getting-started) guide for setup instructions.
+</Warning>
+
+### Modal Sizes
+
+```java
+import com.jjarroyo.components.JModal.Size;
+
+// Small modal
+JModal small = new JModal(content, Size.SMALL);
+small.show();
+
+// Medium modal (default)
+JModal medium = new JModal(content, Size.MEDIUM);
+medium.show();
+
+// Large modal
+JModal large = new JModal(content, Size.LARGE);
+large.show();
+
+// Full-screen modal
+JModal fullscreen = new JModal(content, Size.FULL);
+fullscreen.show();
+
+// Change size after creation
+modal.setSize(Size.LARGE);
+```
+
+### Backdrop Click Behavior
+
+```java
+// Prevent closing on backdrop click
+JModal modal = new JModal(content)
+    .setCloseOnBackdropClick(false);
+
+// Allow closing on backdrop click (default)
+modal.setCloseOnBackdropClick(true);
+```
+
+### Complete Examples
+
+#### Confirmation Dialog
+
+```java
+public void showDeleteConfirmation(Runnable onConfirm) {
+    VBox content = new VBox(20);
+    content.setPadding(new Insets(30));
+    content.setAlignment(Pos.CENTER);
+    
+    // Icon
+    SVGPath icon = new SVGPath();
+    icon.setContent(JIcon.WARNING.getPath());
+    icon.setStyle("-fx-fill: red; -fx-scale-x: 2; -fx-scale-y: 2;");
+    
+    // Title
+    Label title = new Label("Delete Confirmation");
+    title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+    
+    // Message
+    Label message = new Label("Are you sure you want to delete this item?");
+    message.setStyle("-fx-text-fill: gray;");
+    message.setWrapText(true);
+    
+    // Buttons
+    HBox buttons = new HBox(10);
+    buttons.setAlignment(Pos.CENTER);
+    
+    JButton cancelBtn = new JButton("Cancel")
+        .addClass("btn-secondary");
+    
+    JButton deleteBtn = new JButton("Delete")
+        .addClass("btn-danger");
+    
+    buttons.getChildren().addAll(cancelBtn, deleteBtn);
+    
+    content.getChildren().addAll(icon, title, message, buttons);
+    
+    JModal modal = new JModal(content, Size.SMALL)
+        .setCloseOnBackdropClick(false);
+    
+    cancelBtn.setOnAction(e -> modal.close());
+    deleteBtn.setOnAction(e -> {
+        onConfirm.run();
+        modal.close();
+    });
+    
+    modal.show();
+}
+```
+
+#### Form Modal with Card
+
+```java
+public void showUserForm() {
+    JCard card = new JCard();
+    card.setTitle("Add New User");
+    card.setSubtitle("Enter user details below");
+    card.setLine(true);
+    
+    VBox form = new VBox(15);
+    form.setPadding(new Insets(20));
+    
+    // Form fields
+    JInput nameInput = new JInput("Full name");
+    VBox nameField = nameInput.createWithLabel("Name", true);
+    
+    JInput emailInput = new JInput("user@example.com");
+    VBox emailField = emailInput.createWithLabel("Email", true);
+    
+    JPasswordInput passwordInput = new JPasswordInput("Password");
+    VBox passwordField = passwordInput.createWithLabel("Password", true);
+    
+    form.getChildren().addAll(nameField, emailField, passwordField);
+    card.setBody(form);
+    
+    // Footer buttons
+    HBox footer = new HBox(10);
+    JButton cancelBtn = new JButton("Cancel")
+        .addClass("btn-secondary");
+    JButton saveBtn = new JButton("Save User")
+        .addClass("btn-primary");
+    footer.getChildren().addAll(cancelBtn, saveBtn);
+    
+    card.setFooter(footer);
+    
+    JModal modal = new JModal(card, Size.MEDIUM);
+    
+    cancelBtn.setOnAction(e -> modal.close());
+    saveBtn.setOnAction(e -> {
+        // Validate and save
+        if (validateForm(nameInput, emailInput)) {
+            saveUser(nameInput.getText(), emailInput.getText());
+            modal.close();
+        }
+    });
+    
+    modal.show();
+}
+```
+
+#### Information Modal
+
+```java
+public void showWelcomeModal() {
+    VBox content = new VBox(20);
+    content.setPadding(new Insets(40));
+    content.setAlignment(Pos.CENTER);
+    content.setMaxWidth(500);
+    
+    Label title = new Label("Welcome to JJArroyo!");
+    title.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
+    
+    Label subtitle = new Label("Modern JavaFX Components");
+    subtitle.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
+    
+    Label description = new Label(
+        "Build beautiful JavaFX applications with pre-styled components, " +
+        "flexible theming, and modern design patterns."
+    );
+    description.setWrapText(true);
+    description.setStyle("-fx-text-align: center;");
+    
+    HBox features = new HBox(20);
+    features.setAlignment(Pos.CENTER);
+    
+    VBox feature1 = createFeature(JIcon.ROCKET, "Fast");
+    VBox feature2 = createFeature(JIcon.CODE, "Modern");
+    VBox feature3 = createFeature(JIcon.CHECK_CIRCLE, "Reliable");
+    
+    features.getChildren().addAll(feature1, feature2, feature3);
+    
+    JButton getStartedBtn = new JButton("Get Started")
+        .addClass("btn-primary", "btn-lg");
+    
+    content.getChildren().addAll(
+        title,
+        subtitle,
+        description,
+        features,
+        getStartedBtn
+    );
+    
+    JModal modal = new JModal(content, Size.MEDIUM);
+    getStartedBtn.setOnAction(e -> modal.close());
+    modal.show();
+}
+
+private VBox createFeature(JIcon icon, String text) {
+    VBox feature = new VBox(10);
+    feature.setAlignment(Pos.CENTER);
+    
+    SVGPath iconSvg = new SVGPath();
+    iconSvg.setContent(icon.getPath());
+    iconSvg.setStyle("-fx-fill: blue; -fx-scale-x: 1.5; -fx-scale-y: 1.5;");
+    
+    Label label = new Label(text);
+    label.setStyle("-fx-font-weight: bold;");
+    
+    feature.getChildren().addAll(iconSvg, label);
+    return feature;
+}
+```
+
+#### Image Viewer Modal
+
+```java
+public void showImageViewer(String imagePath) {
+    VBox content = new VBox(20);
+    content.setAlignment(Pos.CENTER);
+    content.setPadding(new Insets(20));
+    
+    ImageView imageView = new ImageView(new Image(imagePath));
+    imageView.setPreserveRatio(true);
+    imageView.setFitWidth(800);
+    
+    HBox controls = new HBox(10);
+    controls.setAlignment(Pos.CENTER);
+    
+    JButton downloadBtn = new JButton("Download", JIcon.DOWNLOAD)
+        .addClass("btn-primary");
+    JButton closeBtn = new JButton("Close")
+        .addClass("btn-secondary");
+    
+    controls.getChildren().addAll(downloadBtn, closeBtn);
+    content.getChildren().addAll(imageView, controls);
+    
+    JModal modal = new JModal(content, Size.LARGE);
+    closeBtn.setOnAction(e -> modal.close());
+    modal.show();
+}
+```
+
+## API Reference
+
+### Constructors
+
+<ResponseField name="JModal(Node content)" type="constructor">
+  Creates a modal with the specified content and medium size
+  
+  <Expandable title="parameters">
+    <ResponseField name="content" type="Node">
+      The content to display in the modal dialog
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="JModal(Node content, Size size)" type="constructor">
+  Creates a modal with specified content and size
+  
+  <Expandable title="parameters">
+    <ResponseField name="content" type="Node">
+      The content to display
+    </ResponseField>
+    <ResponseField name="size" type="Size">
+      The modal size: SMALL, MEDIUM, LARGE, or FULL
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Methods
+
+<ResponseField name="show()" type="void">
+  Displays the modal with entrance animations (fade + scale)
+  
+  ```java
+  modal.show();
+  ```
+</ResponseField>
+
+<ResponseField name="close()" type="void">
+  Closes the modal with exit animations and removes it from the container
+  
+  ```java
+  modal.close();
+  ```
+</ResponseField>
+
+<ResponseField name="setCloseOnBackdropClick(boolean close)" type="JModal">
+  Controls whether clicking the backdrop (outside the dialog) closes the modal. Default is true.
+  
+  ```java
+  modal.setCloseOnBackdropClick(false);
+  ```
+</ResponseField>
+
+<ResponseField name="setSize(Size size)" type="JModal">
+  Changes the modal size. Available sizes: SMALL, MEDIUM, LARGE, FULL
+  
+  ```java
+  modal.setSize(Size.LARGE);
+  ```
+</ResponseField>
+
+### Size Enum
+
+<ResponseField name="Size.SMALL" type="enum">
+  Small modal - best for confirmations and simple dialogs
+</ResponseField>
+
+<ResponseField name="Size.MEDIUM" type="enum">
+  Medium modal - default size, good for forms and standard content
+</ResponseField>
+
+<ResponseField name="Size.LARGE" type="enum">
+  Large modal - for detailed content, tables, or complex forms
+</ResponseField>
+
+<ResponseField name="Size.FULL" type="enum">
+  Full-screen modal - takes up 95% of viewport, best for immersive content
+</ResponseField>
+
+## Animations
+
+JModal includes smooth entrance and exit animations:
+
+### Entrance Animation (300ms)
+- Backdrop: Fade in from 0 to 1 opacity
+- Dialog: Scale from 0.8 to 1.0 + Fade in
+
+### Exit Animation (200ms)
+- Backdrop: Fade out from 1 to 0 opacity  
+- Dialog: Scale from 1.0 to 0.9 + Fade out
+
+## CSS Style Classes
+
+Modals use the following CSS classes:
+
+- `j-modal-root` - Root modal container (StackPane)
+- `j-modal-backdrop` - Semi-transparent backdrop overlay
+- `j-modal-dialog` - Dialog content container
+- `modal-sm` - Small size modifier
+- `modal-md` - Medium size modifier
+- `modal-lg` - Large size modifier
+- `modal-full` - Full-screen size modifier
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Initialize Modal Container">
+    Always call `JJArroyo.setModalContainer(stackPane)` in your application setup before using modals.
+  </Accordion>
+  
+  <Accordion title="Use Appropriate Sizes">
+    - SMALL: Confirmations, simple alerts (300-400px)
+    - MEDIUM: Forms, standard dialogs (500-700px)
+    - LARGE: Complex forms, data tables (800-1000px)
+    - FULL: Image viewers, detailed content (95% viewport)
+  </Accordion>
+  
+  <Accordion title="Provide Clear Actions">
+    Always include obvious actions like "Cancel", "Close", "Save", etc. Users should know how to exit the modal.
+  </Accordion>
+  
+  <Accordion title="Consider Backdrop Click">
+    For critical actions (delete, payment), disable backdrop click to prevent accidental dismissal.
+  </Accordion>
+  
+  <Accordion title="Use Cards for Structure">
+    Combine JModal with JCard for well-structured dialogs with headers, bodies, and footers.
+  </Accordion>
+  
+  <Accordion title="Keep Content Focused">
+    Modals should focus on a single task or piece of information. Don't overload them with content.
+  </Accordion>
+</AccordionGroup>
+
+## Common Patterns
+
+### Confirmation Pattern
+```java
+modal.setCloseOnBackdropClick(false);
+// Two buttons: Cancel (secondary) and Confirm (danger/primary)
+```
+
+### Form Pattern
+```java
+modal.setSize(Size.MEDIUM);
+// Card with header, form fields in body, Save/Cancel in footer
+```
+
+### Info/Welcome Pattern
+```java
+modal.setCloseOnBackdropClick(true);
+// Centered content with single "Got it" or "Close" button
+```
+
+### Viewer Pattern
+```java
+modal.setSize(Size.LARGE or Size.FULL);
+// Image/document with minimal controls
+```
+
+## Accessibility
+
+- Modals overlay content with a semi-transparent backdrop
+- Animations provide visual feedback for opening/closing
+- Keyboard navigation works within modal content
+- Clicking backdrop (when enabled) provides easy dismissal
+- Clear visual hierarchy with backdrop + elevated dialog

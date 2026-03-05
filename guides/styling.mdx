@@ -1,0 +1,346 @@
+---
+title: Styling Components
+description: Learn how to style JJArroyo components using CSS classes and custom styles
+icon: brush
+---
+
+## Overview
+
+JJArroyo components can be styled using JavaFX CSS, utility classes, and custom stylesheets. The library provides a comprehensive set of CSS variables and utility classes inspired by Tailwind CSS.
+
+## Using CSS Classes
+
+All JJArroyo components support standard JavaFX CSS styling through the `getStyleClass()` method:
+
+```java
+import com.jjarroyo.components.JButton;
+import com.jjarroyo.components.JCard;
+
+// Add utility classes
+JButton button = new JButton("Click me");
+button.getStyleClass().addAll("p-4", "w-full");
+
+// Add custom classes
+JCard card = new JCard();
+card.getStyleClass().add("my-custom-card");
+```
+
+## Utility Classes
+
+JJArroyo includes Tailwind-inspired utility classes for common styling needs:
+
+### Padding
+
+```java
+// Uniform padding
+.p-0  // 0px
+.p-1  // 4px
+.p-2  // 8px
+.p-3  // 12px
+.p-4  // 16px
+.p-5  // 24px
+.p-6  // 32px
+.p-8  // 48px
+
+// Horizontal padding
+.px-1, .px-2, .px-3, .px-4, .px-5
+
+// Vertical padding
+.py-1, .py-2, .py-3, .py-4, .py-5
+```
+
+<CodeGroup>
+```java Example
+JCard card = new JCard();
+card.getStyleClass().add("p-4"); // 16px padding on all sides
+
+JButton button = new JButton("Submit");
+button.getStyleClass().addAll("px-5", "py-2"); // 24px horizontal, 8px vertical
+```
+</CodeGroup>
+
+### Width & Height
+
+```java
+// Width
+.w-full   // 100% width
+.w-100    // 100%
+.w-75     // 75%
+.w-50     // 50%
+
+// Height
+.h-full   // 100% height
+```
+
+<CodeGroup>
+```java Example
+JInput input = new JInput();
+input.getStyleClass().add("w-full"); // Full width input
+```
+</CodeGroup>
+
+### Spacing (Gap)
+
+```java
+.gap-2   // 8px spacing
+.gap-4   // 16px spacing
+.gap-6   // 24px spacing
+```
+
+<CodeGroup>
+```java Example
+VBox container = new VBox();
+container.getStyleClass().add("gap-4"); // 16px spacing between children
+```
+</CodeGroup>
+
+## CSS Variables
+
+JJArroyo provides a comprehensive set of CSS variables for colors, typography, and component styling.
+
+### Color Palette
+
+<AccordionGroup>
+  <Accordion title="Primary (Blue)">
+    ```css
+    -color-primary-50: #eff6ff
+    -color-primary-100: #dbeafe
+    -color-primary-200: #bfdbfe
+    -color-primary-300: #60a5fa
+    -color-primary-500: #3b82f6
+    -color-primary-600: #2563eb
+    -color-primary-700: #1d4ed8
+    -color-primary: -color-primary-600  /* Alias */
+    ```
+  </Accordion>
+  
+  <Accordion title="Neutral (Slate)">
+    ```css
+    -color-slate-50: #f8fafc
+    -color-slate-100: #f1f5f9
+    -color-slate-200: #e2e8f0
+    -color-slate-300: #cbd5e1
+    -color-slate-400: #94a3b8
+    -color-slate-500: #64748b
+    -color-slate-600: #475569
+    -color-slate-700: #334155
+    -color-slate-800: #1e293b
+    -color-slate-900: #0f172a
+    ```
+  </Accordion>
+  
+  <Accordion title="Success (Emerald)">
+    ```css
+    -color-success-50: #ecfdf5
+    -color-success-100: #d1fae5
+    -color-success-200: #a7f3d0
+    -color-success-500: #10b981
+    -color-success-600: #059669
+    -color-success-700: #047857
+    ```
+  </Accordion>
+  
+  <Accordion title="Danger (Red)">
+    ```css
+    -color-danger-50: #fef2f2
+    -color-danger-100: #fee2e2
+    -color-danger-200: #fecaca
+    -color-danger-500: #ef4444
+    -color-danger-600: #dc2626
+    -color-danger-700: #b91c1c
+    ```
+  </Accordion>
+  
+  <Accordion title="Warning (Amber)">
+    ```css
+    -color-warning-50: #fffbeb
+    -color-warning-200: #fde68a
+    -color-warning-500: #f59e0b
+    -color-warning-600: #d97706
+    -color-warning-700: #b45309
+    ```
+  </Accordion>
+  
+  <Accordion title="Info (Violet)">
+    ```css
+    -color-info-50: #f5f3ff
+    -color-info-100: #ede9fe
+    -color-info-200: #ddd6fe
+    -color-info-500: #8b5cf6
+    -color-info-600: #7c3aed
+    -color-info-700: #6d28d9
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Semantic Tokens
+
+Semantic tokens provide theme-aware colors that adapt to light/dark mode:
+
+```css
+/* Backgrounds */
+-color-bg-body: -color-slate-50
+-color-bg-surface: #ffffff
+-color-bg-surface-hover: -color-slate-50
+-color-bg-subtle: -color-slate-100
+
+/* Text */
+-color-text-primary: -color-slate-800
+-color-text-secondary: -color-slate-500
+-color-text-muted: -color-slate-400
+-color-text-inverted: #ffffff
+
+/* Borders */
+-color-border-default: -color-slate-200
+-color-border-subtle: -color-slate-100
+-color-border-highlight: -color-primary-500
+```
+
+<Tip>
+  Use semantic tokens instead of raw color values to ensure your custom styles adapt to dark mode automatically.
+</Tip>
+
+## Custom Stylesheets
+
+You can add custom stylesheets to your Scene to override or extend the default styles:
+
+```java
+import javafx.scene.Scene;
+
+Scene scene = new Scene(root, 800, 600);
+JJArroyo.init(scene);
+
+// Add custom stylesheet
+scene.getStylesheets().add(
+    getClass().getResource("/styles/custom.css").toExternalForm()
+);
+```
+
+### Example Custom Stylesheet
+
+```css custom.css
+/* Custom button variant */
+.btn-gradient {
+    -fx-background-color: linear-gradient(to right, 
+        -color-primary-500, 
+        -color-info-500);
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px 24px;
+    -fx-cursor: hand;
+}
+
+.btn-gradient:hover {
+    -fx-background-color: linear-gradient(to right, 
+        -color-primary-600, 
+        -color-info-600);
+}
+
+/* Custom card with shadow */
+.card-elevated {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 16, 0, 0, 4);
+}
+
+/* Custom text style */
+.text-gradient {
+    -fx-fill: linear-gradient(to right, 
+        -color-primary-500, 
+        -color-info-500);
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+```
+
+## Inline Styles
+
+For one-off customizations, you can use inline styles:
+
+```java
+JButton button = new JButton("Custom");
+button.setStyle(
+    "-fx-background-color: -color-success-500; " +
+    "-fx-text-fill: white; " +
+    "-fx-background-radius: 20px;"
+);
+```
+
+<Warning>
+  Inline styles have the highest specificity and will override stylesheet classes. Use sparingly.
+</Warning>
+
+## Typography
+
+The default font family and size are defined in the root:
+
+```css
+-fx-font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+-fx-font-size: 14;
+```
+
+You can override these for specific components:
+
+```java
+JLabel heading = new JLabel("Title");
+heading.setStyle(
+    "-fx-font-size: 24px; " +
+    "-fx-font-weight: bold; " +
+    "-fx-text-fill: -color-text-primary;"
+);
+```
+
+## Component-Specific Styling
+
+Each component has its own CSS classes that can be targeted:
+
+<CodeGroup>
+```java JButton
+JButton button = new JButton("Click");
+// Has style classes: "button", "j-button"
+// Variants add: "primary", "secondary", "success", etc.
+```
+
+```java JCard
+JCard card = new JCard();
+// Has style classes: "card"
+// Can target: ".card-title", ".card-subtitle", ".card-footer"
+```
+
+```java JInput
+JInput input = new JInput();
+// Has style classes: "text-field", "j-input"
+// Can target: ".j-input:focused", ".j-input-label"
+```
+</CodeGroup>
+
+See individual component documentation for specific styling options.
+
+## Best Practices
+
+<Steps>
+  <Step title="Use Semantic Tokens">
+    Prefer semantic tokens like `-color-text-primary` over raw colors for automatic dark mode support
+  </Step>
+  
+  <Step title="Leverage Utility Classes">
+    Use utility classes for common styling patterns before writing custom CSS
+  </Step>
+  
+  <Step title="Organize Custom Styles">
+    Keep custom styles in separate CSS files for maintainability
+  </Step>
+  
+  <Step title="Follow Naming Conventions">
+    Use kebab-case for CSS classes and prefix custom classes to avoid conflicts
+  </Step>
+</Steps>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Dark Mode" icon="moon" href="/guides/dark-mode">
+    Learn how to implement dark mode
+  </Card>
+  <Card title="Custom Colors" icon="palette" href="/guides/custom-colors">
+    Customize the color palette
+  </Card>
+</CardGroup>

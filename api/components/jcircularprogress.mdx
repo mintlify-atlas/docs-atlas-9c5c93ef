@@ -1,0 +1,223 @@
+---
+title: JCircularProgress
+description: Circular progress indicator for showing task completion in a radial format
+---
+
+A circular progress indicator that displays task completion as a radial arc, perfect for compact progress displays and dashboards.
+
+## Constructor
+
+<ParamField path="JCircularProgress()" type="constructor">
+  Creates a circular progress indicator with default radius (70) and stroke width (20).
+</ParamField>
+
+<ParamField path="JCircularProgress(double radius, double strokeWidth)" type="constructor">
+  Creates a circular progress indicator with custom dimensions.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="radius" type="double" required>
+      The radius of the circle in pixels
+    </ResponseField>
+    <ResponseField name="strokeWidth" type="double" required>
+      The width of the progress arc stroke
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Methods
+
+<ParamField path="setProgress(double value)" type="void">
+  Sets the progress value.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="value" type="double" required>
+      Progress value between 0.0 (0%) and 1.0 (100%)
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="getProgress()" type="double">
+  Gets the current progress value.
+  
+  <ResponseField name="returns" type="double">
+    Current progress (0.0 to 1.0)
+  </ResponseField>
+</ParamField>
+
+<ParamField path="progressProperty()" type="DoubleProperty">
+  Returns the progress property for binding.
+  
+  <ResponseField name="returns" type="DoubleProperty">
+    Observable progress property
+  </ResponseField>
+</ParamField>
+
+<ParamField path="setColor(String webColor)" type="void">
+  Sets the progress bar color.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="webColor" type="String" required>
+      Web color string (e.g., "#FF5733", "rgb(255, 87, 51)", "blue")
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setTrackColor(String webColor)" type="void">
+  Sets the background track color.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="webColor" type="String" required>
+      Web color string for the background track
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Usage Examples
+
+### Basic Circular Progress
+
+```java
+JCircularProgress progress = new JCircularProgress();
+progress.setProgress(0.65); // 65%
+```
+
+### Custom Size
+
+```java
+// Small indicator
+JCircularProgress small = new JCircularProgress(40, 8);
+small.setProgress(0.5);
+
+// Large indicator
+JCircularProgress large = new JCircularProgress(120, 30);
+large.setProgress(0.75);
+```
+
+### Custom Colors
+
+```java
+JCircularProgress progress = new JCircularProgress();
+progress.setProgress(0.8);
+progress.setColor("#4CAF50"); // Green progress
+progress.setTrackColor("#E0E0E0"); // Light gray track
+```
+
+### With Center Label
+
+```java
+StackPane container = new StackPane();
+JCircularProgress progress = new JCircularProgress(80, 15);
+JLabel percentLabel = new JLabel("0%");
+percentLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+
+progress.progressProperty().addListener((obs, old, newVal) -> {
+    int percent = (int) (newVal.doubleValue() * 100);
+    percentLabel.setText(percent + "%");
+});
+
+container.getChildren().addAll(progress, percentLabel);
+progress.setProgress(0.72);
+```
+
+### Animated Progress
+
+```java
+JCircularProgress progress = new JCircularProgress();
+progress.setColor("#2196F3");
+
+Timeline animation = new Timeline(
+    new KeyFrame(Duration.ZERO, new KeyValue(progress.progressProperty(), 0)),
+    new KeyFrame(Duration.seconds(3), new KeyValue(progress.progressProperty(), 1.0))
+);
+animation.play();
+```
+
+### Multiple Indicators
+
+```java
+HBox indicators = new HBox(24);
+
+JCircularProgress cpu = new JCircularProgress(60, 12);
+cpu.setProgress(0.45);
+cpu.setColor("#FF5722");
+
+JCircularProgress memory = new JCircularProgress(60, 12);
+memory.setProgress(0.67);
+memory.setColor("#4CAF50");
+
+JCircularProgress disk = new JCircularProgress(60, 12);
+disk.setProgress(0.82);
+disk.setColor("#FFC107");
+
+indicators.getChildren().addAll(
+    createLabeledProgress("CPU", cpu),
+    createLabeledProgress("Memory", memory),
+    createLabeledProgress("Disk", disk)
+);
+```
+
+### Dashboard Widget
+
+```java
+VBox widget = new VBox(16);
+widget.setAlignment(Pos.CENTER);
+widget.setStyle("-fx-padding: 20; -fx-background-color: white; -fx-border-radius: 8;");
+
+JCircularProgress progress = new JCircularProgress(100, 20);
+progress.setProgress(0.73);
+progress.setColor("#9C27B0");
+
+StackPane progressWithLabel = new StackPane();
+VBox centerContent = new VBox(4);
+centerContent.setAlignment(Pos.CENTER);
+
+JLabel value = new JLabel("73%");
+value.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
+
+JLabel subtitle = new JLabel("Complete");
+subtitle.setStyle("-fx-font-size: 14px; -fx-text-fill: #666;");
+
+centerContent.getChildren().addAll(value, subtitle);
+progressWithLabel.getChildren().addAll(progress, centerContent);
+
+JLabel title = new JLabel("Project Progress");
+title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+widget.getChildren().addAll(title, progressWithLabel);
+```
+
+### Real-time Data Binding
+
+```java
+JCircularProgress progress = new JCircularProgress();
+
+// Bind to a data source
+DoubleProperty dataValue = new SimpleDoubleProperty();
+progress.progressProperty().bind(dataValue.divide(100.0));
+
+// Update the value
+dataValue.set(65); // Sets progress to 65%
+```
+
+## Features
+
+- Smooth radial progress animation
+- Customizable radius and stroke width
+- Rounded stroke caps for modern look
+- Custom colors for progress and track
+- Data binding support
+- Clockwise progress from 12 o'clock position
+- Transparent fill (shows only the arc)
+
+## Style Classes
+
+- `.circular-progress` - Main container
+- `.circular-progress-track` - Background circle track
+- `.circular-progress-bar` - Progress arc
+
+## Notes
+
+- Progress values are automatically clamped between 0.0 and 1.0
+- The component automatically sizes itself based on the radius and stroke width
+- The progress arc starts at the top (12 o'clock) and moves clockwise
+- Use `StackPane` to overlay text or icons in the center of the circular progress

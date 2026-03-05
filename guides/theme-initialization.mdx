@@ -1,0 +1,175 @@
+---
+title: Theme Initialization
+description: Learn how to initialize the JJArroyo theme in your JavaFX application
+icon: rocket
+---
+
+## Overview
+
+The JJArroyo theme must be initialized before components can be properly styled. The library provides a simple static method to apply the theme to your JavaFX Scene.
+
+<Info>
+  Theme initialization loads the main stylesheet (`jjarroyo-theme.css`) which includes all component styles, color variables, and utilities.
+</Info>
+
+## Basic Initialization
+
+To initialize the theme, call `JJArroyo.init()` with your Scene object:
+
+```java
+import com.jjarroyo.JJArroyo;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
+public class MyApp extends Application {
+    @Override
+    public void start(Stage primaryStage) {
+        StackPane root = new StackPane();
+        Scene scene = new Scene(root, 800, 600);
+        
+        // Initialize the JJArroyo theme
+        JJArroyo.init(scene);
+        
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("My Application");
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+```
+
+## What Gets Loaded
+
+When you call `JJArroyo.init(scene)`, the following stylesheets are automatically loaded:
+
+<CardGroup cols={2}>
+  <Card title="variables.css" icon="palette">
+    Color palette, typography, and semantic tokens for light mode
+  </Card>
+  <Card title="dark.css" icon="moon">
+    Dark mode color overrides and component-specific styles
+  </Card>
+  <Card title="utilities.css" icon="wrench">
+    Tailwind-inspired utility classes for spacing, sizing, and layout
+  </Card>
+  <Card title="Component Styles" icon="puzzle-piece">
+    Buttons, cards, forms, navigation, data display, overlays, and more
+  </Card>
+</CardGroup>
+
+## Modal Container Setup
+
+If you plan to use modals in your application, you should register a modal container:
+
+```java
+import com.jjarroyo.JJArroyo;
+import javafx.scene.layout.StackPane;
+
+public class MyApp extends Application {
+    @Override
+    public void start(Stage primaryStage) {
+        StackPane root = new StackPane();
+        Scene scene = new Scene(root, 800, 600);
+        
+        // Initialize theme
+        JJArroyo.init(scene);
+        
+        // Register modal container
+        JJArroyo.setModalContainer(root);
+        
+        // Now you can use JModal anywhere in your app
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+}
+```
+
+<Note>
+  The modal container should be a `StackPane` that sits at the root of your scene. Modals will be overlaid on top of this container.
+</Note>
+
+## Error Handling
+
+The `init()` method validates the Scene parameter:
+
+```java
+JJArroyo.init(null); // Throws IllegalArgumentException
+```
+
+<Warning>
+  Always ensure your Scene is not null before initializing the theme.
+</Warning>
+
+## Complete Example
+
+Here's a complete example with modal support:
+
+```java
+import com.jjarroyo.JJArroyo;
+import com.jjarroyo.components.JButton;
+import com.jjarroyo.components.JModal;
+import javafx.application.Application;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class CompleteApp extends Application {
+    @Override
+    public void start(Stage primaryStage) {
+        // Create root container
+        StackPane root = new StackPane();
+        
+        // Create content
+        VBox content = new VBox(16);
+        content.setAlignment(Pos.CENTER);
+        
+        JButton button = new JButton("Open Modal");
+        button.setOnAction(e -> {
+            JModal modal = new JModal("Hello", "This is a modal!");
+            modal.show();
+        });
+        
+        content.getChildren().add(button);
+        root.getChildren().add(content);
+        
+        // Create scene
+        Scene scene = new Scene(root, 800, 600);
+        
+        // Initialize theme and modal container
+        JJArroyo.init(scene);
+        JJArroyo.setModalContainer(root);
+        
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("JJArroyo Theme Demo");
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Styling Components" icon="brush" href="/guides/styling">
+    Learn how to use CSS classes and custom styles
+  </Card>
+  <Card title="Dark Mode" icon="moon" href="/guides/dark-mode">
+    Enable dark mode in your application
+  </Card>
+  <Card title="Custom Colors" icon="palette" href="/guides/custom-colors">
+    Customize the color palette
+  </Card>
+  <Card title="Components" icon="grid" href="/components/overview">
+    Explore available components
+  </Card>
+</CardGroup>

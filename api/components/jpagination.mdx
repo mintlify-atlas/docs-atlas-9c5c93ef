@@ -1,0 +1,83 @@
+---
+title: JPagination
+description: Pagination component for navigating through multiple pages of content
+---
+
+A pagination control that displays page numbers and navigation buttons, allowing users to browse through paginated content.
+
+## Constructor
+
+<ParamField path="JPagination()" type="constructor">
+  Creates a new pagination component with default settings (page 1 of 1).
+</ParamField>
+
+## Properties
+
+<ParamField path="currentPageProperty()" type="IntegerProperty">
+  Returns the current page number property for binding.
+  
+  <ResponseField name="returns" type="IntegerProperty">
+    The observable current page property (1-indexed)
+  </ResponseField>
+</ParamField>
+
+<ParamField path="totalPagesProperty()" type="IntegerProperty">
+  Returns the total pages property for binding.
+  
+  <Expandable title="Returns">
+    <ResponseField name="returns" type="IntegerProperty">
+      The observable total pages property
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Methods
+
+<ParamField path="setOnPageChange(Runnable action)" type="void">
+  Sets the callback to execute when the page changes.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="action" type="Runnable" required>
+      The callback to execute on page change
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Usage Example
+
+```java
+JPagination pagination = new JPagination();
+
+// Set total pages
+pagination.totalPagesProperty().set(10);
+
+// Listen to page changes
+pagination.setOnPageChange(() -> {
+    int currentPage = pagination.currentPageProperty().get();
+    loadPageData(currentPage);
+});
+
+// Programmatically change page
+pagination.currentPageProperty().set(3);
+```
+
+## Behavior
+
+- Displays page numbers with ellipsis (...) for large page ranges
+- Shows up to 7 page buttons at a time
+- Always displays first and last page
+- Previous button is disabled on first page
+- Next button is disabled on last page
+- Active page is highlighted
+
+## Page Number Display Logic
+
+- **7 or fewer pages**: Shows all page numbers
+- **More than 7 pages**: Shows first page, current page ± 1, last page, with ellipsis between ranges
+
+## Style Classes
+
+- `.j-pagination` - Main container
+- `.j-pagination-btn` - Page button
+- `.active` - Active page button
+- `.disabled` - Disabled button (ellipsis)

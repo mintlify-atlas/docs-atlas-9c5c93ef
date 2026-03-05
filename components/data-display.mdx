@@ -1,0 +1,355 @@
+---
+title: Data Display
+description: Display user data with JAvatar and JStatCard components
+icon: chart-bar
+---
+
+## JAvatar
+
+User avatar component with initials, images, status badges, and sizing options.
+
+### Basic Usage
+
+```java
+// Avatar with initials
+JAvatar avatar = new JAvatar("JD");
+
+// Or auto-generate from name
+JAvatar avatar = new JAvatar("John", "Doe"); // Shows "JD"
+```
+
+### With Image
+
+```java
+JAvatar avatar = new JAvatar("JD");
+Image photo = new Image("/path/to/photo.jpg");
+avatar.setImage(photo);
+```
+
+### Sizes
+
+```java
+JAvatar xs = new JAvatar("JD").setSize(JAvatar.Size.XS); // 24px
+JAvatar sm = new JAvatar("JD").setSize(JAvatar.Size.SM); // 32px
+JAvatar md = new JAvatar("JD").setSize(JAvatar.Size.MD); // 40px (default)
+JAvatar lg = new JAvatar("JD").setSize(JAvatar.Size.LG); // 48px
+JAvatar xl = new JAvatar("JD").setSize(JAvatar.Size.XL); // 64px
+```
+
+### Color Variants
+
+```java
+JAvatar primary = new JAvatar("JD").setColor("primary");
+JAvatar success = new JAvatar("AS").setColor("success");
+JAvatar danger = new JAvatar("MW").setColor("danger");
+JAvatar warning = new JAvatar("KL").setColor("warning");
+JAvatar info = new JAvatar("TP").setColor("info");
+JAvatar slate = new JAvatar("GH").setColor("slate");
+```
+
+### Status Badges
+
+```java
+JAvatar online = new JAvatar("JD");
+online.setStatus(JAvatar.Status.ONLINE); // Green
+
+JAvatar away = new JAvatar("AS");
+away.setStatus(JAvatar.Status.AWAY); // Orange
+
+JAvatar busy = new JAvatar("MW");
+busy.setStatus(JAvatar.Status.BUSY); // Red
+
+JAvatar offline = new JAvatar("KL");
+offline.setStatus(JAvatar.Status.OFFLINE); // Gray
+```
+
+### Complete Example
+
+```java
+JAvatar avatar = new JAvatar("John", "Doe");
+avatar.setSize(JAvatar.Size.LG);
+avatar.setColor("primary");
+avatar.setStatus(JAvatar.Status.ONLINE);
+
+// Optionally add image later
+Image userPhoto = loadUserPhoto(userId);
+if (userPhoto != null) {
+    avatar.setImage(userPhoto);
+}
+```
+
+### Avatar Group
+
+Display multiple avatars with overlap:
+
+```java
+JAvatar.Group group = new JAvatar.Group(
+    new JAvatar("John", "Doe"),
+    new JAvatar("Jane", "Smith"),
+    new JAvatar("Mike", "Wilson"),
+    new JAvatar("Sarah", "Johnson")
+);
+
+// Limit visible avatars
+group.setMax(3); // Shows 3 avatars + "+1" indicator
+```
+
+### In User Profile
+
+```java
+HBox userProfile = new HBox(12);
+userProfile.setAlignment(Pos.CENTER_LEFT);
+
+JAvatar avatar = new JAvatar("John", "Doe");
+avatar.setSize(JAvatar.Size.LG);
+avatar.setStatus(JAvatar.Status.ONLINE);
+
+VBox info = new VBox(4);
+Label name = new Label("John Doe");
+name.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+
+Label email = new Label("john.doe@example.com");
+email.setStyle("-fx-text-fill: -color-text-muted;");
+
+info.getChildren().addAll(name, email);
+userProfile.getChildren().addAll(avatar, info);
+```
+
+### API Reference - JAvatar
+
+<ParamField path="new JAvatar(String)" type="constructor">
+  Create avatar with initials
+</ParamField>
+
+<ParamField path="new JAvatar(String, String)" type="constructor">
+  Create avatar with first and last name (auto-generates initials)
+</ParamField>
+
+<ParamField path="setImage(Image)" type="JAvatar">
+  Set avatar image (overrides initials)
+</ParamField>
+
+<ParamField path="setInitials(String)" type="JAvatar">
+  Set custom initials
+</ParamField>
+
+<ParamField path="setSize(Size)" type="JAvatar">
+  Set size: XS, SM, MD, LG, XL
+</ParamField>
+
+<ParamField path="setColor(String)" type="JAvatar">
+  Set color variant: primary, success, danger, warning, info, slate
+</ParamField>
+
+<ParamField path="setStatus(Status)" type="JAvatar">
+  Set status badge: ONLINE, AWAY, BUSY, OFFLINE, NONE
+</ParamField>
+
+### API Reference - JAvatar.Group
+
+<ParamField path="new JAvatar.Group(JAvatar...)" type="constructor">
+  Create avatar group with initial avatars
+</ParamField>
+
+<ParamField path="addAvatar(JAvatar)" type="void">
+  Add avatar to group
+</ParamField>
+
+<ParamField path="setMax(int)" type="JAvatar.Group">
+  Set maximum visible avatars (rest shown as "+N")
+</ParamField>
+
+---
+
+## JStatCard
+
+Animated statistic card for displaying metrics with icons and trends.
+
+### Basic Usage
+
+```java
+JStatCard card = new JStatCard();
+card.setTitle("Total Sales");
+card.setValue(12450);
+```
+
+### With Icon
+
+```java
+JStatCard card = new JStatCard();
+card.setTitle("Revenue");
+card.setIcon(JIcon.DOLLAR_SIGN.view(), "success");
+card.setValue(45230);
+card.setPrefix("$");
+```
+
+### With Trend
+
+```java
+JStatCard card = new JStatCard();
+card.setTitle("Active Users");
+card.setIcon(JIcon.USERS.view(), "primary");
+card.setValue(1543);
+card.setTrend("↑ 12% from last month", true); // true = positive
+```
+
+### Decimal Values
+
+```java
+JStatCard card = new JStatCard();
+card.setTitle("Average Rating");
+card.setIcon(JIcon.STAR.view(), "warning");
+card.setDecimalPlaces(2);
+card.setValue(4.67);
+```
+
+### With Prefix/Suffix
+
+```java
+// Currency
+JStatCard revenue = new JStatCard();
+revenue.setTitle("Monthly Revenue");
+revenue.setPrefix("$");
+revenue.setValue(125000);
+
+// Percentage
+JStatCard growth = new JStatCard();
+growth.setTitle("Growth Rate");
+growth.setSuffix("%");
+growth.setDecimalPlaces(1);
+growth.setValue(23.5);
+
+// Units
+JStatCard storage = new JStatCard();
+storage.setTitle("Storage Used");
+storage.setSuffix(" GB");
+storage.setDecimalPlaces(2);
+storage.setValue(487.65);
+```
+
+### Animated Updates
+
+```java
+JStatCard card = new JStatCard();
+card.setTitle("Live Counter");
+card.setValue(100);
+
+// Animate to new value over 1 second (default)
+card.setValue(250);
+
+// Custom animation duration
+card.setValue(500, 2000); // 2 seconds
+```
+
+### Dashboard Example
+
+```java
+GridPane dashboard = new GridPane();
+dashboard.setHgap(20);
+dashboard.setVgap(20);
+dashboard.setPadding(new Insets(20));
+
+// Total Sales
+JStatCard sales = new JStatCard();
+sales.setTitle("Total Sales");
+sales.setIcon(JIcon.SHOPPING_CART.view(), "primary");
+sales.setPrefix("$");
+sales.setValue(124500);
+sales.setTrend("↑ 23% from last week", true);
+
+// New Users
+JStatCard users = new JStatCard();
+users.setTitle("New Users");
+users.setIcon(JIcon.USERS.view(), "success");
+users.setValue(1543);
+users.setTrend("↑ 145 this week", true);
+
+// Conversion Rate
+JStatCard conversion = new JStatCard();
+conversion.setTitle("Conversion Rate");
+conversion.setIcon(JIcon.TRENDING_UP.view(), "info");
+conversion.setSuffix("%");
+conversion.setDecimalPlaces(2);
+conversion.setValue(3.47);
+conversion.setTrend("↓ 0.8% from yesterday", false);
+
+// Bounce Rate
+JStatCard bounce = new JStatCard();
+bounce.setTitle("Bounce Rate");
+bounce.setIcon(JIcon.ACTIVITY.view(), "danger");
+bounce.setSuffix("%");
+bounce.setDecimalPlaces(1);
+bounce.setValue(42.3);
+bounce.setTrend("↓ 2.1% improvement", true);
+
+dashboard.add(sales, 0, 0);
+dashboard.add(users, 1, 0);
+dashboard.add(conversion, 0, 1);
+dashboard.add(bounce, 1, 1);
+```
+
+### Real-Time Updates
+
+```java
+JStatCard liveCard = new JStatCard();
+liveCard.setTitle("Live Visitors");
+liveCard.setIcon(JIcon.ACTIVITY.view(), "success");
+liveCard.setValue(234);
+
+// Update periodically
+Timeline timeline = new Timeline(new KeyFrame(
+    Duration.seconds(5),
+    e -> {
+        int newValue = fetchCurrentVisitorCount();
+        liveCard.setValue(newValue, 800); // Smooth 800ms animation
+    }
+));
+timeline.setCycleCount(Timeline.INDEFINITE);
+timeline.play();
+```
+
+### Icon Color Variants
+
+```java
+// Available color classes for icons:
+card.setIcon(iconNode, "primary");   // Blue
+card.setIcon(iconNode, "success");   // Green
+card.setIcon(iconNode, "danger");    // Red
+card.setIcon(iconNode, "warning");   // Orange
+card.setIcon(iconNode, "info");      // Light blue
+card.setIcon(iconNode, "slate");     // Gray
+```
+
+### API Reference
+
+<ParamField path="setTitle(String)" type="void">
+  Set the card title/label
+</ParamField>
+
+<ParamField path="setValue(double)" type="void">
+  Set value with default 1s animation
+</ParamField>
+
+<ParamField path="setValue(double, int)" type="void">
+  Set value with custom animation duration in milliseconds
+</ParamField>
+
+<ParamField path="setIcon(Node, String)" type="void">
+  Set icon with color class (primary, success, danger, etc.)
+</ParamField>
+
+<ParamField path="setPrefix(String)" type="void">
+  Set prefix (e.g., "$" for currency)
+</ParamField>
+
+<ParamField path="setSuffix(String)" type="void">
+  Set suffix (e.g., "%" for percentage)
+</ParamField>
+
+<ParamField path="setDecimalPlaces(int)" type="void">
+  Set number of decimal places to display
+</ParamField>
+
+<ParamField path="setTrend(String, boolean)" type="void">
+  Set trend text and whether it's positive (true) or negative (false)
+</ParamField>

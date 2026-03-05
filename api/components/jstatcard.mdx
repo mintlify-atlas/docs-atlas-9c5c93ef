@@ -1,0 +1,201 @@
+---
+title: JStatCard
+description: Statistical display card with animated values, icons, and trend indicators for dashboards and analytics.
+---
+
+## Overview
+
+JStatCard is a specialized card component for displaying statistics and metrics with:
+
+- Animated number transitions
+- Customizable prefix/suffix (e.g., "$", "%")
+- Decimal place formatting
+- Thousand separators
+- Icon with color variants
+- Trend indicators (positive/negative)
+
+## Constructor
+
+<ParamField path="JStatCard()" type="constructor">
+  Creates a new stat card with default settings.
+</ParamField>
+
+## Basic Usage
+
+```java
+JStatCard card = new JStatCard();
+card.setTitle("Total Revenue");
+card.setValue(45230.50);
+card.setPrefix("$");
+card.setDecimalPlaces(2);
+card.setTrend("+12.5% from last month", true);
+
+JIcon icon = new JIcon("dollar-sign");
+card.setIcon(icon.view(), "success");
+```
+
+## Title and Content
+
+<ParamField path="setTitle(title)" type="void">
+  Sets the card title text displayed at the top.
+  
+  <Expandable title="Parameters">
+    - `title` (String): Title text
+  </Expandable>
+</ParamField>
+
+## Value Display
+
+<ParamField path="setValue(targetValue)" type="void">
+  Sets the card value with default 1-second animation.
+  
+  <Expandable title="Parameters">
+    - `targetValue` (double): Target numeric value to animate to
+  </Expandable>
+  
+  ```java
+  card.setValue(1234.56); // Animates from current to 1234.56
+  ```
+</ParamField>
+
+<ParamField path="setValue(targetValue, durationMs)" type="void">
+  Sets the card value with custom animation duration.
+  
+  <Expandable title="Parameters">
+    - `targetValue` (double): Target numeric value
+    - `durationMs` (int): Animation duration in milliseconds
+  </Expandable>
+  
+  ```java
+  card.setValue(5000, 2000); // Animate to 5000 over 2 seconds
+  ```
+</ParamField>
+
+## Number Formatting
+
+<ParamField path="setPrefix(prefix)" type="void">
+  Sets a prefix to display before the value (e.g., "$", "€").
+  
+  <Expandable title="Parameters">
+    - `prefix` (String): Prefix string, or null/empty for none
+  </Expandable>
+  
+  ```java
+  card.setPrefix("$");  // Displays "$1,234"
+  card.setPrefix("€");  // Displays "€1,234"
+  ```
+</ParamField>
+
+<ParamField path="setSuffix(suffix)" type="void">
+  Sets a suffix to display after the value (e.g., "%", "kg", "users").
+  
+  <Expandable title="Parameters">
+    - `suffix` (String): Suffix string, or null/empty for none
+  </Expandable>
+  
+  ```java
+  card.setSuffix("%");      // Displays "85%"
+  card.setSuffix(" users"); // Displays "1,234 users"
+  ```
+</ParamField>
+
+<ParamField path="setDecimalPlaces(places)" type="void">
+  Sets the number of decimal places to display.
+  
+  <Expandable title="Parameters">
+    - `places` (int): Number of decimal places (0 for integers)
+  </Expandable>
+  
+  ```java
+  card.setDecimalPlaces(0);  // "1,234"
+  card.setDecimalPlaces(2);  // "1,234.56"
+  card.setDecimalPlaces(3);  // "1,234.567"
+  ```
+</ParamField>
+
+## Icon
+
+<ParamField path="setIcon(icon, colorClass)" type="void">
+  Sets an icon with optional color variant displayed in the top-right.
+  
+  <Expandable title="Parameters">
+    - `icon` (Node): JavaFX Node (typically JIcon.view()), or null to remove
+    - `colorClass` (String): Color class - "primary", "success", "danger", "warning", "info", "slate"
+  </Expandable>
+  
+  ```java
+  JIcon dollarIcon = new JIcon("dollar-sign");
+  card.setIcon(dollarIcon.view(), "success");
+  
+  // Remove icon
+  card.setIcon(null, null);
+  ```
+</ParamField>
+
+## Trend Indicator
+
+<ParamField path="setTrend(text, isPositive)" type="void">
+  Sets a trend indicator text with positive/negative styling.
+  
+  <Expandable title="Parameters">
+    - `text` (String): Trend description text, or null/empty to hide
+    - `isPositive` (boolean): true for positive (green), false for negative (red)
+  </Expandable>
+  
+  ```java
+  card.setTrend("+12.5% from last month", true);  // Green text
+  card.setTrend("-3.2% from last week", false);   // Red text
+  card.setTrend(null, false);                      // Hide trend
+  ```
+</ParamField>
+
+## Complete Example
+
+```java
+// Revenue card
+JStatCard revenueCard = new JStatCard();
+revenueCard.setTitle("Monthly Revenue");
+revenueCard.setPrefix("$");
+revenueCard.setDecimalPlaces(2);
+revenueCard.setValue(45230.50);
+revenueCard.setTrend("+12.5% vs last month", true);
+JIcon dollarIcon = new JIcon("dollar-sign");
+revenueCard.setIcon(dollarIcon.view(), "success");
+
+// Users card
+JStatCard usersCard = new JStatCard();
+usersCard.setTitle("Active Users");
+usersCard.setValue(8234);
+usersCard.setTrend("+342 this week", true);
+JIcon usersIcon = new JIcon("users");
+usersCard.setIcon(usersIcon.view(), "primary");
+
+// Conversion rate card
+JStatCard conversionCard = new JStatCard();
+conversionCard.setTitle("Conversion Rate");
+conversionCard.setSuffix("%");
+conversionCard.setDecimalPlaces(1);
+conversionCard.setValue(3.24);
+conversionCard.setTrend("-0.3% vs last month", false);
+JIcon chartIcon = new JIcon("trending-up");
+conversionCard.setIcon(chartIcon.view(), "warning");
+
+// Layout in dashboard
+HBox statsRow = new HBox(16, revenueCard, usersCard, conversionCard);
+```
+
+## Animation Behavior
+
+The value animates smoothly using JavaFX Timeline:
+
+- Default animation: 1000ms (1 second)
+- Custom duration can be specified
+- Interrupts previous animation if still running
+- Formats value on every animation frame with thousand separators
+- Supports prefix, suffix, and decimal places during animation
+
+```java
+// Smooth animation from 0 to target
+card.setValue(0);
+card.setValue(10000, 2000); // Counts up over 2 seconds
+```

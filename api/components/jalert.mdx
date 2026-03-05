@@ -1,0 +1,120 @@
+---
+title: JAlert
+description: Alert component for displaying important messages and notifications
+---
+
+A flexible alert component for displaying informational messages, warnings, errors, and success notifications to users.
+
+## Constructor
+
+<ParamField path="JAlert(String title)" type="constructor">
+  Creates a new alert with only a title.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="title" type="String" required>
+      The alert title text
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="JAlert(String title, String description)" type="constructor">
+  Creates a new alert with title and description.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="title" type="String" required>
+      The alert title text
+    </ResponseField>
+    <ResponseField name="description" type="String">
+      Optional description text
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Methods
+
+<ParamField path="setIcon(Node icon)" type="JAlert">
+  Sets a custom icon for the alert.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="icon" type="Node" required>
+      The icon node to display (null to remove icon)
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setIcon(JIcon iconEnum)" type="JAlert">
+  Sets an icon using the JIcon enumeration.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="iconEnum" type="JIcon" required>
+      The icon from the JIcon enum
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setDismissible(boolean dismissible)" type="JAlert">
+  Makes the alert dismissible with a close button.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="dismissible" type="boolean" required>
+      true to show close button, false to hide it
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="addClass(String... styleClasses)" type="JAlert">
+  Adds custom CSS style classes to the alert.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="styleClasses" type="String..." required>
+      One or more CSS class names to add
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Usage Example
+
+```java
+// Basic alert
+JAlert alert = new JAlert("Success!", "Your changes have been saved.");
+alert.addClass("alert-success");
+
+// Alert with icon
+JAlert warning = new JAlert("Warning", "Please review your input.");
+warning.setIcon(JIcon.WARNING)
+       .addClass("alert-warning");
+
+// Dismissible alert
+JAlert info = new JAlert("Info", "This is an informational message.");
+info.setDismissible(true)
+    .addClass("alert-info");
+
+// Danger alert with custom icon
+SVGPath errorIcon = new SVGPath();
+errorIcon.setContent("M12 2L2 22h20L12 2z");
+JAlert danger = new JAlert("Error");
+danger.setIcon(errorIcon)
+      .addClass("alert-danger");
+```
+
+## Common Alert Variants
+
+Use the `addClass()` method with these common variants:
+
+- `.alert-primary` - Primary alert style
+- `.alert-success` - Success message (green)
+- `.alert-danger` - Error or critical warning (red)
+- `.alert-warning` - Warning message (yellow/orange)
+- `.alert-info` - Informational message (blue)
+- `.alert-secondary` - Secondary style (gray)
+
+## Style Classes
+
+- `.alert` - Main container
+- `.alert-icon-container` - Icon container
+- `.alert-icon` - Icon element
+- `.alert-title` - Title label
+- `.alert-description` - Description label
+- `.alert-dismiss-container` - Dismiss button container
+- `.alert-dismiss-btn` - Dismiss button
+- `.alert-close-icon` - Close icon SVG

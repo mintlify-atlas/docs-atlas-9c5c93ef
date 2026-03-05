@@ -1,0 +1,320 @@
+---
+title: JTabs
+description: A customizable tab component with multiple styles and orientations
+---
+
+## Overview
+
+`JTabs` is a flexible tab component that extends JavaFX's `BorderPane`. It supports multiple visual styles (line, pills), tab positioning (top, bottom, left, right), and custom tab content with titles, descriptions, and icons.
+
+## Enumerations
+
+### TabStyle
+
+<ResponseField name="LINE" type="TabStyle">
+  Line-style tabs with an underline indicator
+</ResponseField>
+
+<ResponseField name="PILLS" type="TabStyle">
+  Pill-style tabs with rounded backgrounds
+</ResponseField>
+
+## Constructor
+
+<ParamField path="JTabs()" type="constructor">
+  Creates a new tab container with default settings (LINE style, TOP position).
+</ParamField>
+
+## Methods
+
+### Tab Management
+
+<ParamField path="getTabs()" type="ObservableList&lt;JTab&gt;">
+  Returns the observable list of tabs.
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="ObservableList&lt;JTab&gt;">
+      The list of tabs in the container
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="selectTab(JTab tab)" type="void">
+  Programmatically selects a tab.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="tab" type="JTab">
+      The tab to select (must not be disabled)
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+### Style Configuration
+
+<ParamField path="getTabStyle()" type="TabStyle">
+  Gets the current tab style.
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="TabStyle">
+      The current tab style (LINE or PILLS)
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setTabStyle(TabStyle style)" type="void">
+  Sets the visual style of the tabs.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="style" type="TabStyle">
+      The tab style to apply (LINE or PILLS)
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="tabStyleProperty()" type="ObjectProperty<TabStyle>">
+  Property for the tab style.
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="ObjectProperty<TabStyle>">
+      The tab style property
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+### Position Configuration
+
+<ParamField path="getSide()" type="Side">
+  Gets the current tab position.
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="Side">
+      The current side (TOP, BOTTOM, LEFT, or RIGHT)
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="setSide(Side side)" type="void">
+  Sets the position of the tab headers.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="side" type="Side">
+      The side where tabs should appear (TOP, BOTTOM, LEFT, or RIGHT)
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="sideProperty()" type="ObjectProperty<Side>">
+  Property for the tab position.
+  
+  <Expandable title="Returns">
+    <ResponseField name="return" type="ObjectProperty<Side>">
+      The side property
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+## Related Components
+
+- [JTab](/api/components/jtab) - Individual tab data objects for use within JTabs
+
+## Style Classes
+
+<ResponseField name="j-tabs" type="String">
+  Base style class applied to the tabs container
+</ResponseField>
+
+<ResponseField name="tabs-line" type="String">
+  Applied when using LINE tab style
+</ResponseField>
+
+<ResponseField name="tabs-pills" type="String">
+  Applied when using PILLS tab style
+</ResponseField>
+
+<ResponseField name="j-tabs-header" type="String">
+  Applied to the container holding tab headers
+</ResponseField>
+
+<ResponseField name="j-tabs-content" type="String">
+  Applied to the container holding tab content
+</ResponseField>
+
+<ResponseField name="j-tab" type="String">
+  Applied to individual tab headers
+</ResponseField>
+
+<ResponseField name="selected" type="String">
+  Applied to the currently selected tab header
+</ResponseField>
+
+<ResponseField name="tab-title" type="String">
+  Applied to tab title labels
+</ResponseField>
+
+<ResponseField name="tab-description" type="String">
+  Applied to tab description labels
+</ResponseField>
+
+## Example Usage
+
+```java
+// Create tabs container
+JTabs tabs = new JTabs();
+
+// Add tabs
+tabs.getTabs().addAll(
+    new JTab("Home", new Label("Home content")),
+    new JTab("Profile", new Label("Profile content")),
+    new JTab("Settings", new Label("Settings content"))
+);
+
+// Configure style
+tabs.setTabStyle(JTabs.TabStyle.PILLS);
+tabs.setSide(Side.LEFT);
+
+// Tab with description and icon
+JTab detailsTab = new JTab();
+detailsTab.setTitle("Details");
+detailsTab.setDescription("View detailed information");
+detailsTab.setGraphic(JIcon.INFO.view());
+detailsTab.setContent(new Label("Details content"));
+tabs.getTabs().add(detailsTab);
+
+// Programmatically select a tab
+tabs.selectTab(tabs.getTabs().get(1));
+
+// Bind to property changes
+tabs.sideProperty().addListener((obs, old, newSide) -> {
+    System.out.println("Tabs moved to: " + newSide);
+});
+```
+
+## Behavior Notes
+
+- Only one tab can be selected at a time
+- When tabs are positioned on TOP or BOTTOM, headers are horizontally scrollable if needed
+- When tabs are positioned on LEFT or RIGHT, headers are vertically arranged
+- Disabled tabs cannot be selected
+- The first tab is automatically selected when tabs are added to an empty container
+- Tab descriptions are only visible when set and non-empty
+
+## Source
+
+`com.jjarroyo.components.JTabs` in JTabs.java:22
+
+## JTab
+
+### Overview
+
+`JTab` is a data model class representing an individual tab within a `JTabs` container. It holds the tab's title, description, content, icon, and disabled state.
+
+### Constructor
+
+<ParamField path="JTab()" type="constructor">
+  Creates an empty tab.
+</ParamField>
+
+<ParamField path="JTab(String title, Node content)" type="constructor">
+  Creates a tab with title and content.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="title" type="String">
+      The tab title
+    </ResponseField>
+    <ResponseField name="content" type="Node">
+      The content to display when the tab is selected
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="JTab(String title, String description, Node content)" type="constructor">
+  Creates a tab with title, description, and content.
+  
+  <Expandable title="Parameters">
+    <ResponseField name="title" type="String">
+      The tab title
+    </ResponseField>
+    <ResponseField name="description" type="String">
+      The tab description (appears below title)
+    </ResponseField>
+    <ResponseField name="content" type="Node">
+      The content to display when the tab is selected
+    </ResponseField>
+  </Expandable>
+</ParamField>
+
+### Properties
+
+#### Title
+
+<ParamField path="titleProperty()" type="StringProperty">
+  Property for the tab title.
+</ParamField>
+
+<ParamField path="getTitle()" type="String">
+  Gets the tab title.
+</ParamField>
+
+<ParamField path="setTitle(String title)" type="void">
+  Sets the tab title.
+</ParamField>
+
+#### Description
+
+<ParamField path="descriptionProperty()" type="StringProperty">
+  Property for the tab description.
+</ParamField>
+
+<ParamField path="getDescription()" type="String">
+  Gets the tab description.
+</ParamField>
+
+<ParamField path="setDescription(String description)" type="void">
+  Sets the tab description.
+</ParamField>
+
+#### Content
+
+<ParamField path="contentProperty()" type="ObjectProperty<Node>">
+  Property for the tab content.
+</ParamField>
+
+<ParamField path="getContent()" type="Node">
+  Gets the tab content.
+</ParamField>
+
+<ParamField path="setContent(Node content)" type="void">
+  Sets the tab content.
+</ParamField>
+
+#### Graphic
+
+<ParamField path="graphicProperty()" type="ObjectProperty<Node>">
+  Property for the tab icon/graphic.
+</ParamField>
+
+<ParamField path="getGraphic()" type="Node">
+  Gets the tab graphic.
+</ParamField>
+
+<ParamField path="setGraphic(Node graphic)" type="void">
+  Sets the tab graphic (typically an icon).
+</ParamField>
+
+#### Disable
+
+<ParamField path="disableProperty()" type="ObjectProperty<Boolean>">
+  Property for the tab disabled state.
+</ParamField>
+
+<ParamField path="isDisable()" type="Boolean">
+  Checks if the tab is disabled.
+</ParamField>
+
+<ParamField path="setDisable(Boolean disable)" type="void">
+  Sets whether the tab is disabled.
+</ParamField>
+
+### Source
+
+`com.jjarroyo.components.JTab` in JTab.java:9

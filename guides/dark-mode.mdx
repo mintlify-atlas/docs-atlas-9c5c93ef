@@ -1,0 +1,403 @@
+---
+title: Dark Mode
+description: Implement dark mode in your JJArroyo application
+icon: moon
+---
+
+## Overview
+
+JJArroyo includes built-in dark mode support with carefully crafted color tokens that automatically adapt when dark mode is enabled. The theme uses semantic color variables that change based on the `.dark` class applied to the root node.
+
+## Enabling Dark Mode
+
+To enable dark mode, add the `dark` style class to your Scene's root node:
+
+```java
+import com.jjarroyo.JJArroyo;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+
+public class MyApp extends Application {
+    @Override
+    public void start(Stage primaryStage) {
+        StackPane root = new StackPane();
+        Scene scene = new Scene(root, 800, 600);
+        
+        // Initialize theme
+        JJArroyo.init(scene);
+        
+        // Enable dark mode
+        root.getStyleClass().add("dark");
+        
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+}
+```
+
+<Info>
+  The `dark` class can be added to any ancestor node, but it's typically added to the root for app-wide dark mode.
+</Info>
+
+## Toggling Dark Mode
+
+Create a toggle to let users switch between light and dark modes:
+
+```java
+import com.jjarroyo.components.JButton;
+import javafx.scene.layout.StackPane;
+
+public class DarkModeToggle {
+    private boolean isDarkMode = false;
+    private StackPane root;
+    
+    public DarkModeToggle(StackPane root) {
+        this.root = root;
+    }
+    
+    public JButton createToggleButton() {
+        JButton toggleButton = new JButton("Toggle Theme");
+        
+        toggleButton.setOnAction(e -> {
+            isDarkMode = !isDarkMode;
+            
+            if (isDarkMode) {
+                root.getStyleClass().add("dark");
+                toggleButton.setText("Light Mode");
+            } else {
+                root.getStyleClass().remove("dark");
+                toggleButton.setText("Dark Mode");
+            }
+        });
+        
+        return toggleButton;
+    }
+}
+```
+
+<CodeGroup>
+```java Usage Example
+StackPane root = new StackPane();
+Scene scene = new Scene(root, 800, 600);
+JJArroyo.init(scene);
+
+DarkModeToggle darkModeToggle = new DarkModeToggle(root);
+JButton toggleButton = darkModeToggle.createToggleButton();
+
+root.getChildren().add(toggleButton);
+```
+</CodeGroup>
+
+## Dark Mode Color Tokens
+
+When dark mode is enabled, the following semantic tokens are automatically updated:
+
+### Background Colors
+
+<CardGroup cols={2}>
+  <Card title="Body Background">
+    ```css
+    -color-bg-body: #0f172a  /* Slate 900 */
+    ```
+  </Card>
+  <Card title="Surface Background">
+    ```css
+    -color-bg-surface: #1e293b  /* Slate 800 */
+    ```
+  </Card>
+  <Card title="Surface Hover">
+    ```css
+    -color-bg-surface-hover: #334155  /* Slate 700 */
+    ```
+  </Card>
+  <Card title="Subtle Background">
+    ```css
+    -color-bg-subtle: #1e293b  /* Slate 800 */
+    ```
+  </Card>
+</CardGroup>
+
+### Text Colors
+
+```css
+-color-text-primary: #f8fafc    /* Slate 50 */
+-color-text-secondary: #cbd5e1  /* Slate 300 */
+-color-text-muted: #94a3b8      /* Slate 400 */
+-color-text-inverted: #0f172a   /* Slate 900 */
+```
+
+### Border Colors
+
+```css
+-color-border-default: #334155    /* Slate 700 */
+-color-border-subtle: #1e293b     /* Slate 800 */
+-color-border-highlight: -color-primary-400
+```
+
+### Inverted Slate Palette
+
+In dark mode, the slate palette is inverted:
+
+<Accordion title="View Inverted Slate Values">
+```css
+-color-slate-50: #0f172a   /* was 900 */
+-color-slate-100: #1e293b  /* was 800 */
+-color-slate-200: #334155  /* was 700 */
+-color-slate-300: #475569  /* was 600 */
+-color-slate-400: #64748b  /* was 500 */
+-color-slate-500: #94a3b8  /* was 400 */
+-color-slate-600: #cbd5e1  /* was 300 */
+-color-slate-700: #e2e8f0  /* was 200 */
+-color-slate-800: #f1f5f9  /* was 100 */
+-color-slate-900: #f8fafc  /* was 50 */
+```
+</Accordion>
+
+<Note>
+  Primary, success, danger, warning, and info color palettes remain the same in dark mode.
+</Note>
+
+## Component-Specific Dark Mode Styles
+
+Some components have explicit dark mode overrides to work around JavaFX CSS variable reassignment limitations:
+
+### Headers
+
+```css
+.root.dark .j-header {
+    -fx-background-color: -color-bg-surface;
+    -fx-border-color: -color-border-default;
+}
+
+.root.dark .j-header-logo-text,
+.root.dark .j-header-user-name {
+    -fx-text-fill: -color-text-primary;
+}
+
+.root.dark .j-header-menu-item {
+    -fx-text-fill: -color-text-secondary;
+}
+
+.root.dark .j-header-menu-item:hover {
+    -fx-text-fill: -color-text-primary;
+}
+```
+
+### Cards
+
+```css
+.root.dark .card {
+    -fx-background-color: -color-bg-surface;
+    -fx-border-color: -color-border-default;
+}
+
+.root.dark .card-title,
+.root.dark .card-subtitle {
+    -fx-text-fill: -color-text-primary;
+}
+```
+
+### Sidebar
+
+```css
+.root.dark .j-sidebar.light {
+    -fx-background-color: -color-bg-surface;
+}
+
+.root.dark .j-content-area {
+    -fx-background-color: -color-bg-body;
+}
+```
+
+## SQL Editor Dark Mode
+
+The SQL editor component has dedicated dark mode styling:
+
+```css
+.root.dark {
+    -sql-surface: -color-slate-900;
+    -sql-border: -color-slate-700;
+    -sql-border-focus: -color-primary-500;
+    -sql-gutter-bg: -color-slate-800;
+    -sql-gutter-border: -color-slate-700;
+    -sql-line-num: -color-slate-500;
+    -sql-line-num-hover: -color-slate-300;
+    -sql-text: -color-slate-200;
+    -sql-selection: #2563eb;
+    -sql-status-bg: -color-slate-800;
+    -sql-status-border: -color-slate-700;
+    -sql-status-text: -color-slate-400;
+}
+```
+
+## Creating Dark Mode Aware Custom Styles
+
+When creating custom styles, use semantic tokens to ensure automatic dark mode support:
+
+<Tabs>
+  <Tab title="Good Practice">
+    ```css
+    /* Uses semantic tokens - adapts to dark mode */
+    .my-custom-card {
+        -fx-background-color: -color-bg-surface;
+        -fx-text-fill: -color-text-primary;
+        -fx-border-color: -color-border-default;
+    }
+    
+    .my-custom-card:hover {
+        -fx-background-color: -color-bg-surface-hover;
+    }
+    ```
+  </Tab>
+  
+  <Tab title="Bad Practice">
+    ```css
+    /* Uses hardcoded colors - won't adapt to dark mode */
+    .my-custom-card {
+        -fx-background-color: #ffffff;
+        -fx-text-fill: #1e293b;
+        -fx-border-color: #e2e8f0;
+    }
+    ```
+  </Tab>
+</Tabs>
+
+If you need different styles for dark mode, use the `.root.dark` selector:
+
+```css
+/* Light mode */
+.my-component {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+/* Dark mode */
+.root.dark .my-component {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 2);
+}
+```
+
+## Persisting Dark Mode Preference
+
+You can save the user's dark mode preference using JavaFX Preferences:
+
+```java
+import java.util.prefs.Preferences;
+import javafx.scene.layout.StackPane;
+
+public class DarkModeManager {
+    private static final String DARK_MODE_KEY = "darkMode";
+    private final Preferences prefs;
+    private final StackPane root;
+    
+    public DarkModeManager(StackPane root) {
+        this.root = root;
+        this.prefs = Preferences.userNodeForPackage(getClass());
+    }
+    
+    public void loadPreference() {
+        boolean isDarkMode = prefs.getBoolean(DARK_MODE_KEY, false);
+        setDarkMode(isDarkMode);
+    }
+    
+    public void setDarkMode(boolean enabled) {
+        if (enabled) {
+            root.getStyleClass().add("dark");
+        } else {
+            root.getStyleClass().remove("dark");
+        }
+        prefs.putBoolean(DARK_MODE_KEY, enabled);
+    }
+    
+    public boolean isDarkMode() {
+        return root.getStyleClass().contains("dark");
+    }
+    
+    public void toggle() {
+        setDarkMode(!isDarkMode());
+    }
+}
+```
+
+<CodeGroup>
+```java Usage
+@Override
+public void start(Stage primaryStage) {
+    StackPane root = new StackPane();
+    Scene scene = new Scene(root, 800, 600);
+    JJArroyo.init(scene);
+    
+    DarkModeManager darkMode = new DarkModeManager(root);
+    darkMode.loadPreference(); // Load saved preference
+    
+    JButton toggleBtn = new JButton("Toggle Theme");
+    toggleBtn.setOnAction(e -> darkMode.toggle());
+    
+    root.getChildren().add(toggleBtn);
+    primaryStage.setScene(scene);
+    primaryStage.show();
+}
+```
+</CodeGroup>
+
+## System Theme Detection
+
+To detect the system's theme preference, you can use platform-specific code or libraries like [jSystemThemeDetector](https://github.com/Dansoftowner/jSystemThemeDetector):
+
+```java
+import com.jthemedetector.OsThemeDetector;
+
+public void detectSystemTheme() {
+    OsThemeDetector detector = OsThemeDetector.getDetector();
+    boolean isDark = detector.isDark();
+    
+    if (isDark) {
+        root.getStyleClass().add("dark");
+    }
+    
+    // Listen for system theme changes
+    detector.registerListener(isDarkTheme -> {
+        Platform.runLater(() -> {
+            if (isDarkTheme) {
+                root.getStyleClass().add("dark");
+            } else {
+                root.getStyleClass().remove("dark");
+            }
+        });
+    });
+}
+```
+
+## Best Practices
+
+<Steps>
+  <Step title="Use Semantic Tokens">
+    Always use semantic color tokens like `-color-text-primary` instead of raw colors
+  </Step>
+  
+  <Step title="Test Both Modes">
+    Test your UI in both light and dark modes to ensure readability and contrast
+  </Step>
+  
+  <Step title="Provide User Control">
+    Give users the ability to choose their preferred theme
+  </Step>
+  
+  <Step title="Persist Preferences">
+    Save the user's theme preference for future sessions
+  </Step>
+  
+  <Step title="Consider System Theme">
+    Respect the system theme by default, but allow overrides
+  </Step>
+</Steps>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Custom Colors" icon="palette" href="/guides/custom-colors">
+    Learn how to customize the color palette
+  </Card>
+  <Card title="Styling Guide" icon="brush" href="/guides/styling">
+    Master component styling techniques
+  </Card>
+</CardGroup>

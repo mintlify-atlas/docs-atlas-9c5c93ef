@@ -1,0 +1,291 @@
+---
+title: "JButton"
+description: "Styled button component with support for colors, sizes, and icons"
+icon: "square"
+---
+
+## Overview
+
+The `JButton` class extends JavaFX's standard `Button` control with pre-styled variants including solid, outline, light, and dashed styles. It supports multiple colors, sizes, and icon integration.
+
+## Package
+
+```java
+com.jjarroyo.components.JButton
+```
+
+## Constructors
+
+### JButton()
+
+Creates a button with no text and default primary styling.
+
+```java
+public JButton()
+```
+
+#### Example
+
+```java
+JButton button = new JButton();
+button.setText("Click Me");
+```
+
+### JButton(String text)
+
+Creates a button with the specified text and default primary styling.
+
+<ParamField path="text" type="String" required>
+  The button text
+</ParamField>
+
+```java
+public JButton(String text)
+```
+
+#### Example
+
+```java
+JButton button = new JButton("Save");
+```
+
+### JButton(String text, JIcon icon)
+
+Creates a button with text, an icon, and default primary styling.
+
+<ParamField path="text" type="String" required>
+  The button text
+</ParamField>
+
+<ParamField path="icon" type="JIcon" required>
+  The icon to display on the button
+</ParamField>
+
+```java
+public JButton(String text, JIcon icon)
+```
+
+#### Example
+
+```java
+JButton button = new JButton("Delete", JIcon.DELETE);
+```
+
+## Methods
+
+### addClass
+
+Adds one or more CSS style classes to the button. Automatically handles variant replacement logic to ensure only one color variant is active at a time.
+
+<ParamField path="styleClasses" type="String..." required>
+  One or more CSS class names to add
+</ParamField>
+
+<ResponseField name="return" type="JButton">
+  Returns this button instance for method chaining
+</ResponseField>
+
+```java
+public JButton addClass(String... styleClasses)
+```
+
+#### Example
+
+```java
+// Single class
+JButton button = new JButton("Warning");
+button.addClass("btn-warning");
+
+// Multiple classes
+JButton button = new JButton("Large Success");
+button.addClass("btn-success", "btn-lg");
+
+// Method chaining
+JButton button = new JButton("Submit")
+    .addClass("btn-primary", "btn-lg");
+```
+
+### setIcon
+
+Sets or removes an icon on the button.
+
+<ParamField path="icon" type="JIcon">
+  The icon to display, or null to remove the icon
+</ParamField>
+
+```java
+public void setIcon(JIcon icon)
+```
+
+#### Example
+
+```java
+JButton button = new JButton("Settings");
+button.setIcon(JIcon.SETTINGS);
+
+// Remove icon
+button.setIcon(null);
+```
+
+## Style Variants
+
+### Solid Colors (Default)
+
+The default button style with solid background colors:
+
+- `btn-primary` (default) - Blue
+- `btn-success` - Green
+- `btn-danger` - Red
+- `btn-warning` - Orange/Yellow
+- `btn-info` - Cyan
+- `btn-secondary` - Gray
+- `btn-dark` - Dark gray/black
+
+```java
+JButton primary = new JButton("Primary");
+JButton success = new JButton("Success").addClass("btn-success");
+JButton danger = new JButton("Danger").addClass("btn-danger");
+JButton warning = new JButton("Warning").addClass("btn-warning");
+JButton info = new JButton("Info").addClass("btn-info");
+JButton secondary = new JButton("Secondary").addClass("btn-secondary");
+JButton dark = new JButton("Dark").addClass("btn-dark");
+```
+
+### Outline Style
+
+Buttons with transparent background and colored border:
+
+```java
+JButton outline = new JButton("Outline Primary")
+    .addClass("btn-outline-primary");
+```
+
+### Light Style
+
+Buttons with light, subtle background colors:
+
+- `btn-light-primary`
+- `btn-light-success`
+- `btn-light-danger`
+- `btn-light-warning`
+- `btn-light-info`
+- `btn-light-dark`
+
+```java
+JButton lightPrimary = new JButton("Primary Light")
+    .addClass("btn-light-primary");
+JButton lightSuccess = new JButton("Success Light")
+    .addClass("btn-light-success");
+```
+
+### Dashed Style
+
+Button with dashed border, typically used for "Add" actions:
+
+```java
+JButton dashed = new JButton("Add New")
+    .addClass("btn-dashed");
+```
+
+### Icon/Accent Style
+
+Buttons with colored icons and text:
+
+- `btn-accent-primary`
+- `btn-accent-info`
+
+```java
+JButton iconBtn = new JButton("Star Button", JIcon.STAR)
+    .addClass("btn-accent-primary");
+```
+
+## Sizes
+
+Three size variants are available:
+
+- `btn-sm` - Small
+- Default - Medium (no class needed)
+- `btn-lg` - Large
+
+```java
+JButton small = new JButton("Small").addClass("btn-sm");
+JButton medium = new JButton("Default");
+JButton large = new JButton("Large").addClass("btn-lg");
+```
+
+## Icon Buttons
+
+Buttons can display icons using the `JIcon` enum:
+
+```java
+// Icon with text
+JButton withIcon = new JButton("Favorites", JIcon.HEART)
+    .addClass("btn-accent-info");
+
+// Add icon after creation
+JButton settings = new JButton("Settings");
+settings.setIcon(JIcon.SETTINGS);
+settings.addClass("btn-secondary");
+```
+
+## Loading State
+
+You can display a loading spinner by setting a ProgressIndicator as the button's graphic:
+
+```java
+JButton loadingBtn = new JButton("Please wait...");
+ProgressIndicator spinner = new ProgressIndicator();
+spinner.setMaxSize(20, 20);
+spinner.setStyle("-fx-progress-color: white;");
+loadingBtn.setGraphic(spinner);
+```
+
+## Complete Example
+
+```java
+import com.jjarroyo.components.JButton;
+import com.jjarroyo.components.JIcon;
+import javafx.scene.layout.VBox;
+
+public class ButtonExample {
+    public void createButtons() {
+        VBox container = new VBox(10);
+        
+        // Basic buttons
+        JButton primary = new JButton("Primary");
+        JButton success = new JButton("Success").addClass("btn-success");
+        JButton danger = new JButton("Danger").addClass("btn-danger");
+        
+        // Sized button
+        JButton large = new JButton("Large Button")
+            .addClass("btn-primary", "btn-lg");
+        
+        // Icon button
+        JButton withIcon = new JButton("Delete", JIcon.DELETE)
+            .addClass("btn-danger");
+        
+        // Outline button
+        JButton outline = new JButton("Outline")
+            .addClass("btn-outline-primary");
+        
+        // Button with action
+        JButton actionBtn = new JButton("Click Me");
+        actionBtn.setOnAction(e -> {
+            System.out.println("Button clicked!");
+        });
+        
+        container.getChildren().addAll(
+            primary, success, danger, large, 
+            withIcon, outline, actionBtn
+        );
+    }
+}
+```
+
+## Notes
+
+- The default style is `btn-primary` (blue)
+- Adding a new color variant automatically removes the previous one
+- Size modifiers (`btn-sm`, `btn-lg`) can be combined with any color variant
+- Icons are automatically styled to match the button's text color
+- The button extends JavaFX's standard `Button`, so all standard Button methods are available

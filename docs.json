@@ -8,10 +8,6 @@
     "dark": "#1d4ed8"
   },
   "favicon": "/favicon.svg",
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
   "navbar": {
     "primary": {
       "type": "github",
@@ -93,6 +89,7 @@
             "group": "Input Components",
             "pages": [
               "api/components/jinput",
+              "api/components/jinputgroup",
               "api/components/jpasswordinput",
               "api/components/jsearchinput",
               "api/components/jnumberinput",
@@ -115,6 +112,7 @@
             "pages": [
               "api/components/jcard",
               "api/components/jaccordion",
+              "api/components/jaccordionpane",
               "api/components/jtabs",
               "api/components/jheader",
               "api/components/jsidebar"

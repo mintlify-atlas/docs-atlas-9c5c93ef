@@ -1,0 +1,131 @@
+---
+title: JInputGroup
+description: Group multiple inputs and buttons together with connected borders
+---
+
+`JInputGroup` extends JavaFX's `HBox` to create input groups where multiple elements (inputs, buttons, labels) are visually connected with merged borders. This is useful for creating search bars, URL inputs with prefixes, or any composite input controls.
+
+## Overview
+
+JInputGroup automatically manages border styling for grouped elements, ensuring that:
+- The first element has left-rounded corners
+- Middle elements have no rounded corners
+- The last element has right-rounded corners
+- All elements are seamlessly connected with no gaps
+
+## Constructor
+
+<ParamField path="JInputGroup()" type="constructor">
+  Creates a new input group container with zero spacing.
+</ParamField>
+
+```java
+JInputGroup group = new JInputGroup();
+```
+
+## Methods
+
+<ParamField path="add(Node... nodes)" type="void">
+  Adds one or more nodes to the input group. Automatically applies positional styling.
+  
+  <Expandable title="Parameters">
+    - `nodes` (Node...): Variable number of JavaFX nodes to add to the group
+  </Expandable>
+</ParamField>
+
+## Usage Examples
+
+### Search Input with Button
+
+Create a search bar with an input field and button:
+
+```java SearchBar.java
+JInputGroup searchGroup = new JInputGroup();
+
+JInput searchInput = new JInput("Search...");
+JButton searchButton = new JButton("Search", JIcon.SEARCH.view());
+searchButton.addClass("btn-primary");
+
+searchGroup.add(searchInput, searchButton);
+```
+
+### URL Input with Prefix
+
+Add a protocol prefix to a URL input:
+
+```java URLInput.java
+JInputGroup urlGroup = new JInputGroup();
+
+JButton prefix = new JButton("https://");
+prefix.addClass("btn-secondary");
+prefix.setDisable(true); // Make it non-interactive
+
+JInput urlInput = new JInput("example.com");
+
+urlGroup.add(prefix, urlInput);
+```
+
+### Multi-Part Input
+
+Create complex inputs with multiple segments:
+
+```java ComplexInput.java
+JInputGroup complexGroup = new JInputGroup();
+
+JButton country = new JButton("+1");
+country.addClass("btn-outline-secondary");
+
+JInput areaCode = new JInput();
+areaCode.setPromptText("555");
+areaCode.setPrefWidth(60);
+
+JInput phoneNumber = new JInput();
+phoneNumber.setPromptText("1234567");
+
+complexGroup.add(country, areaCode, phoneNumber);
+```
+
+### Input with Icon Addons
+
+Add icons as visual indicators:
+
+```java IconInput.java
+JInputGroup emailGroup = new JInputGroup();
+
+// Email icon addon
+JButton emailIcon = new JButton();
+emailIcon.setGraphic(JIcon.MAIL.view());
+emailIcon.addClass("btn-light");
+emailIcon.setDisable(true);
+
+JInput emailInput = new JInput();
+emailInput.setPromptText("Enter email");
+
+JButton sendButton = new JButton("Send");
+sendButton.addClass("btn-success");
+
+emailGroup.add(emailIcon, emailInput, sendButton);
+```
+
+## Behavior
+
+- **Automatic Styling**: The component listens to children changes and automatically applies `input-group-left`, `input-group-center`, or `input-group-right` style classes
+- **Zero Spacing**: Elements are positioned with zero spacing so borders touch seamlessly
+- **Compatible Elements**: Works with JInput, JButton, Label, or any JavaFX Node
+
+## Style Classes
+
+- `.input-group` - Applied to the container
+- `.input-group-left` - Applied to the first child element
+- `.input-group-center` - Applied to middle child elements
+- `.input-group-right` - Applied to the last child element
+
+## See Also
+
+- [JInput](/api/components/jinput) - Text input component
+- [JButton](/api/components/jbutton) - Button component
+- [JSearchInput](/api/components/jsearchinput) - Standalone search input
+
+---
+
+**Source**: `com.jjarroyo.components.JInputGroup` in JInputGroup.java:10

@@ -1,0 +1,129 @@
+---
+title: JAccordionPane
+description: Individual accordion pane component for use within JAccordion
+---
+
+`JAccordionPane` extends JavaFX's `TitledPane` to create individual accordion sections with JJArroyo styling. It is designed to be used within a `JAccordion` container.
+
+## Overview
+
+JAccordionPane provides:
+- Consistent styling with the JJArroyo theme
+- Smooth animations when expanding/collapsing
+- Title and content area
+- Automatic integration with JAccordion
+
+## Constructors
+
+<ParamField path="JAccordionPane()" type="constructor">
+  Creates an empty accordion pane with no title or content.
+</ParamField>
+
+<ParamField path="JAccordionPane(String title, Node content)" type="constructor">
+  Creates an accordion pane with the specified title and content.
+  
+  <Expandable title="Parameters">
+    - `title` (String): The title displayed in the pane header
+    - `content` (Node): The content to display when the pane is expanded
+  </Expandable>
+</ParamField>
+
+```java
+JAccordionPane pane = new JAccordionPane("Section Title", new Label("Content"));
+```
+
+## Inherited Methods
+
+Since JAccordionPane extends `TitledPane`, you have access to all JavaFX TitledPane methods:
+
+<ParamField path="setText(String text)" type="void">
+  Sets the title text of the accordion pane.
+</ParamField>
+
+<ParamField path="setContent(Node content)" type="void">
+  Sets the content to display when expanded.
+</ParamField>
+
+<ParamField path="setExpanded(boolean expanded)" type="void">
+  Programmatically expand or collapse the pane.
+</ParamField>
+
+<ParamField path="setGraphic(Node graphic)" type="void">
+  Sets an icon or graphic to display in the header.
+</ParamField>
+
+## Usage Examples
+
+### Basic Accordion Pane
+
+```java BasicPane.java
+JAccordionPane section1 = new JAccordionPane(
+    "Personal Information",
+    new Label("Name, email, and contact details")
+);
+
+JAccordionPane section2 = new JAccordionPane(
+    "Address",
+    new Label("Shipping and billing addresses")
+);
+```
+
+### Pane with Complex Content
+
+```java ComplexPane.java
+VBox formContent = new VBox(10);
+formContent.getChildren().addAll(
+    new JInput("Full Name"),
+    new JInput("Email Address"),
+    new JInput("Phone Number")
+);
+
+JAccordionPane contactPane = new JAccordionPane("Contact Details", formContent);
+```
+
+### Using in JAccordion
+
+```java AccordionExample.java
+JAccordion accordion = new JAccordion(
+    new JAccordionPane("Overview", new Label("Project overview content")),
+    new JAccordionPane("Details", new Label("Detailed information")),
+    new JAccordionPane("Settings", new Label("Configuration options"))
+);
+```
+
+### Programmatic Control
+
+```java ControlPane.java
+JAccordionPane pane = new JAccordionPane("Settings", settingsContent);
+
+// Start expanded
+pane.setExpanded(true);
+
+// Add icon to header
+pane.setGraphic(JIcon.SETTINGS.view());
+
+// Listen to expansion changes
+pane.expandedProperty().addListener((obs, wasExpanded, isExpanded) -> {
+    System.out.println("Pane is now " + (isExpanded ? "expanded" : "collapsed"));
+});
+```
+
+## Features
+
+- **Smooth Animations**: Animation is enabled by default for smooth expand/collapse transitions
+- **Theme Integration**: Automatically styled with `j-accordion-pane` class
+- **Flexible Content**: Accept any JavaFX Node as content (VBox, forms, cards, etc.)
+
+## Style Classes
+
+- `.j-accordion-pane` - Applied to the component
+- Inherits all TitledPane style classes from JavaFX
+
+## See Also
+
+- [JAccordion](/api/components/jaccordion) - Container for multiple accordion panes
+- [JCard](/api/components/jcard) - Alternative collapsible container
+
+---
+
+**Source**: `com.jjarroyo.components.JAccordionPane` in JAccordionPane.java:6
